@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace Barcode_Writer
 {
@@ -78,6 +79,25 @@ namespace Barcode_Writer
                     default:
                         throw new ApplicationException("Unknown pattern element.");
                 }
+            }
+
+            return result;
+        }
+
+        public static Pattern Parse(char[] pattern)
+        {
+            Pattern result = new Pattern();
+            result._State = new Elements[pattern.Length];
+            result.NarrowCount = pattern.Length;
+
+            for (int i = 0; i < pattern.Length; i++)
+            {
+                if (pattern[i] == '0')
+                    result._State[i] = Elements.NarrowWhite;
+                else if (pattern[i] == '1')
+                    result._State[i] = Elements.NarrowBlack;
+                else
+                    throw new ApplicationException("Unknown pattern element found.");
             }
 
             return result;

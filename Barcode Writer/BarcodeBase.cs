@@ -8,7 +8,7 @@ namespace Barcode_Writer
 {
     public abstract class BarcodeBase
     {
-        //internal static BarcodeBase Instance;
+        internal static BarcodeBase Instance;
 
         protected Dictionary<char, Pattern> PatternSet
         {
@@ -43,16 +43,7 @@ namespace Barcode_Writer
             if (!settings.IsTextShown)
                 return;
 
-            if (settings.IsTextPadded)
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append(" ");
-                foreach (char item in text)
-                {
-                    sb.AppendFormat("{0} ", item);
-                }
-                text = sb.ToString();
-            }
+            text = PadText(text, settings);
 
             SizeF textSize = canvas.MeasureString(text, settings.Font);
             int x = (width / 2) - ((int)textSize.Width / 2);
@@ -60,6 +51,21 @@ namespace Barcode_Writer
 
             canvas.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             canvas.DrawString(text, settings.Font, Brushes.Black, x, y);
+        }
+
+        protected string PadText(string value, BarcodeSettings settings)
+        {
+            if (!settings.IsTextPadded)
+                return value;
+
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(" ");
+            foreach (char item in value)
+            {
+                sb.AppendFormat("{0} ", item);
+            }
+            return sb.ToString();
         }
 
         public virtual bool IsValidText(string value)
@@ -77,6 +83,20 @@ namespace Barcode_Writer
         }
 
         protected abstract void Init();
+
+        protected void AddMeasure(BarcodeSettings settings, int width, Graphics canvas)
+        {
+            int left = 0;
+            bool alt = true;
+
+            while (left < width)
+            {
+                if (alt)
+                    canvas.FillRectangle(Brushes.Gainsboro, left, 0, 1, settings.TopMargin);
+                left++;
+                alt = !alt;
+            }
+        }
 
         //public static Bitmap Generate(string text)
         //{

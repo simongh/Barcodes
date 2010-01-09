@@ -9,7 +9,7 @@ namespace Barcode_Writer
 {
     public class Code128 : BarcodeBase
     {
-        internal readonly static Code128 Instance;
+        //internal readonly static Code128 Instance;
 
         protected override string AllowedChars
         {
@@ -375,20 +375,6 @@ namespace Barcode_Writer
         public static Bitmap Generate(string text)
         {
             return Instance.Paint(new BarcodeSettings(), text);
-        }
-
-        private void AddMeasure(BarcodeSettings settings, int width, Graphics canvas)
-        {
-            int left = settings.LeftMargin;
-            bool alt = true;
-
-            while (left < width)
-            {
-                if (alt)
-                    canvas.FillRectangle(Brushes.Gainsboro, left, 0, settings.NarrowWidth, settings.TopMargin);
-                left += settings.NarrowWidth;
-                alt = !alt;
-            }
         }
     }
 }

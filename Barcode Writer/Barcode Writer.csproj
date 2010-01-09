@@ -51,8 +51,11 @@
     <Compile Include="Code128.cs" />
     <Compile Include="Code128Helper.cs" />
     <Compile Include="Code3of9.cs" />
+    <Compile Include="EAN.cs" />
+    <Compile Include="EAN13.cs" />
     <Compile Include="Pattern.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UPC.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
