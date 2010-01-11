@@ -1,6 +1,6 @@
-﻿using System;
+﻿#define MEASURE
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Drawing;
 
@@ -8,22 +8,18 @@ namespace Barcode_Writer
 {
     public abstract class BarcodeBase
     {
-        internal static BarcodeBase Instance;
+        //public static BarcodeBase2 Instance;
 
-        protected Dictionary<char, Pattern> PatternSet
+        protected Dictionary<int, Pattern> PatternSet
         {
             get;
             set;
         }
 
-        protected abstract string AllowedChars
+        protected System.Text.RegularExpressions.Regex AllowedCharsPattern
         {
             get;
-        }
-
-        public abstract bool IsCaseSensitive
-        {
-            get;
+            set;
         }
 
         protected BarcodeBase()
@@ -31,12 +27,24 @@ namespace Barcode_Writer
             Init();
         }
 
-        public virtual Bitmap Paint(string text)
+        protected void AddMeasure(BarcodeSettings settings, int width, Graphics canvas)
         {
-            return Paint(new BarcodeSettings(), text);
+            int left = 0;
+            bool alt = true;
+
+            while (left < width)
+            {
+                if (alt)
+                    canvas.FillRectangle(Brushes.Gainsboro, left, 0, 1, settings.TopMargin);
+                left++;
+                alt = !alt;
+            }
         }
 
-        public abstract Bitmap Paint(BarcodeSettings settings, string text);
+        protected virtual BarcodeSettings GetDefaultSettings()
+        {
+            return new BarcodeSettings();
+        }
 
         protected virtual void PaintText(Graphics canvas, BarcodeSettings settings, string text, int width)
         {
@@ -68,41 +76,78 @@ namespace Barcode_Writer
             return sb.ToString();
         }
 
-        public virtual bool IsValidText(string value)
+        protected Bitmap Paint(BarcodeSettings settings, string text)
         {
-            if (!IsCaseSensitive)
-                value = value.ToUpper();
+            List<int> codes = new List<int>();
+            text = ParseText(text, codes);
 
-            foreach (char item in value)
+            int width = settings.LeftMargin + settings.RightMargin + (codes.Count * GetModuleWidth(settings)) + GetQuietSpace(settings, codes.Count);
+            int height = settings.TopMargin + settings.BarHeight + settings.BottomMargin;
+            if (settings.IsTextShown)
+                height += Convert.ToInt32(settings.Font.GetHeight()) + settings.TextPadding;
+
+            Bitmap b = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            Graphics g = Graphics.FromImage(b);
+            g.FillRectangle(Brushes.White, 0, 0, width, height);
+
+#if MEASURE
+            AddMeasure(settings, width, g);
+#endif
+            //int left = settings.LeftMargin + (10 * settings.NarrowWidth);
+            State state = new State(g, settings, settings.LeftMargin);
+            OnStartCode(state);
+
+            for (int i = 0; i < codes.Count; i++)
             {
-                if (!AllowedChars.Contains(item))
-                    return false;
+                OnDrawModule(state, i);
+
+                foreach (Rectangle rect in PatternSet[codes[i]].Paint(settings))
+                {
+                    rect.Offset(state.Left, settings.TopMargin);
+                    g.FillRectangle(Brushes.Black, rect);
+                }
+
+                state.Left += GetModuleWidth(settings);
             }
 
-            return true;
+            OnEndCode(state);
+            PaintText(g, settings, text, width);
+
+            return b;
         }
+
+        protected virtual void OnStartCode(State state)
+        {
+        }
+
+        protected virtual void OnDrawModule(State state, int index)
+        {
+        }
+
+        protected virtual void OnEndCode(State state)
+        {
+        }
+
+        public virtual bool IsValidData(string value)
+        {
+            return AllowedCharsPattern.IsMatch(value);
+        }
+
+        public Bitmap Generate(string text)
+        {
+            return Paint(GetDefaultSettings(), text);
+        }
+
+        #region To Implement
 
         protected abstract void Init();
 
-        protected void AddMeasure(BarcodeSettings settings, int width, Graphics canvas)
-        {
-            int left = 0;
-            bool alt = true;
+        protected abstract string ParseText(string value, List<int> codes);
 
-            while (left < width)
-            {
-                if (alt)
-                    canvas.FillRectangle(Brushes.Gainsboro, left, 0, 1, settings.TopMargin);
-                left++;
-                alt = !alt;
-            }
-        }
+        protected abstract int GetModuleWidth(BarcodeSettings settings);
 
-        //public static Bitmap Generate(string text)
-        //{
-        //    return Instance.Paint(new BarcodeSettings(), text);
-        //}
+        protected abstract int GetQuietSpace(BarcodeSettings settings, int length);
 
-
+        #endregion
     }
 }

@@ -1,7 +1,6 @@
 ﻿#define MEASURE
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Drawing;
 
@@ -9,17 +8,7 @@ namespace Barcode_Writer
 {
     public class Code3of9 : BarcodeBase
     {
-        //internal readonly static Code3of9 Instance;
-
-        protected override string AllowedChars
-        {
-            get { return "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.$/+% "; }
-        }
-
-        public override bool IsCaseSensitive
-        {
-            get { return false; }
-        }
+        public readonly static Code3of9 Instance;
 
         private Code3of9()
             : base()
@@ -32,7 +21,7 @@ namespace Barcode_Writer
 
         protected override void Init()
         {
-            PatternSet = new Dictionary<char, Pattern>();
+            PatternSet = new Dictionary<int, Pattern>();
 
             PatternSet.Add('0', Pattern.Parse("nb nw nb ww wb nw wb nw nb"));
             PatternSet.Add('1', Pattern.Parse("wb nw nb ww nb nw nb nw wb"));
@@ -78,50 +67,41 @@ namespace Barcode_Writer
             PatternSet.Add('/', Pattern.Parse("nb ww nb ww nb nw nb ww nb"));
             PatternSet.Add('+', Pattern.Parse("nb ww nb nw nb ww nb ww nb"));
             PatternSet.Add('%', Pattern.Parse("nb nw nb ww nb ww nb ww nb"));
+
+            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^[A-Z0-9-\\. \\$/+%]+$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         }
 
-        public override System.Drawing.Bitmap Paint(BarcodeSettings settings, string text)
+        protected override string ParseText(string value, List<int> codes)
         {
-            text = text.Trim('*');
-            if (!IsValidText(text))
-                throw new ApplicationException("The text for the barcode contained unsupported characters.");
-            text = text.ToUpper();
+            value = value.Trim('*');
+            if (!IsValidData(value))
+                throw new ApplicationException("Invalid data for this barcode.");
 
-            text = "*" + text + "*";
+            value = "*" + value.ToUpper() + "*";
 
-            int width = settings.LeftMargin + settings.RightMargin + (text.Length * 3 * settings.WideWidth) + (text.Length * 6 * settings.NarrowWidth) + (settings.BarSpacing * (text.Length - 1));
-            int height = settings.BarHeight + settings.TopMargin + settings.BottomMargin;
-            if (settings.IsTextShown)
-                height += Convert.ToInt32(settings.Font.GetHeight()) + settings.TextPadding ;
-            
-            Bitmap b = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            Graphics g = Graphics.FromImage(b);
-            g.FillRectangle(Brushes.White, 0, 0, width, height);
-
-#if MEASURE
-            AddMeasure(settings, width, g);
-#endif
-            int left = settings.LeftMargin;
-            foreach (char item in text.ToCharArray())
+            foreach (char item in value.ToCharArray())
             {
-                foreach (Rectangle bar in PatternSet[item].Paint(settings))
-                {
-                    bar.Offset(left, settings.TopMargin);
-                    g.FillRectangle(Brushes.Black, bar);
-                }
-
-                left += settings.BarSpacing + (3 * settings.WideWidth) + (6 * settings.NarrowWidth);
+                codes.Add(item);
             }
 
-            PaintText(g, settings, text, width);
-
-            return b;
+            return value;
         }
 
-        public static Bitmap Generate(string text)
+        protected override int GetModuleWidth(BarcodeSettings settings)
         {
-            return Code3of9.Instance.Paint(new BarcodeSettings(), text);
+            return (3 * settings.WideWidth) + (6 * settings.NarrowWidth);
         }
 
+        protected override int GetQuietSpace(BarcodeSettings settings, int length)
+        {
+            return settings.BarSpacing * (length - 1);
+        }
+
+        protected override void OnDrawModule(State state, int index)
+        {
+            if (index > 0)
+                state.Left += state.Settings.BarSpacing;
+            base.OnDrawModule(state, index);
+        }
     }
 }
