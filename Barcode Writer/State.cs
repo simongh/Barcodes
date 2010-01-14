@@ -13,6 +13,12 @@ namespace Barcode_Writer
             set;
         }
 
+        public int Top
+        {
+            get;
+            set;
+        }
+
         public Graphics Canvas
         {
             get;
@@ -25,9 +31,10 @@ namespace Barcode_Writer
             private set;
         }
 
-        public State(Graphics canvas, BarcodeSettings settings, int left)
+        public State(Graphics canvas, BarcodeSettings settings, int left, int top)
         {
             Left = left;
+            Top = top;
             Canvas = canvas;
             Settings = settings;
         }

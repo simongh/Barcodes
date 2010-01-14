@@ -94,7 +94,7 @@ namespace Barcode_Writer
             AddMeasure(settings, width, g);
 #endif
             //int left = settings.LeftMargin + (10 * settings.NarrowWidth);
-            State state = new State(g, settings, settings.LeftMargin);
+            State state = new State(g, settings, settings.LeftMargin, settings.LeftMargin);
             OnStartCode(state);
 
             for (int i = 0; i < codes.Count; i++)
@@ -103,7 +103,7 @@ namespace Barcode_Writer
 
                 foreach (Rectangle rect in PatternSet[codes[i]].Paint(settings))
                 {
-                    rect.Offset(state.Left, settings.TopMargin);
+                    rect.Offset(state.Left, state.Top);
                     g.FillRectangle(Brushes.Black, rect);
                 }
 

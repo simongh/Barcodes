@@ -30,7 +30,7 @@ namespace Barcode_Writer
             foreach (Rectangle bar in guardbar)
             {
                 bar.Inflate(0, offset);
-                bar.Offset(state.Left, state.Settings.TopMargin + offset);
+                bar.Offset(state.Left, state.Top + offset);
 
                 state.Canvas.FillRectangle(Brushes.Black, bar);
             }
