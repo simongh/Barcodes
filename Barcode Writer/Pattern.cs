@@ -31,6 +31,18 @@ namespace Barcode_Writer
             set;
         }
 
+        internal int BlackCount
+        {
+            get;
+            set;
+        }
+
+        internal int WhiteCount
+        {
+            get;
+            set;
+        }
+
         public Pattern(Elements[] pattern)
             : this()
         {
@@ -42,6 +54,10 @@ namespace Barcode_Writer
                     NarrowCount++;
                 else
                     WideCount++;
+                if ((int)item % 2 == 0)
+                    BlackCount++;
+                else
+                    WhiteCount++;
             }
         }
 
@@ -63,18 +79,24 @@ namespace Barcode_Writer
                     case "ww":
                         result._State[i] = Elements.WideWhite;
                         result.WideCount++;
+                        result.WhiteCount++;
                         break;
-                    case"wb":
+                    case "wb":
                         result._State[i] = Elements.WideBlack;
                         result.WideCount++;
+                        result.BlackCount++;
                         break;
+                    case "0":
                     case "nw":
                         result._State[i] = Elements.NarrowWhite;
                         result.NarrowCount++;
+                        result.WhiteCount++;
                         break;
+                    case "1":
                     case "nb":
                         result._State[i] = Elements.NarrowBlack;
                         result.NarrowCount++;
+                        result.BlackCount++;
                         break;
                     default:
                         throw new ApplicationException("Unknown pattern element.");

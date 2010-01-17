@@ -51,6 +51,7 @@
     <Compile Include="Code128.cs" />
     <Compile Include="Code128Helper.cs" />
     <Compile Include="Code3of9.cs" />
+    <Compile Include="CPC.cs" />
     <Compile Include="EAN.cs" />
     <Compile Include="EAN13.cs" />
     <Compile Include="EAN8.cs" />
