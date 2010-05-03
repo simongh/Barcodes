@@ -7,6 +7,9 @@ using System.Drawing;
 
 namespace Barcode_Writer
 {
+    /// <summary>
+    /// Code 128 barcode generator
+    /// </summary>
     public class Code128 : BarcodeBase
     {
         public readonly static Code128 Instance;
@@ -145,6 +148,11 @@ namespace Barcode_Writer
             PatternSet.Add(106, ParseCode("2331112"));
         }
 
+        /// <summary>
+        /// Converts shorthand listed module format into a pattern
+        /// </summary>
+        /// <param name="value">shorthand format - number of black or white bars to draw</param>
+        /// <returns>pattern representing format</returns>
         private Pattern ParseCode(string value)
         {
             List<Elements> list = new List<Elements>();
@@ -263,6 +271,12 @@ namespace Barcode_Writer
             return ParsedText.ToString();
         }
 
+        /// <summary>
+        /// Encode a character using type A encoding
+        /// </summary>
+        /// <param name="value">value to encode</param>
+        /// <param name="parsedText">string builder to hold the encoded text</param>
+        /// <returns>value of the encoded character</returns>
         private int EncodeCodeA(char value, StringBuilder parsedText)
         {
             int tmp =(int)value;
@@ -281,6 +295,12 @@ namespace Barcode_Writer
             throw new ApplicationException("Unsupported character encountered");
         }
 
+        /// <summary>
+        /// Encode a character using type B encoding
+        /// </summary>
+        /// <param name="value">value to encode</param>
+        /// <param name="parsedText">string builder to hold the encoded text</param>
+        /// <returns>value of the encoded character</returns>
         private int EncodeCodeB(char value, StringBuilder parsedText)
         {
             int tmp = (int)value;
@@ -299,6 +319,12 @@ namespace Barcode_Writer
             throw new ApplicationException("Unsupported character encountered");
         }
 
+        /// <summary>
+        /// Encode a character using type A encoding
+        /// </summary>
+        /// <param name="value">value to encode</param>
+        /// <param name="parsedText">string builder to hold the encoded text</param>
+        /// <returns>value of the encoded character</returns>
         private int EncodeCodeC(string value, StringBuilder parsedText)
         {
             int tmp = int.Parse(value);
@@ -309,6 +335,10 @@ namespace Barcode_Writer
             return tmp;
         }
 
+        /// <summary>
+        /// Calculate the check digit for the encoded text
+        /// </summary>
+        /// <param name="values">List of encoded values to use</param>
         private void AddCheckDigit(List<int> values)
         {
             int total = 0;

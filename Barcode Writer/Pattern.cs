@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace Barcode_Writer
 {
+    /// <summary>
+    /// Elements of a pattern
+    /// </summary>
     public enum Elements
     {
         WideBlack,
@@ -17,28 +20,43 @@ namespace Barcode_Writer
         Descender
     }
 
+    /// <summary>
+    /// An individual module or pattern in a barcode
+    /// </summary>
     public class Pattern
     {
         private Elements[] _State;
 
+        /// <summary>
+        /// Gets or sets the count of wide bars in the module
+        /// </summary>
         internal int WideCount
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Gets or sets the count of narrow bars in the module
+        /// </summary>
         internal int NarrowCount
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Gets or sets the count of black bars in the module
+        /// </summary>
         internal int BlackCount
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Gets or sets the count of white bars in the module
+        /// </summary>
         internal int WhiteCount
         {
             get;
@@ -67,6 +85,14 @@ namespace Barcode_Writer
         {
         }
 
+        /// <summary>
+        /// Parse a textual pattern description into a module
+        /// (0 - white, 1 - black)
+        /// (ww - wide white, wb - wide black, nw - narrow white, nb - narrow black)
+        /// (t - tracker, a - ascender, d - descender, f - full height)
+        /// </summary>
+        /// <param name="pattern">string to encode</param>
+        /// <returns>pattern object</returns>
         public static Pattern Parse(string pattern)
         {
             Pattern result = new Pattern();
@@ -81,6 +107,10 @@ namespace Barcode_Writer
             return result;
         }
 
+        /// <summary>
+        /// Parse the pattern using a space seperated description
+        /// </summary>
+        /// <param name="pattern">pattern to encode</param>
         private void ParseFull(string pattern)
         {
             string[] parts = pattern.Split(' ');
@@ -111,6 +141,10 @@ namespace Barcode_Writer
 
         }
 
+        /// <summary>
+        /// Parse using a binary pattern
+        /// </summary>
+        /// <param name="pattern">pattern to encode</param>
         private void ParseBinary(string value)
         {
             _State = new Elements[value.Length];
@@ -130,6 +164,10 @@ namespace Barcode_Writer
 
         }
 
+        /// <summary>
+        /// Parse using 4-state encodings
+        /// </summary>
+        /// <param name="pattern">pattern to encode</param>
         private void ParsePost(string pattern)
         {
             _State = new Elements[(pattern.Length * 2) - 1];
@@ -158,6 +196,11 @@ namespace Barcode_Writer
             }
         }
 
+        /// <summary>
+        /// Add a bar to this pattern
+        /// </summary>
+        /// <param name="bar">bar to add</param>
+        /// <param name="index">index to add bar at</param>
         private void AddBar(Elements bar, int index)
         {
             _State[index] = bar;
@@ -205,6 +248,11 @@ namespace Barcode_Writer
         //    return result;
         //}
 
+        /// <summary>
+        /// Draw the module as series of black rectangles
+        /// </summary>
+        /// <param name="settings">settings to use</param>
+        /// <returns>array of black rectangles</returns>
         internal Rectangle[] Paint(BarcodeSettings settings)
         {
             List<Rectangle> result = new List<Rectangle>();

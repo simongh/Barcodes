@@ -6,8 +6,14 @@ using System.Drawing;
 
 namespace Barcode_Writer
 {
+    /// <summary>
+    /// Code 3 of 9 barcode generator
+    /// </summary>
     public class Code3of9 : BarcodeBase
     {
+        /// <summary>
+        /// Gets Code 3of9 instance
+        /// </summary>
         public readonly static Code3of9 Instance;
 
         private Code3of9()

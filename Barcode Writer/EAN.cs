@@ -7,8 +7,15 @@ using System.Drawing;
 
 namespace Barcode_Writer
 {
+    /// <summary>
+    /// Base class for EAN codes
+    /// </summary>
     public abstract class EAN : BarcodeBase
     {
+        
+        /// <summary>
+        /// The type of guard bar to use
+        /// </summary>
         protected enum GuardType
         {
             Limit = 31,
@@ -16,13 +23,24 @@ namespace Barcode_Writer
         }
         protected const int TEXTPADDING = 2;
 
+        /// <summary>
+        /// List of parity settings used for calculations
+        /// </summary>
         protected List<bool[]> Parity;
 
+        /// <summary>
+        /// Gets the digits are groupings
+        /// </summary>
         protected abstract int[] DigitGrouping
         {
             get;
         }
 
+        /// <summary>
+        /// Draws the required guard bar
+        /// </summary>
+        /// <param name="state">drawing state</param>
+        /// <param name="type">type of guard bar to draw</param>
         protected void DrawGuardBar(State state, GuardType type)
         {
             Rectangle[] guardbar = PatternSet[(int)type].Paint(state.Settings);
@@ -91,6 +109,10 @@ namespace Barcode_Writer
             Parity.Add(new bool[] { false, true, true, false, true, false });
         }
 
+        /// <summary>
+        /// Calculate parity for given list of codes
+        /// </summary>
+        /// <param name="codes">list of values</param>
         protected virtual void CalculateParity(List<int> codes)
         {
             bool[] parity = Parity[codes[0]];

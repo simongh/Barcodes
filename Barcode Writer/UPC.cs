@@ -5,6 +5,10 @@ using System.Text;
 
 namespace Barcode_Writer
 {
+    /// <summary>
+    /// Universal Product Code (UPC) 12 digit code
+    /// Also known as UPC-A
+    /// </summary>
     public class UPC : EAN
     {
         private readonly int[] _DigitGrouping;

@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Barcode_Writer
 {
+    /// <summary>
+    /// European Article Number (EAN) 8 digit code
+    /// </summary>
     public class EAN8 : EAN
     {
         private readonly int[] _DigitGrouping;

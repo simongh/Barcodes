@@ -5,6 +5,9 @@ using System.Drawing;
 
 namespace Barcode_Writer
 {
+    /// <summary>
+    /// Universal Product Code (UPC) 2 digit code
+    /// </summary>
     public class UPC2 : EAN
     {
         private readonly int[] _digitGrouping;

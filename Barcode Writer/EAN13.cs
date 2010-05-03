@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Barcode_Writer
 {
+    /// <summary>
+    /// European Article Number (EAN) 13 digit code
+    /// </summary>
     public class EAN13 : EAN
     {
         private readonly int[] _DigitGrouping;

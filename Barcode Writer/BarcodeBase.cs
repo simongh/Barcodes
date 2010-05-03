@@ -6,16 +6,25 @@ using System.Drawing;
 
 namespace Barcode_Writer
 {
+    /// <summary>
+    /// Abstract class for all barcodes
+    /// </summary>
     public abstract class BarcodeBase
     {
         //public static BarcodeBase2 Instance;
 
+        /// <summary>
+        /// Gets or sets the list of patterns to draw
+        /// </summary>
         protected Dictionary<int, Pattern> PatternSet
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Gets or sets the allowed characters expression
+        /// </summary>
         protected System.Text.RegularExpressions.Regex AllowedCharsPattern
         {
             get;
@@ -27,6 +36,12 @@ namespace Barcode_Writer
             Init();
         }
 
+        /// <summary>
+        /// Test method for adding a measure along the top of the image
+        /// </summary>
+        /// <param name="settings">Settings to sue for calculations</param>
+        /// <param name="width">width of the image in pixels</param>
+        /// <param name="canvas">Canvas to draw on</param>
         protected void AddMeasure(BarcodeSettings settings, int width, Graphics canvas)
         {
             int left = 0;
@@ -41,11 +56,22 @@ namespace Barcode_Writer
             }
         }
 
+        /// <summary>
+        /// Get the default settings for the barcode
+        /// </summary>
+        /// <returns>Settings object</returns>
         protected virtual BarcodeSettings GetDefaultSettings()
         {
             return new BarcodeSettings();
         }
 
+        /// <summary>
+        /// Draws the text below the barcode
+        /// </summary>
+        /// <param name="canvas">the canvas object on which to draw</param>
+        /// <param name="settings">the settigns file in use for the barcode</param>
+        /// <param name="text">the text to draw</param>
+        /// <param name="width">The width of the barcode to align the text</param>
         protected virtual void PaintText(Graphics canvas, BarcodeSettings settings, string text, int width)
         {
             if (!settings.IsTextShown)
@@ -61,6 +87,12 @@ namespace Barcode_Writer
             canvas.DrawString(text, settings.Font, Brushes.Black, x, y);
         }
 
+        /// <summary>
+        /// If the barcode requires the text to be limited with a character(s), this adds them
+        /// </summary>
+        /// <param name="value">the text to pad</param>
+        /// <param name="settings">the settings in use</param>
+        /// <returns>the text with any padding added</returns>
         protected string PadText(string value, BarcodeSettings settings)
         {
             if (!settings.IsTextPadded)
@@ -76,6 +108,12 @@ namespace Barcode_Writer
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Main function to draw the barcode
+        /// </summary>
+        /// <param name="settings">setting in use with this barcode</param>
+        /// <param name="text">text to encode</param>
+        /// <returns>bitmap image of the barcode</returns>
         protected Bitmap Paint(BarcodeSettings settings, string text)
         {
             List<int> codes = new List<int>();
@@ -121,28 +159,57 @@ namespace Barcode_Writer
             return b;
         }
 
+        /// <summary>
+        /// Occurs before the barcode is drawn
+        /// </summary>
+        /// <param name="state">drawing state object</param>
         protected virtual void OnStartCode(State state)
         {
         }
 
+        /// <summary>
+        /// Occurs inbetween characters. Each character is a "module"
+        /// </summary>
+        /// <param name="state">drawing state</param>
+        /// <param name="index">module index in the text to encode</param>
         protected virtual void OnDrawModule(State state, int index)
         {
         }
 
+        /// <summary>
+        /// Occurs after the last module drawn
+        /// </summary>
+        /// <param name="state">drawing state object</param>
         protected virtual void OnEndCode(State state)
         {
         }
 
+        /// <summary>
+        /// Validates the text to ensure the barcode encoding scheme can support it.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public virtual bool IsValidData(string value)
         {
             return AllowedCharsPattern.IsMatch(value);
         }
 
+        /// <summary>
+        /// Main entry point for generating the barcode
+        /// </summary>
+        /// <param name="text">text to encode</param>
+        /// <returns>bitmap of the generated barcode</returns>
         public Bitmap Generate(string text)
         {
             return Paint(GetDefaultSettings(), text);
         }
 
+        /// <summary>
+        /// Main entry point for generating the barcode
+        /// </summary>
+        /// <param name="text">text to encode</param>
+        /// <param name="settings">setting to use to overide the defaults</param>
+        /// <returns>bitmap of the generated barcode</returns>
         public Bitmap Generate(string text, BarcodeSettings settings)
         {
             return Paint(settings, text);
@@ -150,12 +217,32 @@ namespace Barcode_Writer
 
         #region To Implement
 
+        /// <summary>
+        /// initialises the barcode generator
+        /// </summary>
         protected abstract void Init();
 
+        /// <summary>
+        /// Parses the text into encodable characters
+        /// </summary>
+        /// <param name="value">the text to encode</param>
+        /// <param name="codes">the code set to sue for encoding</param>
+        /// <returns>the text after any clean-up</returns>
         protected abstract string ParseText(string value, List<int> codes);
 
+        /// <summary>
+        /// Get the width of a module usin the supplied settings
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
         protected abstract int GetModuleWidth(BarcodeSettings settings);
 
+        /// <summary>
+        /// Returns any required quiet space added to the barcode for width calculations
+        /// </summary>
+        /// <param name="settings">The settings to use</param>
+        /// <param name="length">the length of the bardcode</param>
+        /// <returns>pixels to add to the width</returns>
         protected abstract int GetQuietSpace(BarcodeSettings settings, int length);
 
         #endregion

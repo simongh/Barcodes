@@ -5,6 +5,10 @@ using System.Text;
 
 namespace Barcode_Writer
 {
+    /// <summary>
+    /// Universal Product Code (UPC) 6 digit code
+    /// Also known as UPC-E or zero compressed
+    /// </summary>
     public class UPCE : EAN
     {
         private int[] _DigitGrouping;
@@ -101,6 +105,11 @@ namespace Barcode_Writer
             DrawGuardBar(state, (GuardType)33);
         }
 
+        /// <summary>
+        /// Converts this UPC-E to a UPC-A code
+        /// </summary>
+        /// <param name="value">UPC-E value</param>
+        /// <returns>UPC-A compatible string</returns>
         public string ToUpcA(string value)
         {
             if (!IsValidData(value))
