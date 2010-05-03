@@ -42,41 +42,41 @@ namespace Barcode_Writer
         {
             PatternSet = new Dictionary<int, Pattern>();
 
-            PatternSet.Add(0, Pattern.Parse("0001101".ToCharArray()));
-            PatternSet.Add(1, Pattern.Parse("0011001".ToCharArray()));
-            PatternSet.Add(2, Pattern.Parse("0010011".ToCharArray()));
-            PatternSet.Add(3, Pattern.Parse("0111101".ToCharArray()));
-            PatternSet.Add(4, Pattern.Parse("0100011".ToCharArray()));
-            PatternSet.Add(5, Pattern.Parse("0110001".ToCharArray()));
-            PatternSet.Add(6, Pattern.Parse("0101111".ToCharArray()));
-            PatternSet.Add(7, Pattern.Parse("0111011".ToCharArray()));
-            PatternSet.Add(8, Pattern.Parse("0110111".ToCharArray()));
-            PatternSet.Add(9, Pattern.Parse("0001011".ToCharArray()));
+            PatternSet.Add(0, Pattern.Parse("0 0 0 1 1 0 1"));
+            PatternSet.Add(1, Pattern.Parse("0 0 1 1 0 0 1"));
+            PatternSet.Add(2, Pattern.Parse("0 0 1 0 0 1 1"));
+            PatternSet.Add(3, Pattern.Parse("0 1 1 1 1 0 1"));
+            PatternSet.Add(4, Pattern.Parse("0 1 0 0 0 1 1"));
+            PatternSet.Add(5, Pattern.Parse("0 1 1 0 0 0 1"));
+            PatternSet.Add(6, Pattern.Parse("0 1 0 1 1 1 1"));
+            PatternSet.Add(7, Pattern.Parse("0 1 1 1 0 1 1"));
+            PatternSet.Add(8, Pattern.Parse("0 1 1 0 1 1 1"));
+            PatternSet.Add(9, Pattern.Parse("0 0 0 1 0 1 1"));
 
-            PatternSet.Add(10, Pattern.Parse("0100111".ToCharArray()));
-            PatternSet.Add(11, Pattern.Parse("0110011".ToCharArray()));
-            PatternSet.Add(12, Pattern.Parse("0011011".ToCharArray()));
-            PatternSet.Add(13, Pattern.Parse("0100001".ToCharArray()));
-            PatternSet.Add(14, Pattern.Parse("0011101".ToCharArray()));
-            PatternSet.Add(15, Pattern.Parse("0111001".ToCharArray()));
-            PatternSet.Add(16, Pattern.Parse("0000101".ToCharArray()));
-            PatternSet.Add(17, Pattern.Parse("0010001".ToCharArray()));
-            PatternSet.Add(18, Pattern.Parse("0001001".ToCharArray()));
-            PatternSet.Add(19, Pattern.Parse("0010111".ToCharArray()));
+            PatternSet.Add(10, Pattern.Parse("0 1 0 0 1 1 1"));
+            PatternSet.Add(11, Pattern.Parse("0 1 1 0 0 1 1"));
+            PatternSet.Add(12, Pattern.Parse("0 0 1 1 0 1 1"));
+            PatternSet.Add(13, Pattern.Parse("0 1 0 0 0 0 1"));
+            PatternSet.Add(14, Pattern.Parse("0 0 1 1 1 0 1"));
+            PatternSet.Add(15, Pattern.Parse("0 1 1 1 0 0 1"));
+            PatternSet.Add(16, Pattern.Parse("0 0 0 0 1 0 1"));
+            PatternSet.Add(17, Pattern.Parse("0 0 1 0 0 0 1"));
+            PatternSet.Add(18, Pattern.Parse("0 0 0 1 0 0 1"));
+            PatternSet.Add(19, Pattern.Parse("0 0 1 0 1 1 1"));
 
-            PatternSet.Add(20, Pattern.Parse("1110010".ToCharArray()));
-            PatternSet.Add(21, Pattern.Parse("1100110".ToCharArray()));
-            PatternSet.Add(22, Pattern.Parse("1101100".ToCharArray()));
-            PatternSet.Add(23, Pattern.Parse("1000010".ToCharArray()));
-            PatternSet.Add(24, Pattern.Parse("1011100".ToCharArray()));
-            PatternSet.Add(25, Pattern.Parse("1001110".ToCharArray()));
-            PatternSet.Add(26, Pattern.Parse("1010000".ToCharArray()));
-            PatternSet.Add(27, Pattern.Parse("1000100".ToCharArray()));
-            PatternSet.Add(28, Pattern.Parse("1001000".ToCharArray()));
-            PatternSet.Add(29, Pattern.Parse("1110100".ToCharArray()));
+            PatternSet.Add(20, Pattern.Parse("1 1 1 0 0 1 0"));
+            PatternSet.Add(21, Pattern.Parse("1 1 0 0 1 1 0"));
+            PatternSet.Add(22, Pattern.Parse("1 1 0 1 1 0 0"));
+            PatternSet.Add(23, Pattern.Parse("1 0 0 0 0 1 0"));
+            PatternSet.Add(24, Pattern.Parse("1 0 1 1 1 0 0"));
+            PatternSet.Add(25, Pattern.Parse("1 0 0 1 1 1 0"));
+            PatternSet.Add(26, Pattern.Parse("1 0 1 0 0 0 0"));
+            PatternSet.Add(27, Pattern.Parse("1 0 0 0 1 0 0"));
+            PatternSet.Add(28, Pattern.Parse("1 0 0 1 0 0 0"));
+            PatternSet.Add(29, Pattern.Parse("1 1 1 0 1 0 0"));
 
-            PatternSet.Add((int)GuardType.Limit, Pattern.Parse("101".ToCharArray()));
-            PatternSet.Add((int)GuardType.Split, Pattern.Parse("01010".ToCharArray()));
+            PatternSet.Add((int)GuardType.Limit, Pattern.Parse("1 0 1"));
+            PatternSet.Add((int)GuardType.Split, Pattern.Parse("0 1 0 1 0"));
 
             Parity = new List<bool[]>();
             Parity.Add(new bool[] { false, false, false, false, false, false });

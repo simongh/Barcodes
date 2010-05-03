@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Text.RegularExpressions;
@@ -12,7 +11,10 @@ namespace Barcode_Writer
         WideBlack,
         WideWhite,
         NarrowBlack,
-        NarrowWhite
+        NarrowWhite,
+        Tracker,
+        Ascender,
+        Descender
     }
 
     public class Pattern
@@ -67,68 +69,147 @@ namespace Barcode_Writer
 
         public static Pattern Parse(string pattern)
         {
-            string[] parts = pattern.Split(' ');
-
             Pattern result = new Pattern();
-            result._State = new Elements[parts.Length];
 
+            if (Regex.IsMatch(pattern, "^[01]+$"))
+                result.ParseBinary(pattern);
+            else if (Regex.IsMatch(pattern, "^((0|1|[wn][wb]) ?)+$"))
+                result.ParseFull(pattern);
+            else if (Regex.IsMatch(pattern, "^[tadf]+$"))
+                result.ParsePost(pattern);
+
+            return result;
+        }
+
+        private void ParseFull(string pattern)
+        {
+            string[] parts = pattern.Split(' ');
+            _State = new Elements[parts.Length];
+            
             for (int i = 0; i < parts.Length; i++)
             {
                 switch (parts[i])
                 {
                     case "ww":
-                        result._State[i] = Elements.WideWhite;
-                        result.WideCount++;
-                        result.WhiteCount++;
+                        AddBar(Elements.WideWhite, i);
                         break;
                     case "wb":
-                        result._State[i] = Elements.WideBlack;
-                        result.WideCount++;
-                        result.BlackCount++;
+                        AddBar(Elements.WideBlack, i);
                         break;
                     case "0":
                     case "nw":
-                        result._State[i] = Elements.NarrowWhite;
-                        result.NarrowCount++;
-                        result.WhiteCount++;
+                        AddBar(Elements.NarrowWhite, i);
                         break;
                     case "1":
                     case "nb":
-                        result._State[i] = Elements.NarrowBlack;
-                        result.NarrowCount++;
-                        result.BlackCount++;
+                        AddBar(Elements.NarrowBlack, i);
                         break;
                     default:
                         throw new ApplicationException("Unknown pattern element.");
                 }
             }
 
-            return result;
         }
 
-        public static Pattern Parse(char[] pattern)
+        private void ParseBinary(string value)
         {
-            Pattern result = new Pattern();
-            result._State = new Elements[pattern.Length];
-            result.NarrowCount = pattern.Length;
+            _State = new Elements[value.Length];
+
+            for (int i = 0; i < value.Length; i++)
+            {
+                switch (value[i])
+                {
+                    case '0':
+                        AddBar(Elements.NarrowWhite, i);
+                        break;
+                    case '1':
+                        AddBar(Elements.NarrowBlack, i);
+                        break;
+                }
+            }
+
+        }
+
+        private void ParsePost(string pattern)
+        {
+            _State = new Elements[(pattern.Length * 2) - 1];
 
             for (int i = 0; i < pattern.Length; i++)
             {
-                if (pattern[i] == '0')
-                    result._State[i] = Elements.NarrowWhite;
-                else if (pattern[i] == '1')
-                    result._State[i] = Elements.NarrowBlack;
-                else
-                    throw new ApplicationException("Unknown pattern element found.");
-            }
+                if (i > 0)
+                    AddBar(Elements.WideWhite, (i * 2) - 1);
 
-            return result;
+                switch (pattern[i])
+                {
+                    case't':
+                        AddBar(Elements.Tracker, i*2);
+                        break;
+                    case'a':
+                        AddBar(Elements.Ascender, i*2);
+                        break;
+                    case 'd':
+                        AddBar(Elements.Descender, i*2);
+                        break;
+                    case 'f':
+                        AddBar(Elements.NarrowBlack, i*2);
+                        break;
+                }
+
+            }
         }
+
+        private void AddBar(Elements bar, int index)
+        {
+            _State[index] = bar;
+
+            switch (bar)
+            {
+                case Elements.WideBlack:
+                    WideCount++;
+                    BlackCount++;
+                    break;
+                case Elements.WideWhite:
+                    WideCount++;
+                    BlackCount++;
+                    break;
+                case Elements.NarrowWhite:
+                    NarrowCount++;
+                    WhiteCount++;
+                    break;
+                case Elements.Tracker:
+                case Elements.Ascender:
+                case Elements.Descender:
+                case Elements.NarrowBlack:
+                    NarrowCount++;
+                    BlackCount++;
+                    break;
+            }
+        }
+
+        //public static Pattern Parse(char[] pattern)
+        //{
+        //    Pattern result = new Pattern();
+        //    result._State = new Elements[pattern.Length];
+        //    result.NarrowCount = pattern.Length;
+
+        //    for (int i = 0; i < pattern.Length; i++)
+        //    {
+        //        if (pattern[i] == '0')
+        //            result._State[i] = Elements.NarrowWhite;
+        //        else if (pattern[i] == '1')
+        //            result._State[i] = Elements.NarrowBlack;
+        //        else
+        //            throw new ApplicationException("Unknown pattern element found.");
+        //    }
+
+        //    return result;
+        //}
 
         internal Rectangle[] Paint(BarcodeSettings settings)
         {
             List<Rectangle> result = new List<Rectangle>();
 
+            int offset = (settings.MediumHeight - settings.ShortHeight);
             int left = 0;
             Rectangle rect;
             foreach (Elements item in _State)
@@ -153,7 +234,20 @@ namespace Barcode_Writer
                     case Elements.NarrowWhite:
                         left += settings.NarrowWidth;
                         break;
-                    default:
+                    case Elements.Tracker:
+                        rect = new Rectangle(left, offset, settings.NarrowWidth, settings.ShortHeight);
+                        left += settings.NarrowWidth;
+                        result.Add(rect);
+                        break;
+                    case Elements.Ascender:
+                        rect = new Rectangle(left, 0, settings.NarrowWidth, settings.MediumHeight);
+                        left += settings.NarrowWidth;
+                        result.Add(rect);
+                        break;
+                    case Elements.Descender:
+                        rect = new Rectangle(left, offset, settings.NarrowWidth, settings.MediumHeight);
+                        left += settings.NarrowWidth;
+                        result.Add(rect);
                         break;
                 }                
             }

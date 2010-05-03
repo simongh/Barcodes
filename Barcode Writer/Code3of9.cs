@@ -94,13 +94,13 @@ namespace Barcode_Writer
 
         protected override int GetQuietSpace(BarcodeSettings settings, int length)
         {
-            return settings.BarSpacing * (length - 1);
+            return settings.ModulePadding * (length - 1);
         }
 
         protected override void OnDrawModule(State state, int index)
         {
             if (index > 0)
-                state.Left += state.Settings.BarSpacing;
+                state.Left += state.Settings.ModulePadding;
             base.OnDrawModule(state, index);
         }
     }

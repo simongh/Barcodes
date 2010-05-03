@@ -30,7 +30,7 @@ namespace Barcode_Writer
         {
             base.Init();
 
-            PatternSet.Add(33, Pattern.Parse("010101".ToCharArray()));
+            PatternSet.Add(33, Pattern.Parse("0 1 0 1 0 1"));
 
             Parity.Clear();
             Parity.Add(new bool[] { true, true, true, false, false, false });

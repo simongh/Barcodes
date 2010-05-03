@@ -86,6 +86,11 @@ namespace Barcode_Writer
             if (settings.IsTextShown)
                 height += Convert.ToInt32(settings.Font.GetHeight()) + settings.TextPadding;
 
+            if (settings.MaxWidth > 0 && width > settings.MaxWidth)
+                return null;
+            if (settings.MaxHeight > 0 && height > settings.MaxHeight)
+                return null;
+
             Bitmap b = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             Graphics g = Graphics.FromImage(b);
             g.FillRectangle(Brushes.White, 0, 0, width, height);
@@ -136,6 +141,11 @@ namespace Barcode_Writer
         public Bitmap Generate(string text)
         {
             return Paint(GetDefaultSettings(), text);
+        }
+
+        public Bitmap Generate(string text, BarcodeSettings settings)
+        {
+            return Paint(settings, text);
         }
 
         #region To Implement
