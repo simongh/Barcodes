@@ -46,6 +46,15 @@ namespace Barcode_Writer
             private set;
         }
 
+        /// <summary>
+        /// Gets or sets the module to be drawn
+        /// </summary>
+        public char ModuleValue
+        {
+            get;
+            set;
+        }
+
         public State(Graphics canvas, BarcodeSettings settings, int left, int top)
         {
             Left = left;

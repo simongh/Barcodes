@@ -359,16 +359,16 @@ namespace Barcode_Writer
             return settings.NarrowWidth * 11;
         }
 
-        protected override int GetQuietSpace(BarcodeSettings settings, int length)
-        {
-            //10 narrow space queit zone + 2 narrow bars for the STOP
-            return (2 * 10 * settings.NarrowWidth) + (2 * settings.NarrowWidth);
-        }
-
-        protected override void OnStartCode(State state)
+        protected override void OnBeforeDrawCode(State state)
         {
             state.Left += 10 * state.Settings.NarrowWidth;
-            base.OnStartCode(state);
+            base.OnBeforeDrawCode(state);
+        }
+
+        protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
+        {
+             //10 narrow space queit zone + 2 narrow bars for the STOP
+            return width + (2 * 10 * settings.NarrowWidth) + (2 * settings.NarrowWidth);
         }
 
         public override bool IsValidData(string value)

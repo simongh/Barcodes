@@ -67,6 +67,8 @@
   <ItemGroup>
     <Compile Include="BarcodeBase.cs" />
     <Compile Include="BarcodeSettings.cs" />
+    <Compile Include="Codabar.cs" />
+    <Compile Include="Code11.cs" />
     <Compile Include="Code128.cs" />
     <Compile Include="Code128Helper.cs" />
     <Compile Include="Code2of5.cs" />

@@ -57,15 +57,6 @@ namespace Barcode_Writer
         }
 
         /// <summary>
-        /// Get the default settings for the barcode
-        /// </summary>
-        /// <returns>Settings object</returns>
-        protected virtual BarcodeSettings GetDefaultSettings()
-        {
-            return new BarcodeSettings();
-        }
-
-        /// <summary>
         /// Draws the text below the barcode
         /// </summary>
         /// <param name="canvas">the canvas object on which to draw</param>
@@ -119,8 +110,11 @@ namespace Barcode_Writer
             List<int> codes = new List<int>();
             text = ParseText(text, codes);
 
-            int width = settings.LeftMargin + settings.RightMargin + (codes.Count * GetModuleWidth(settings)) + GetQuietSpace(settings, codes.Count);
+            int width = settings.LeftMargin + settings.RightMargin + (codes.Count * GetModuleWidth(settings));
             int height = settings.TopMargin + settings.BarHeight + settings.BottomMargin;
+            width = OnCalculateWidth(width, settings, codes);
+            height = OnCalculateHeight(height, settings, codes);
+
             if (settings.IsTextShown)
                 height += Convert.ToInt32(settings.Font.GetHeight()) + settings.TextPadding;
 
@@ -138,11 +132,12 @@ namespace Barcode_Writer
 #endif
             //int left = settings.LeftMargin + (10 * settings.NarrowWidth);
             State state = new State(g, settings, settings.LeftMargin, settings.LeftMargin);
-            OnStartCode(state);
+            OnBeforeDrawCode(state);
 
             for (int i = 0; i < codes.Count; i++)
             {
-                OnDrawModule(state, i);
+                state.ModuleValue = (char)codes[i];
+                OnBeforeDrawModule(state, i);
 
                 foreach (Rectangle rect in PatternSet[codes[i]].Paint(settings))
                 {
@@ -150,48 +145,13 @@ namespace Barcode_Writer
                     g.FillRectangle(Brushes.Black, rect);
                 }
 
-                state.Left += GetModuleWidth(settings);
+                OnAfterDrawModule(state, i);
             }
 
-            OnEndCode(state);
+            OnAfterDrawCode(state);
             PaintText(g, settings, text, width);
 
             return b;
-        }
-
-        /// <summary>
-        /// Occurs before the barcode is drawn
-        /// </summary>
-        /// <param name="state">drawing state object</param>
-        protected virtual void OnStartCode(State state)
-        {
-        }
-
-        /// <summary>
-        /// Occurs inbetween characters. Each character is a "module"
-        /// </summary>
-        /// <param name="state">drawing state</param>
-        /// <param name="index">module index in the text to encode</param>
-        protected virtual void OnDrawModule(State state, int index)
-        {
-        }
-
-        /// <summary>
-        /// Occurs after the last module drawn
-        /// </summary>
-        /// <param name="state">drawing state object</param>
-        protected virtual void OnEndCode(State state)
-        {
-        }
-
-        /// <summary>
-        /// Validates the text to ensure the barcode encoding scheme can support it.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public virtual bool IsValidData(string value)
-        {
-            return AllowedCharsPattern.IsMatch(value);
         }
 
         /// <summary>
@@ -213,6 +173,82 @@ namespace Barcode_Writer
         public Bitmap Generate(string text, BarcodeSettings settings)
         {
             return Paint(settings, text);
+        }
+
+        /// <summary>
+        /// Get the default settings for the barcode
+        /// </summary>
+        /// <returns>Settings object</returns>
+        protected virtual BarcodeSettings GetDefaultSettings()
+        {
+            return new BarcodeSettings();
+        }
+
+        /// <summary>
+        /// Validates the text to ensure the barcode encoding scheme can support it.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public virtual bool IsValidData(string value)
+        {
+            return AllowedCharsPattern.IsMatch(value);
+        }
+
+        /// <summary>
+        /// Modify the width calculation
+        /// </summary>
+        /// <param name="width">calculated pixel width</param>
+        /// <param name="codes">parsed value</param>
+        /// <returns>new pixel width</returns>
+        protected virtual int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
+        {
+            return width;
+        }
+
+        /// <summary>
+        /// Modify the height
+        /// </summary>
+        /// <param name="height">calculated pixel height</param>
+        /// <param name="codes">parsed value</param>
+        /// <returns>new pixel height</returns>
+        protected virtual int OnCalculateHeight(int height, BarcodeSettings settings, List<int> codes)
+        {
+            return height;
+        }
+
+        /// <summary>
+        /// Occurs before the barcode is drawn
+        /// </summary>
+        /// <param name="state">drawing state object</param>
+        protected virtual void OnBeforeDrawCode(State state)
+        {
+        }
+
+        /// <summary>
+        /// Occurs inbetween characters. Each character is a "module"
+        /// </summary>
+        /// <param name="state">drawing state</param>
+        /// <param name="index">module index in the text to encode</param>
+        protected virtual void OnBeforeDrawModule(State state, int index)
+        {
+        }
+
+        /// <summary>
+        /// Occurs after a module has been drawn
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="index"></param>
+        protected virtual void OnAfterDrawModule(State state, int index)
+        {
+            state.Left += GetModuleWidth(state.Settings);
+        }
+
+        /// <summary>
+        /// Occurs after the last module drawn
+        /// </summary>
+        /// <param name="state">drawing state object</param>
+        protected virtual void OnAfterDrawCode(State state)
+        {
         }
 
         #region To Implement
@@ -243,7 +279,7 @@ namespace Barcode_Writer
         /// <param name="settings">The settings to use</param>
         /// <param name="length">the length of the bardcode</param>
         /// <returns>pixels to add to the width</returns>
-        protected abstract int GetQuietSpace(BarcodeSettings settings, int length);
+//        protected abstract int GetQuietSpace(BarcodeSettings settings, int length);
 
         #endregion
     }

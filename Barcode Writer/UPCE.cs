@@ -95,12 +95,12 @@ namespace Barcode_Writer
             return total == 10 ? 0 : total;
         }
 
-        protected override void OnDrawModule(State state, int index)
+        protected override void OnBeforeDrawModule(State state, int index)
         {
             //No inter-module behaviour
         }
 
-        protected override void OnEndCode(State state)
+        protected override void OnAfterDrawCode(State state)
         {
             DrawGuardBar(state, (GuardType)33);
         }

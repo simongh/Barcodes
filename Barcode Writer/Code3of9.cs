@@ -98,16 +98,16 @@ namespace Barcode_Writer
             return (3 * settings.WideWidth) + (6 * settings.NarrowWidth);
         }
 
-        protected override int GetQuietSpace(BarcodeSettings settings, int length)
-        {
-            return settings.ModulePadding * (length - 1);
-        }
-
-        protected override void OnDrawModule(State state, int index)
+        protected override void OnBeforeDrawModule(State state, int index)
         {
             if (index > 0)
                 state.Left += state.Settings.ModulePadding;
-            base.OnDrawModule(state, index);
+            base.OnBeforeDrawModule(state, index);
+        }
+
+        protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
+        {
+            return width + (settings.ModulePadding * (codes.Count - 1));
         }
     }
 }

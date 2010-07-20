@@ -156,17 +156,18 @@ namespace Barcode_Writer
             return (settings.NarrowWidth + settings.WideWidth) * 4;
         }
 
-        protected override int GetQuietSpace(BarcodeSettings settings, int length)
-        {
-            const int DeadBars = -9;
-            return (settings.NarrowWidth + settings.WideWidth) * DeadBars;
-        }
-
-        protected override void OnDrawModule(State state, int index)
+        protected override void OnBeforeDrawModule(State state, int index)
         {
             if (index == 0 || index == 3 || index == 8)
                 state.Left -= (state.Settings.NarrowWidth + state.Settings.WideWidth) * 3;
 
+        }
+
+        protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
+        {
+            const int DeadBars = -9;
+
+            return width + ((settings.NarrowWidth + settings.WideWidth) * DeadBars);
         }
 
         protected override BarcodeSettings GetDefaultSettings()

@@ -170,24 +170,23 @@ namespace Barcode_Writer
             return 7 * settings.NarrowWidth;
         }
 
-        protected override int GetQuietSpace(BarcodeSettings settings, int length)
+        protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
         {
-            return (11 * settings.NarrowWidth) + (DigitGrouping[0] * GetModuleWidth(settings));
-        }
-
-        protected override void OnStartCode(State state)
+            return width + ((11 * settings.NarrowWidth) + (DigitGrouping[0] * GetModuleWidth(settings)));
+        }        
+        protected override void OnBeforeDrawCode(State state)
         {
             state.Left += DigitGrouping[0] * GetModuleWidth(state.Settings);
             DrawGuardBar(state, GuardType.Limit);
         }
 
-        protected override void OnDrawModule(State state, int index)
+        protected override void OnBeforeDrawModule(State state, int index)
         {
             if (index == DigitGrouping[1])
                 DrawGuardBar(state, GuardType.Split);
         }
 
-        protected override void OnEndCode(State state)
+        protected override void OnAfterDrawCode(State state)
         {
             DrawGuardBar(state, GuardType.Limit);
         }

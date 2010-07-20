@@ -66,7 +66,7 @@ namespace Barcode_Writer
             }
         }
 
-        protected override void OnDrawModule(State state, int index)
+        protected override void OnBeforeDrawModule(State state, int index)
         {
             if (index == 1)
                 state.Left -= 3 * state.Settings.NarrowWidth;
@@ -75,12 +75,12 @@ namespace Barcode_Writer
                 state.Left -= 5 * state.Settings.NarrowWidth;
         }
 
-        protected override void OnStartCode(State state)
+        protected override void OnBeforeDrawCode(State state)
         {
             state.Top += Convert.ToInt32(state.Settings.Font.GetHeight()) + state.Settings.TextPadding;
         }
 
-        protected override void OnEndCode(State state)
+        protected override void OnAfterDrawCode(State state)
         {
             //Do nothing
         }
@@ -100,9 +100,9 @@ namespace Barcode_Writer
             canvas.DrawString(text, settings.Font, Brushes.Black, x, y);
         }
 
-        protected override int GetQuietSpace(BarcodeSettings settings, int length)
+        protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
         {
-            return (-23) * settings.NarrowWidth;
+            return width + ((-23) * settings.NarrowWidth);
         }
 
         protected override BarcodeSettings GetDefaultSettings()
