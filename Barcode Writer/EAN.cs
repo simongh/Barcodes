@@ -173,7 +173,8 @@ namespace Barcode_Writer
         protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
         {
             return width + ((11 * settings.NarrowWidth) + (DigitGrouping[0] * GetModuleWidth(settings)));
-        }        
+        }
+        
         protected override void OnBeforeDrawCode(State state)
         {
             state.Left += DigitGrouping[0] * GetModuleWidth(state.Settings);

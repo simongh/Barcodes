@@ -7,16 +7,9 @@ namespace Barcode_Writer
 {
     public class Code11 : BarcodeBase
     {
-        public readonly static Code11 Instance;
-
-        private Code11()
+        internal Code11()
             : base()
         { }
-
-        static Code11()
-        {
-            Instance = new Code11();
-        }
 
         protected override void Init()
         {
@@ -35,7 +28,7 @@ namespace Barcode_Writer
             PatternSet.Add('-', Pattern.Parse("nb nw wb nw nb"));
             PatternSet.Add('s', Pattern.Parse("nb nw wb ww nb"));
 
-            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^[\\d-]+]$");
+            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^[\\d-]+$");
         }
 
         protected override string ParseText(string value, List<int> codes)
@@ -43,9 +36,9 @@ namespace Barcode_Writer
             if (!IsValidData(value))
                 throw new ApplicationException();
 
-            value = "s" + value + "s";
+            string tmp = "s" + value + "s";
 
-            foreach (char item in value.ToCharArray())
+            foreach (char item in tmp.ToCharArray())
             {
                 codes.Add(item);
             }
@@ -102,25 +95,26 @@ namespace Barcode_Writer
 
         protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
         {
+            width += (codes.Count - 1) * settings.ModulePadding;
+
             int[] shorts = new int[] { '0', '9', '-' };
 
             int c = (from t in codes where shorts.Contains(t) select t).Count();
-            return width - settings.WideWidth + settings.NarrowWidth;
+            return width - (c * (settings.WideWidth - settings.NarrowWidth));
         }
 
         protected override void OnBeforeDrawModule(State state, int index)
         {
-            if (index > 0)
-                state.Left += state.Settings.ModulePadding;
-
             base.OnBeforeDrawModule(state, index);
         }
 
         protected override void OnAfterDrawModule(State state, int index)
         {
+            state.Left += state.Settings.ModulePadding;
+
             int[] shorts = new int[] { '0', '9', '-' };
             if (shorts.Contains(state.ModuleValue))
-                state.Left += state.Settings.NarrowWidth - state.Settings.WideWidth;
+                state.Left += GetModuleWidth(state.Settings) + state.Settings.NarrowWidth - state.Settings.WideWidth;
             else
                 base.OnAfterDrawModule(state, index);
         }

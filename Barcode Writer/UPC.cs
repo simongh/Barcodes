@@ -13,22 +13,15 @@ namespace Barcode_Writer
     {
         private readonly int[] _DigitGrouping;
 
-        public readonly static UPC Instance;
-
-        protected override int[] DigitGrouping
+         protected override int[] DigitGrouping
         {
             get { return _DigitGrouping; }
         }
 
-        private UPC()
+        internal UPC()
             : base()
         {
             _DigitGrouping = new int[] { 0, 6, 6 };
-        }
-
-        static UPC()
-        {
-            Instance = new UPC();
         }
 
         protected override void Init()

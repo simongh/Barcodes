@@ -11,22 +11,16 @@ namespace Barcode_Writer
     public class EAN8 : EAN
     {
         private readonly int[] _DigitGrouping;
-        public static readonly EAN8 Instance;
 
         protected override int[] DigitGrouping
         {
             get { return _DigitGrouping; }
         }
 
-        protected EAN8()
+        internal EAN8()
             : base()
         {
             _DigitGrouping = new int[] { 0, 4, 4 };
-        }
-
-        static EAN8()
-        {
-            Instance = new EAN8();
         }
 
         protected override void Init()

@@ -17,16 +17,9 @@ namespace Barcode_Writer
 
         private const string _Extras = ":/.+abcdent*";
 
-        public readonly static Codabar Instance;
-
-        protected Codabar()
+        internal Codabar()
             : base()
         { }
-
-        static Codabar()
-        {
-            Instance = new Codabar();
-        }
 
         protected override void Init()
         {
@@ -59,17 +52,18 @@ namespace Barcode_Writer
             PatternSet.Add('*', Pattern.Parse("nb nw nb ww nb ww wb"));
             PatternSet.Add('e', Pattern.Parse("nb nw nb ww wb ww nb"));
 
-            AllowedCharsPattern = new System.Text.RegularExpressions.Regex(@"^([at]|[bn]|[c\*]|[de])[\d-$:/\.\+]+\1$");
+            AllowedCharsPattern = new System.Text.RegularExpressions.Regex(@"^[atbnc\*de][\d-$:/\.\+]+[atbnc\*de]$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         }
 
         protected override string ParseText(string value, List<int> codes)
         {
             value = value.ToLower();
-
-            if (!IsValidData(value))
+            string tmp = value.Replace(" ", "");
+            
+            if (!IsValidData(tmp))
                 throw new ApplicationException();
 
-            foreach (char item in value.ToCharArray())
+            foreach (char item in tmp.ToCharArray())
             {
                 codes.Add(item);
             }
@@ -79,11 +73,13 @@ namespace Barcode_Writer
 
         protected override int GetModuleWidth(BarcodeSettings settings)
         {
-            return (2 * settings.WideWidth) + (4 * settings.NarrowWidth);
+            return (2 * settings.WideWidth) + (5 * settings.NarrowWidth);
         }
 
         protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
         {
+            width += (settings.ModulePadding * (codes.Count - 1));
+
             int count = (from t in codes where _Extras.IndexOf((char)t) > -1 select t).Count();
             return width + (count * settings.WideWidth) - (count * settings.NarrowWidth);
         }
@@ -91,9 +87,11 @@ namespace Barcode_Writer
         protected override void OnAfterDrawModule(State state, int index)
         {
             if (_Extras.Contains(state.ModuleValue))
-                state.Left = GetModuleWidth(state.Settings) + state.Settings.WideWidth - state.Settings.NarrowWidth;
+                state.Left += GetModuleWidth(state.Settings) + state.Settings.WideWidth - state.Settings.NarrowWidth;
             else
                 base.OnAfterDrawModule(state, index);
+
+            state.Left += state.Settings.ModulePadding;
         }
 
         /// <summary>
@@ -123,11 +121,11 @@ namespace Barcode_Writer
         }
     }
 
-    public static class Code2of7
-    {
-        public static Codabar Instance
-        {
-            get { return Codabar.Instance; }
-        }
-    }
+    //public static class Code2of7
+    //{
+    //    public static Codabar Instance
+    //    {
+    //        get { return Codabar.Instance; }
+    //    }
+    //}
 }

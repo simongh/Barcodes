@@ -31,7 +31,7 @@ namespace Barcode_Writer
             set;
         }
 
-        protected BarcodeBase()
+        internal BarcodeBase()
         {
             Init();
         }
@@ -91,7 +91,7 @@ namespace Barcode_Writer
 
 
             StringBuilder sb = new StringBuilder();
-            sb.Append(" ");
+            //sb.Append(" ");
             foreach (char item in value)
             {
                 sb.AppendFormat("{0} ", item);

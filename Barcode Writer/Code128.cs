@@ -12,16 +12,9 @@ namespace Barcode_Writer
     /// </summary>
     public class Code128 : BarcodeBase
     {
-        public readonly static Code128 Instance;
-
-        private Code128()
+        internal Code128()
             : base()
         { }
-
-        static Code128()
-        {
-            Instance = new Code128();
-        }
 
         protected override void Init()
         {

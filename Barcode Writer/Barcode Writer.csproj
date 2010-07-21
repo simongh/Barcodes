@@ -66,12 +66,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BarcodeBase.cs" />
+    <Compile Include="BarcodeManager.cs" />
     <Compile Include="BarcodeSettings.cs" />
     <Compile Include="Codabar.cs" />
     <Compile Include="Code11.cs" />
     <Compile Include="Code128.cs" />
     <Compile Include="Code128Helper.cs" />
-    <Compile Include="Code2of5.cs" />
+    <Compile Include="Interleaved2of5.cs" />
     <Compile Include="Code3of9.cs" />
     <Compile Include="CPC.cs" />
     <Compile Include="EAN.cs" />

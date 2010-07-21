@@ -12,23 +12,23 @@ namespace Barcode_Writer
     {
         private readonly int[] _DigitGrouping;
 
-        public readonly static EAN13 Instance;
+        //public readonly static EAN13 Instance;
 
         protected override int[] DigitGrouping
         {
             get { return _DigitGrouping; }
         }
 
-        private EAN13()
+        internal EAN13()
             : base()
         {
             _DigitGrouping = new int[] { 1, 6, 6 };
         }
 
-        static EAN13()
-        {
-            Instance = new EAN13();
-        }
+        //static EAN13()
+        //{
+        //    Instance = new EAN13();
+        //}
 
         protected override void Init()
         {

@@ -11,19 +11,10 @@ namespace Barcode_Writer
     /// </summary>
     public class Code3of9 : BarcodeBase
     {
-        /// <summary>
-        /// Gets Code 3of9 instance
-        /// </summary>
-        public readonly static Code3of9 Instance;
 
-        private Code3of9()
+        internal Code3of9()
             : base()
         { }
-
-        static Code3of9()
-        {
-            Instance = new Code3of9();
-        }
 
         protected override void Init()
         {

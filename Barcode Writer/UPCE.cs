@@ -12,22 +12,16 @@ namespace Barcode_Writer
     public class UPCE : EAN
     {
         private int[] _DigitGrouping;
-        public static readonly UPCE Instance;
 
         protected override int[] DigitGrouping
         {
             get { return _DigitGrouping; }
         }
 
-        private UPCE()
+        internal UPCE()
             : base()
         {
             _DigitGrouping = new int[] { 0, 6, 0 };
-        }
-
-        static UPCE()
-        {
-            Instance = new UPCE();
         }
 
         protected override void Init()

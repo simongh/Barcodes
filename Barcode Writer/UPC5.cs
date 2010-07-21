@@ -11,22 +11,16 @@ namespace Barcode_Writer
     public class UPC5 : EAN
     {
         private readonly int[] _digitGrouping;
-        public static readonly UPC5 Instance;
 
         protected override int[] DigitGrouping
         {
             get { return _digitGrouping; }
         }
 
-        protected UPC5()
+        internal UPC5()
             : base()
         {
             _digitGrouping = new int[] { 0, 5, 0 };
-        }
-
-        static UPC5()
-        {
-            Instance = new UPC5();
         }
 
         protected override void Init()
