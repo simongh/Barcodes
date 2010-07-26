@@ -45,7 +45,7 @@ namespace Barcode_Writer
             }
         }
 
-        protected override string ParseText(string value, List<int> codes)
+        protected override string ParseText(string value, CodedValueCollection codes)
         {
             if (!IsValidData(value))
                 throw new ApplicationException();
@@ -67,7 +67,7 @@ namespace Barcode_Writer
             return (4 * settings.WideWidth) + (6 * settings.NarrowWidth);
         }
 
-        protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
+        protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
             return width - (2 * GetModuleWidth(settings)) + (6 * settings.NarrowWidth) + (settings.WideWidth);
         }

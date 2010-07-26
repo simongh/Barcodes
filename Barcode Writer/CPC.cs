@@ -6,17 +6,7 @@ namespace Barcode_Writer
 {
     public class CPC : BarcodeBase
     {
-        public static readonly CPC Instance;
         private Dictionary<string, int> _Lookup;
-
-        private CPC()
-            : base()
-        { }
-
-        static CPC()
-        {
-            Instance = new CPC();
-        }
 
         protected override void Init()
         {
@@ -105,7 +95,7 @@ namespace Barcode_Writer
             PatternSet.Add(value, new Pattern(tmp));
         }
         
-        protected override string ParseText(string value, List<int> codes)
+        protected override string ParseText(string value, CodedValueCollection codes)
         {
             value = value.Replace(" ", "").ToUpper();
             if (!IsValidData(value))
@@ -163,14 +153,14 @@ namespace Barcode_Writer
 
         }
 
-        protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
+        protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
             const int DeadBars = -9;
 
             return width + ((settings.NarrowWidth + settings.WideWidth) * DeadBars);
         }
 
-        protected override BarcodeSettings GetDefaultSettings()
+        public override BarcodeSettings GetDefaultSettings()
         {
             BarcodeSettings s = base.GetDefaultSettings();
             s.WideWidth = 4;

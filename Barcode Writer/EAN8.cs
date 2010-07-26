@@ -17,7 +17,7 @@ namespace Barcode_Writer
             get { return _DigitGrouping; }
         }
 
-        internal EAN8()
+        public EAN8()
             : base()
         {
             _DigitGrouping = new int[] { 0, 4, 4 };
@@ -27,10 +27,31 @@ namespace Barcode_Writer
         {
             base.Init();
 
-            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^\\d{8}$");
+            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^\\d{7,8}$");
+
+            AddChecksum += new EventHandler<AddChecksumEventArgs>(EAN8_AddChecksum);
         }
 
-        protected override void CalculateParity(List<int> codes)
+        void EAN8_AddChecksum(object sender, AddChecksumEventArgs e)
+        {
+            if (e.Codes.Count == 8)
+                return;
+
+            int total=0;
+            for (int i = 0; i < e.Codes.Count; i++)
+            {
+                if (i % 2 == 0)
+                    total += e.Codes[i] * 3;
+                else
+                    total += e.Codes[i];
+            }
+
+            total = total % 10;
+            e.Codes.Add(total == 0 ? 20 : 30 - total);
+            e.Text += (total == 0 ? 0 : 10 - total).ToString();
+        }
+
+        protected override void CalculateParity(CodedValueCollection codes)
         {
             for (int i = 4; i < codes.Count; i++)
             {

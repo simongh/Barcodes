@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddChecksumEventArgs.cs" />
     <Compile Include="BarcodeBase.cs" />
     <Compile Include="BarcodeManager.cs" />
     <Compile Include="BarcodeSettings.cs" />
@@ -72,6 +73,8 @@
     <Compile Include="Code11.cs" />
     <Compile Include="Code128.cs" />
     <Compile Include="Code128Helper.cs" />
+    <Compile Include="CodedValueCollection.cs" />
+    <Compile Include="EANHelper.cs" />
     <Compile Include="Interleaved2of5.cs" />
     <Compile Include="Code3of9.cs" />
     <Compile Include="CPC.cs" />

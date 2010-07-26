@@ -23,152 +23,52 @@ namespace Barcode_Writer
 
         public static EAN13 Ean13
         {
-            get
-            {
-                if (_Ean13==null)
-                    lock (_thisLock)
-                    {
-                        if (_Ean13 == null)
-                            _Ean13 = new EAN13();
-                    }
-
-                return _Ean13;
-            }
+            get { return GetInstance<EAN13>(ref _Ean13); }
         }
 
         public static EAN8 Ean8
         {
-            get
-            {
-                if (_Ean8 == null)
-                    lock (_thisLock)
-                    {
-                        if (_Ean8 == null)
-                            _Ean8 = new EAN8();
-                    }
-
-                return _Ean8;
-            }
+            get { return GetInstance<EAN8>(ref _Ean8); }
         }
 
         public static UPC Upc
         {
-            get
-            {
-                if (_Upc == null)
-                    lock (_thisLock)
-                    {
-                        if (_Upc == null)
-                            _Upc = new UPC();
-                    }
-
-                return _Upc;
-            }
+            get { return GetInstance<UPC>(ref _Upc); }
         }
 
         public static UPC2 Upc2
         {
-            get
-            {
-                if (_Upc2 == null)
-                    lock (_thisLock)
-                    {
-                        if (_Upc2 == null)
-                            _Upc2 = new UPC2();
-                    }
-
-                return _Upc2;
-            }
+            get { return GetInstance<UPC2>(ref _Upc2); }
         }
 
         public static UPC5 Upc5
         {
-            get
-            {
-                if (_Upc5 == null)
-                    lock (_thisLock)
-                    {
-                        if (_Upc5 == null)
-                            _Upc5 = new UPC5();
-                    }
-
-                return _Upc5;
-            }
+            get { return GetInstance<UPC5>(ref _Upc5); }
         }
 
         public static UPCE UpcE
         {
-            get
-            {
-                if (_UpcE == null)
-                    lock (_thisLock)
-                    {
-                        if (_UpcE == null)
-                            _UpcE = new UPCE();
-                    }
-
-                return _UpcE;
-            }
+            get { return GetInstance<UPCE>(ref _UpcE); }
         }
 
         public static Code3of9 Code3of9
         {
-            get
-            {
-                if (_Code3of9 == null)
-                    lock (_thisLock)
-                    {
-                        if (_Code3of9 == null)
-                            _Code3of9 = new Code3of9();
-                    }
-
-                return _Code3of9;
-            }
+            get { return GetInstance<Code3of9>(ref _Code3of9); }
         }
 
         public static Code128 Code128
         {
-            get
-            {
-                if (_Code128 == null)
-                    lock (_thisLock)
-                    {
-                        if (_Code128 == null)
-                            _Code128 = new Code128();
-                    }
-
-                return _Code128;
-            }
+            get { return GetInstance<Code128>(ref _Code128); }
         }
 
         public static Code11 Code11
         {
-            get
-            {
-                if (_Code11 == null)
-                    lock (_thisLock)
-                    {
-                        if (_Code11 == null)
-                            _Code11 = new Code11();
-                    }
-
-                return _Code11;
-            }
+            get { return GetInstance<Code11>(ref _Code11); }
         }
 
         public static Codabar Codabar
         {
-            get
-            {
-                if (_Codabar == null)
-                    lock (_thisLock)
-                    {
-                        if (_Codabar == null)
-                            _Codabar = new Codabar();
-                    }
-
-                return _Codabar;
-            }
+            get { return GetInstance<Codabar>(ref _Codabar); }
         }
 
         public static Codabar Code2of7
@@ -183,14 +83,22 @@ namespace Barcode_Writer
         {
             get
             {
-                if (_Interleaved2of5 == null)
-                    lock (_thisLock)
-                    {
-                        if (_Interleaved2of5 == null)
-                            _Interleaved2of5 = new Interleaved2of5();
-                    }
+                return GetInstance<Interleaved2of5>(ref _Interleaved2of5);
+            }
+        }
 
-                return _Interleaved2of5;
+        private static T GetInstance<T>(ref T item) where T:BarcodeBase, new()
+        {
+            if (item != null) return item;
+
+            lock (_thisLock)
+            {
+                if (item != null)
+                    return item;
+
+                item = new T();
+
+                return item;
             }
         }
     }

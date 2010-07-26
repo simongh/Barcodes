@@ -12,6 +12,7 @@ namespace Barcode_Writer
     public abstract class BarcodeBase
     {
         //public static BarcodeBase2 Instance;
+        public event EventHandler<AddChecksumEventArgs> AddChecksum;
 
         /// <summary>
         /// Gets or sets the list of patterns to draw
@@ -31,7 +32,7 @@ namespace Barcode_Writer
             set;
         }
 
-        internal BarcodeBase()
+        public BarcodeBase()
         {
             Init();
         }
@@ -107,8 +108,15 @@ namespace Barcode_Writer
         /// <returns>bitmap image of the barcode</returns>
         protected Bitmap Paint(BarcodeSettings settings, string text)
         {
-            List<int> codes = new List<int>();
+            CodedValueCollection codes = new CodedValueCollection();
             text = ParseText(text, codes);
+
+            if (settings.IsChecksumCalculated)
+            {
+                AddChecksumEventArgs args = new AddChecksumEventArgs(text, codes);
+                OnAddChecksum(args);
+                text = args.Text;
+            }
 
             int width = settings.LeftMargin + settings.RightMargin + (codes.Count * GetModuleWidth(settings));
             int height = settings.TopMargin + settings.BarHeight + settings.BottomMargin;
@@ -161,7 +169,15 @@ namespace Barcode_Writer
         /// <returns>bitmap of the generated barcode</returns>
         public Bitmap Generate(string text)
         {
-            return Paint(GetDefaultSettings(), text);
+            return Generate(text, true);
+        }
+
+        public Bitmap Generate(string text, bool calculateChecksum)
+        {
+            BarcodeSettings s = GetDefaultSettings();
+            s.IsChecksumCalculated = calculateChecksum;
+
+            return Generate(text, s);
         }
 
         /// <summary>
@@ -179,7 +195,7 @@ namespace Barcode_Writer
         /// Get the default settings for the barcode
         /// </summary>
         /// <returns>Settings object</returns>
-        protected virtual BarcodeSettings GetDefaultSettings()
+        public virtual BarcodeSettings GetDefaultSettings()
         {
             return new BarcodeSettings();
         }
@@ -200,7 +216,7 @@ namespace Barcode_Writer
         /// <param name="width">calculated pixel width</param>
         /// <param name="codes">parsed value</param>
         /// <returns>new pixel width</returns>
-        protected virtual int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
+        protected virtual int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
             return width;
         }
@@ -211,7 +227,7 @@ namespace Barcode_Writer
         /// <param name="height">calculated pixel height</param>
         /// <param name="codes">parsed value</param>
         /// <returns>new pixel height</returns>
-        protected virtual int OnCalculateHeight(int height, BarcodeSettings settings, List<int> codes)
+        protected virtual int OnCalculateHeight(int height, BarcodeSettings settings, CodedValueCollection codes)
         {
             return height;
         }
@@ -251,6 +267,35 @@ namespace Barcode_Writer
         {
         }
 
+        /// <summary>
+        /// Fires the add checksum event
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnAddChecksum(AddChecksumEventArgs e)
+        {
+            if (AddChecksum == null)
+                return;
+
+            AddChecksum(this, e);
+        }
+
+        /// <summary>
+        /// If the barcode supports a check digit, add it to the string
+        /// </summary>
+        /// <param name="value">barcode value to use for calculation</param>
+        /// <returns>check digit to return</returns>
+        public virtual string AddCheckDigit(string value)
+        {
+            CodedValueCollection codes = new CodedValueCollection();
+            BarcodeSettings s = GetDefaultSettings();
+
+            value = ParseText(value, codes);
+            AddChecksumEventArgs e = new AddChecksumEventArgs(value, codes);
+            OnAddChecksum(e);
+
+            return e.Text;
+        }
+
         #region To Implement
 
         /// <summary>
@@ -264,7 +309,13 @@ namespace Barcode_Writer
         /// <param name="value">the text to encode</param>
         /// <param name="codes">the code set to sue for encoding</param>
         /// <returns>the text after any clean-up</returns>
-        protected abstract string ParseText(string value, List<int> codes);
+        protected virtual string ParseText(string value, CodedValueCollection codes)
+        {
+            if (!IsValidData(value))
+                throw new ApplicationException();
+
+            return value;
+        }
 
         /// <summary>
         /// Get the width of a module usin the supplied settings

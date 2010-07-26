@@ -12,10 +12,6 @@ namespace Barcode_Writer
     /// </summary>
     public class Code128 : BarcodeBase
     {
-        internal Code128()
-            : base()
-        { }
-
         protected override void Init()
         {
             PatternSet = new Dictionary<int, Pattern>();
@@ -139,6 +135,8 @@ namespace Barcode_Writer
             
             //STOP pattern
             PatternSet.Add(106, ParseCode("2331112"));
+
+            AddChecksum += new EventHandler<AddChecksumEventArgs>(Code128_AddChecksum);
         }
 
         /// <summary>
@@ -166,7 +164,7 @@ namespace Barcode_Writer
             return new Pattern(list.ToArray());
         }
 
-        protected override string ParseText(string value, List<int> codes)
+        protected override string ParseText(string value, CodedValueCollection codes)
         {
             char variant = Code128Helper.StartVariantB;
             int i = 0;
@@ -258,7 +256,6 @@ namespace Barcode_Writer
 
             } while (i < value.ToCharArray().Length);
 
-            AddCheckDigit(codes);
             codes.Add(106);
 
             return ParsedText.ToString();
@@ -329,22 +326,23 @@ namespace Barcode_Writer
         }
 
         /// <summary>
-        /// Calculate the check digit for the encoded text
+        /// Handles the add checksum event
         /// </summary>
-        /// <param name="values">List of encoded values to use</param>
-        private void AddCheckDigit(List<int> values)
+        /// <param name="sender">the barcode instance raising the event</param>
+        /// <param name="e">argument for the event</param>
+        void Code128_AddChecksum(object sender, AddChecksumEventArgs e)
         {
             int total = 0;
 
-            for (int i = 0; i < values.Count; i++)
+            for (int i = 0; i < e.Codes.Count; i++)
             {
                 if (i == 0)
-                    total = values[i];
+                    total = e.Codes[i];
                 else
-                    total += values[i] * i;
+                    total += e.Codes[i] * i;
             }
 
-            values.Add(total % 103);
+            e.Codes.Insert(e.Codes.Count - 2, total % 103);
         }
 
         protected override int GetModuleWidth(BarcodeSettings settings)
@@ -358,7 +356,7 @@ namespace Barcode_Writer
             base.OnBeforeDrawCode(state);
         }
 
-        protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
+        protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
              //10 narrow space queit zone + 2 narrow bars for the STOP
             return width + (2 * 10 * settings.NarrowWidth) + (2 * settings.NarrowWidth);

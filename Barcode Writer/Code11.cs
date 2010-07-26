@@ -7,10 +7,6 @@ namespace Barcode_Writer
 {
     public class Code11 : BarcodeBase
     {
-        internal Code11()
-            : base()
-        { }
-
         protected override void Init()
         {
             PatternSet = new Dictionary<int, Pattern>();
@@ -29,9 +25,19 @@ namespace Barcode_Writer
             PatternSet.Add('s', Pattern.Parse("nb nw wb ww nb"));
 
             AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^[\\d-]+$");
+
+            this.AddChecksum += new EventHandler<AddChecksumEventArgs>(Code11_AddChecksum);
         }
 
-        protected override string ParseText(string value, List<int> codes)
+        void Code11_AddChecksum(object sender, AddChecksumEventArgs e)
+        {
+            DoChecksumCalculation(e, 10);
+
+            if (e.Text.Length >= 10)
+                DoChecksumCalculation(e, 9);
+        }
+
+        protected override string ParseText(string value, CodedValueCollection codes)
         {
             if (!IsValidData(value))
                 throw new ApplicationException();
@@ -51,49 +57,42 @@ namespace Barcode_Writer
             return (2 * settings.WideWidth) + (3 * settings.NarrowWidth);
         }
 
-        public static string AddCheckDigit(string value)
+        protected void DoChecksumCalculation(AddChecksumEventArgs e, int factor)
         {
             int tmp = 0;
             int weight = 0;
-            for (int i = 0; i < value.Length; i++)
+            for (int i = 0; i < e.Text.Length; i++)
             {
-                weight = ((value.Length - i) % 10);
+                weight = ((e.Text.Length - i) % factor);
                 if (weight == 0)
-                    weight = 10;
-                tmp += ((value[i] == '-' ? 10 : int.Parse(value.Substring(i, 1))) * weight);
+                    weight = factor;
+                tmp += ((e.Text[i] == '-' ? 10 : int.Parse(e.Text.Substring(i, 1))) * weight);
             }
 
             tmp = tmp % 11;
-            if (tmp > 9)
-                value += "-";
-            else
-                value = tmp.ToString();
-
-            return value;
+            e.Text += tmp > 9 ? "-" : tmp.ToString();
+            if (e.Codes != null)
+                e.Codes.Add(tmp > 9 ? '-' : tmp + '0');
         }
 
-        public static string AddDoubleCheckDigit(string value)
+        public string AddSingleCheckDigit(string value)
         {
-            value = AddCheckDigit(value);
+            AddChecksumEventArgs e = new AddChecksumEventArgs(value, null);
+            DoChecksumCalculation(e, 10);
 
-            int tmp = 0, weight = 0;
-            for (int i = 0; i < value.Length; i++)
-            {
-                weight = (value.Length - i) % 9;
-                if (weight == 0)
-                    weight = 9;
-
-                tmp += ((value[i] == '-' ? 10 : int.Parse(value.Substring(i, 1))) * weight);
-            }
-
-            tmp = tmp % 11;
-            if (tmp > 9)
-                return value + "-";
-            else
-                return value + tmp.ToString();
+            return e.Text;
         }
 
-        protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
+        public string AddDoubleCheckDigit(string value)
+        {
+            AddChecksumEventArgs e = new AddChecksumEventArgs(value, null);
+            DoChecksumCalculation(e, 10);
+            DoChecksumCalculation(e, 9);
+
+            return e.Text;
+        }
+
+        protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
             width += (codes.Count - 1) * settings.ModulePadding;
 

@@ -167,6 +167,15 @@ namespace Barcode_Writer
             set;
         }
 
+        /// <summary>
+        /// Gets or sets whether the barcode will calculate & add the checksum (where defined)
+        /// </summary>
+        public bool IsChecksumCalculated
+        {
+            get;
+            set;
+        }
+
         public BarcodeSettings()
         {
             BarHeight = 80;
@@ -183,6 +192,7 @@ namespace Barcode_Writer
             TextPadding = 10;
             IsTextPadded = true;
             Font = new System.Drawing.Font(System.Drawing.FontFamily.GenericMonospace, 12);
+            IsChecksumCalculated = true;
         }
     }
 }

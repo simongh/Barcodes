@@ -17,7 +17,7 @@ namespace Barcode_Writer
             get { return _digitGrouping; }
         }
 
-        internal UPC2()
+        public UPC2()
             : base()
         {
             _digitGrouping = new int[] { 0, 2, 0 };
@@ -35,7 +35,7 @@ namespace Barcode_Writer
             AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^\\d{2}$");
         }
 
-        protected override void CalculateParity(List<int> codes)
+        protected override void CalculateParity(CodedValueCollection codes)
         {
             int m = ((codes[0] * 10) + codes[1]) % 4;
 
@@ -80,12 +80,12 @@ namespace Barcode_Writer
             canvas.DrawString(text, settings.Font, Brushes.Black, x, y);
         }
 
-        protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
+        protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
             return width + (-8 * settings.NarrowWidth);
         }
 
-        protected override BarcodeSettings GetDefaultSettings()
+        public override BarcodeSettings GetDefaultSettings()
         {
             BarcodeSettings result =  base.GetDefaultSettings();
             result.TextPadding = 2;
@@ -93,7 +93,7 @@ namespace Barcode_Writer
             return result;
         }
 
-        protected override string ParseText(string value, List<int> codes)
+        protected override string ParseText(string value, CodedValueCollection codes)
         {
             value = base.ParseText(value, codes);
 

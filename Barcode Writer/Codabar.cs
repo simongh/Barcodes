@@ -16,11 +16,7 @@ namespace Barcode_Writer
         public const string LIMITVALUED = "D";
 
         private const string _Extras = ":/.+abcdent*";
-
-        internal Codabar()
-            : base()
-        { }
-
+        
         protected override void Init()
         {
             PatternSet = new Dictionary<int, Pattern>();
@@ -55,13 +51,12 @@ namespace Barcode_Writer
             AllowedCharsPattern = new System.Text.RegularExpressions.Regex(@"^[atbnc\*de][\d-$:/\.\+]+[atbnc\*de]$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         }
 
-        protected override string ParseText(string value, List<int> codes)
+        protected override string ParseText(string value, CodedValueCollection codes)
         {
             value = value.ToLower();
             string tmp = value.Replace(" ", "");
-            
-            if (!IsValidData(tmp))
-                throw new ApplicationException();
+
+            tmp = base.ParseText(tmp, codes);
 
             foreach (char item in tmp.ToCharArray())
             {
@@ -76,7 +71,7 @@ namespace Barcode_Writer
             return (2 * settings.WideWidth) + (5 * settings.NarrowWidth);
         }
 
-        protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
+        protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
             width += (settings.ModulePadding * (codes.Count - 1));
 
@@ -94,38 +89,28 @@ namespace Barcode_Writer
             state.Left += state.Settings.ModulePadding;
         }
 
-        /// <summary>
-        /// Helper to calculate the check digit for numeric values
-        /// </summary>
-        /// <param name="value">numeric value to use</param>
-        /// <returns>check digit 0-9</returns>
-        public static int CalculateCheckDigit(string value)
+        public static void AddChecksumEventHandler(object sender, AddChecksumEventArgs e)
         {
-            if (System.Text.RegularExpressions.Regex.IsMatch(value,"^\\d+$"))
+            if (System.Text.RegularExpressions.Regex.IsMatch(e.Text, "^\\d+$"))
                 throw new ArgumentException("Only numeric values can have a check digit");
 
             int total = 0;
 
-            for (int i = 0; i < value.Length; i++)
+            for (int i = 0; i < e.Text.Length; i++)
             {
                 if (i % 2 == 0)
-                    total += int.Parse(value.Substring(i, 1));
+                    total += int.Parse(e.Text.Substring(i, 1));
                 else
                 {
-                    int tmp = int.Parse(value.Substring(i, 1)) * 2;
+                    int tmp = int.Parse(e.Text.Substring(i, 1)) * 2;
                     total += (tmp % 9);
                 }
             }
 
-            return total % 10;
+            total = total % 10;
+
+            e.Text += total.ToString();
+            e.Codes.Add(total.ToString()[0]);
         }
     }
-
-    //public static class Code2of7
-    //{
-    //    public static Codabar Instance
-    //    {
-    //        get { return Codabar.Instance; }
-    //    }
-    //}
 }

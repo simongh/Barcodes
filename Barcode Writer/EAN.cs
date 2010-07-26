@@ -60,6 +60,7 @@ namespace Barcode_Writer
         {
             PatternSet = new Dictionary<int, Pattern>();
 
+            //Odd parity (false)
             PatternSet.Add(0, Pattern.Parse("0 0 0 1 1 0 1"));
             PatternSet.Add(1, Pattern.Parse("0 0 1 1 0 0 1"));
             PatternSet.Add(2, Pattern.Parse("0 0 1 0 0 1 1"));
@@ -71,6 +72,7 @@ namespace Barcode_Writer
             PatternSet.Add(8, Pattern.Parse("0 1 1 0 1 1 1"));
             PatternSet.Add(9, Pattern.Parse("0 0 0 1 0 1 1"));
 
+            //Even parity (true)
             PatternSet.Add(10, Pattern.Parse("0 1 0 0 1 1 1"));
             PatternSet.Add(11, Pattern.Parse("0 1 1 0 0 1 1"));
             PatternSet.Add(12, Pattern.Parse("0 0 1 1 0 1 1"));
@@ -82,6 +84,7 @@ namespace Barcode_Writer
             PatternSet.Add(18, Pattern.Parse("0 0 0 1 0 0 1"));
             PatternSet.Add(19, Pattern.Parse("0 0 1 0 1 1 1"));
 
+            //right side
             PatternSet.Add(20, Pattern.Parse("1 1 1 0 0 1 0"));
             PatternSet.Add(21, Pattern.Parse("1 1 0 0 1 1 0"));
             PatternSet.Add(22, Pattern.Parse("1 1 0 1 1 0 0"));
@@ -113,7 +116,7 @@ namespace Barcode_Writer
         /// Calculate parity for given list of codes
         /// </summary>
         /// <param name="codes">list of values</param>
-        protected virtual void CalculateParity(List<int> codes)
+        protected virtual void CalculateParity(CodedValueCollection codes)
         {
             bool[] parity = Parity[codes[0]];
 
@@ -149,10 +152,9 @@ namespace Barcode_Writer
             canvas.DrawString(text.Substring(DigitGrouping[0]+DigitGrouping[1], DigitGrouping[2]), settings.Font, Brushes.Black, x, y);
         }
 
-        protected override string ParseText(string value, List<int> codes)
+        protected override string ParseText(string value, CodedValueCollection codes)
         {
-            if (!IsValidData(value))
-                throw new ApplicationException("The data was not valid.");
+            value = base.ParseText(value, codes);
 
             for (int i = 0; i < value.Length; i++)
             {
@@ -170,7 +172,7 @@ namespace Barcode_Writer
             return 7 * settings.NarrowWidth;
         }
 
-        protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
+        protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
             return width + ((11 * settings.NarrowWidth) + (DigitGrouping[0] * GetModuleWidth(settings)));
         }

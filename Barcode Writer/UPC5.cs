@@ -17,7 +17,7 @@ namespace Barcode_Writer
             get { return _digitGrouping; }
         }
 
-        internal UPC5()
+        public UPC5()
             : base()
         {
             _digitGrouping = new int[] { 0, 5, 0 };
@@ -45,7 +45,7 @@ namespace Barcode_Writer
             AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^\\d{5}$");
         }
 
-        protected override void CalculateParity(List<int> codes)
+        protected override void CalculateParity(CodedValueCollection codes)
         {
             int total = (codes[0] + codes[2] + codes[4]) * 3;
             total += (codes[1] + codes[3]) * 9;
@@ -94,12 +94,12 @@ namespace Barcode_Writer
             canvas.DrawString(text, settings.Font, Brushes.Black, x, y);
         }
 
-        protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
+        protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
             return width + ((-23) * settings.NarrowWidth);
         }
 
-        protected override BarcodeSettings GetDefaultSettings()
+        public override BarcodeSettings GetDefaultSettings()
         {
             BarcodeSettings result = base.GetDefaultSettings();
             result.TextPadding = 2;
@@ -107,7 +107,7 @@ namespace Barcode_Writer
             return result;
         }
 
-        protected override string ParseText(string value, List<int> codes)
+        protected override string ParseText(string value, CodedValueCollection codes)
         {
             value = base.ParseText(value, codes);
 

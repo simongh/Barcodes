@@ -12,10 +12,6 @@ namespace Barcode_Writer
     public class Code3of9 : BarcodeBase
     {
 
-        internal Code3of9()
-            : base()
-        { }
-
         protected override void Init()
         {
             PatternSet = new Dictionary<int, Pattern>();
@@ -68,7 +64,7 @@ namespace Barcode_Writer
             AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^[A-Z0-9-\\. \\$/+%]+$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         }
 
-        protected override string ParseText(string value, List<int> codes)
+        protected override string ParseText(string value, CodedValueCollection codes)
         {
             value = value.Trim('*');
             if (!IsValidData(value))
@@ -96,7 +92,7 @@ namespace Barcode_Writer
             base.OnBeforeDrawModule(state, index);
         }
 
-        protected override int OnCalculateWidth(int width, BarcodeSettings settings, List<int> codes)
+        protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
             return width + (settings.ModulePadding * (codes.Count - 1));
         }
