@@ -174,9 +174,6 @@ namespace Barcode_Writer
 
             for (int i = 0; i < pattern.Length; i++)
             {
-                if (i > 0)
-                    AddBar(Elements.WideWhite, (i * 2) - 1);
-
                 switch (pattern[i])
                 {
                     case't':
@@ -192,6 +189,8 @@ namespace Barcode_Writer
                         AddBar(Elements.NarrowBlack, i*2);
                         break;
                 }
+
+                AddBar(Elements.WideWhite, (i * 2) - 1);
 
             }
         }

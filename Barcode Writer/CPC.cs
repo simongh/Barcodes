@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Barcode_Writer
 {
+    /// <summary>
+    /// Canadian Post Office bar code
+    /// </summary>
     public class CPC : BarcodeBase
     {
         private Dictionary<string, int> _Lookup;

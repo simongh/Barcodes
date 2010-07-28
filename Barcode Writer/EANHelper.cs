@@ -112,5 +112,11 @@ namespace Barcode_Writer
         public const int UPC_INSTORENONFOOD = 4;
         public const int UPC_COUPONS = 5;
         public const int UPC_REGULAR7 = 7;
+
+        public const int UPC5_DOLLARS = 50000;
+        public const int UPC5_POUNDS = 0;
+        public const int UPC5_NOSRP = 90000;
+        public const int UPC5_NOCOST = 99991;
+        public const int UPC5_USED = 99990;
     }
 }

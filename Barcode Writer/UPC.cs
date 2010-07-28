@@ -57,5 +57,15 @@ namespace Barcode_Writer
             codes.Insert(0, 0);
             base.CalculateParity(codes);
         }
+
+        public static string FromUPCE(string value)
+        {
+            return UPCE.ToUpcA(value);
+        }
+
+        public static string ToUPCE(string value)
+        {
+            return UPCE.FromUpcA(value);
+        }
     }
 }

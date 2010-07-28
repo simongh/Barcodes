@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Barcode_Writer
 {
@@ -42,7 +43,7 @@ namespace Barcode_Writer
             Parity.Add(new bool[] { true, false, true, false, false, true });
             Parity.Add(new bool[] { true, false, false, true, false, true });
 
-            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^([01]\\d{6,7}|\\d{11,12})$");
+            AllowedCharsPattern = new Regex("^([01]\\d{6,7}|\\d{11,12})$");
         }
 
         protected override string ParseText(string value, CodedValueCollection codes)
@@ -125,9 +126,9 @@ namespace Barcode_Writer
         /// </summary>
         /// <param name="value">UPC-E value</param>
         /// <returns>UPC-A compatible string</returns>
-        public string ToUpcA(string value)
+        public static string ToUpcA(string value)
         {
-            if (!IsValidData(value))
+            if (!Regex.IsMatch(value, "^[01]\\d{6,7}"))
                 throw new ApplicationException("The data was not valid.");
 
             List<int> codes = new List<int>();
@@ -182,9 +183,9 @@ namespace Barcode_Writer
             return result.ToString();
         }
 
-        public string FromUpcA(string value)
+        public static string FromUpcA(string value)
         {
-            if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^[01]\d{2}([012]0{4}\d{3}|[3-9]0{4}\d{2}|\d{4}0{4}\d|\d{5}0{4}[5-9])"))
+            if (!Regex.IsMatch(value, @"^[01]\d{2}([012]0{4}\d{3}|[3-9]0{4}\d{2}|\d{4}0{4}\d|\d{5}0{4}[5-9])"))
                 throw new ArgumentException("UPC A code cannot be compressed.");
 
             StringBuilder result = new StringBuilder(value);
