@@ -18,8 +18,12 @@ namespace Barcode_Writer
         private static Code3of9 _Code3of9;
         private static Code128 _Code128;
         private static Code11 _Code11;
+        private static Code93 _Code93;
         private static Codabar _Codabar;
         private static Interleaved2of5 _Interleaved2of5;
+        private static ExtendedCode3of9 _XCode3of9;
+        private static PostNet _PostNet;
+        private static CPC _Cpc;
 
         public static EAN13 Ean13
         {
@@ -56,6 +60,11 @@ namespace Barcode_Writer
             get { return GetInstance<Code3of9>(ref _Code3of9); }
         }
 
+        public static ExtendedCode3of9 ExtendedCode3of9
+        {
+            get { return GetInstance<ExtendedCode3of9>(ref _XCode3of9); }
+        }
+
         public static Code128 Code128
         {
             get { return GetInstance<Code128>(ref _Code128); }
@@ -64,6 +73,11 @@ namespace Barcode_Writer
         public static Code11 Code11
         {
             get { return GetInstance<Code11>(ref _Code11); }
+        }
+
+        public static Code93 Code93
+        {
+            get { return GetInstance<Code93>(ref _Code93); }
         }
 
         public static Codabar Codabar
@@ -85,6 +99,16 @@ namespace Barcode_Writer
             {
                 return GetInstance<Interleaved2of5>(ref _Interleaved2of5);
             }
+        }
+
+        public static PostNet PostNet
+        {
+            get { return GetInstance<PostNet>(ref _PostNet); }
+        }
+
+        public static CPC Cpc
+        {
+            get { return GetInstance<CPC>(ref _Cpc); }
         }
 
         private static T GetInstance<T>(ref T item) where T:BarcodeBase, new()
