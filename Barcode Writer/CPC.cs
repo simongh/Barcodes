@@ -9,6 +9,9 @@ namespace Barcode_Writer
     /// </summary>
     public class CPC : BarcodeBase
     {
+        private const int ALIGNMENTBAR = 0x100;
+        private const int ODDCOUNT = 0x101;
+
         private Dictionary<string, int> _Lookup;
 
         protected override void Init()
@@ -21,9 +24,15 @@ namespace Barcode_Writer
                 CreatePattern(i);
             }
 
+            PatternSet.Add(ALIGNMENTBAR, Pattern.Parse("ww nb"));
+            PatternSet.Add(ODDCOUNT, Pattern.Parse("ww, nw"));
+
             AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^[A-Z-[DFIOQU]]\\d[A-Z-[DFIOQU]]\\d[A-Z-[DFIOQU]]\\d$");
         }
 
+        /// <summary>
+        /// Create the conversion table
+        /// </summary>
         private void CreateLookups()
         {
             _Lookup = new Dictionary<string, int>();
@@ -84,6 +93,10 @@ namespace Barcode_Writer
             _Lookup.Add("X9", 0x84);
         }
 
+        /// <summary>
+        /// Create binary patterns for 0x0 - 0xf
+        /// </summary>
+        /// <param name="value">value to create pattern for</param>
         private void CreatePattern(int value)
         {
             Elements[] tmp = new Elements[8];
@@ -124,11 +137,20 @@ namespace Barcode_Writer
                 p += PatternSet[item].BlackCount;
             }
 
-            codes.Add(1);
-            codes.Insert(0, 1 - (p % 2));
+            codes.Add(ALIGNMENTBAR);
+            if (p % 2 == 0)
+                codes.Insert(0, ALIGNMENTBAR);
+            else
+                codes.Insert(0, ODDCOUNT);
+
             return null;
         }
 
+        /// <summary>
+        /// Take a double digit pair & get it's hex value from the conversion table and rules
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         private int ParsePair(string value)
         {
             if (_Lookup.ContainsKey(value))
@@ -136,31 +158,32 @@ namespace Barcode_Writer
 
             int ho = _Lookup[value.Substring(0, 1)];
             int lo = _Lookup[value.Substring(1,1)];
-            if (ho < 0x10)
+            if (ho < 0x11)
                 return (ho * 0x10) + lo;
+            else if (ho == 0x11)
+                return 0x10 + lo;
             else if (ho == 0x1a)
                 return lo * 0x10;
+            else if (ho == 0x16)
+                return (lo * 0x10) + 1;
             else
                 return (ho - 0x10) + (lo * 0x10);
         }
 
-        protected override int GetModuleWidth(BarcodeSettings settings)
-        {
-            return (settings.NarrowWidth + settings.WideWidth) * 4;
-        }
-
         protected override void OnBeforeDrawModule(State state, int index)
         {
-            if (index == 0 || index == 3 || index == 8)
+            //digit 3 uses only 5 bits, so move back 3 bits
+            if (index == 3)
                 state.Left -= (state.Settings.NarrowWidth + state.Settings.WideWidth) * 3;
 
+            base.OnBeforeDrawModule(state, index);
         }
 
         protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
-            const int DeadBars = -9;
+            width += (settings.WideWidth + settings.NarrowWidth) * 27; //1+8+5+4+8+1
 
-            return width + ((settings.NarrowWidth + settings.WideWidth) * DeadBars);
+            return base.OnCalculateWidth(width, settings, codes);
         }
 
         public override BarcodeSettings GetDefaultSettings()
@@ -169,6 +192,7 @@ namespace Barcode_Writer
             s.WideWidth = 4;
             s.IsTextShown = false;
             s.BarHeight = 10;
+            s.ModulePadding = 0;
             return s;
         }
     }

@@ -12,7 +12,7 @@ namespace Barcode_Writer
     /// </summary>
     public abstract class EAN : BarcodeBase
     {
-        
+
         /// <summary>
         /// The type of guard bar to use
         /// </summary>
@@ -143,11 +143,11 @@ namespace Barcode_Writer
             if (DigitGrouping[0] > 0)
                 canvas.DrawString(text.Substring(0, DigitGrouping[0]), settings.Font, Brushes.Black, x, y);
             
-            x += DigitGrouping[0] * GetModuleWidth(settings);
+            x += (DigitGrouping[0] * 7 * settings.NarrowWidth);
             x += (PatternSet[(int)GuardType.Limit].NarrowCount * settings.NarrowWidth) + settings.TextPadding;
             canvas.DrawString(text.Substring(DigitGrouping[0], DigitGrouping[1]), settings.Font, Brushes.Black, x, y);
 
-            x += DigitGrouping[1] * GetModuleWidth(settings);
+            x += (DigitGrouping[1] * 7 * settings.NarrowWidth);
             x += (PatternSet[(int)GuardType.Split].NarrowCount * settings.NarrowWidth);
             canvas.DrawString(text.Substring(DigitGrouping[0]+DigitGrouping[1], DigitGrouping[2]), settings.Font, Brushes.Black, x, y);
         }
@@ -167,20 +167,19 @@ namespace Barcode_Writer
             return value;
         }
 
-        protected override int GetModuleWidth(BarcodeSettings settings)
-        {
-            return 7 * settings.NarrowWidth;
-        }
-
         protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
-            return width + ((11 * settings.NarrowWidth) + (DigitGrouping[0] * GetModuleWidth(settings)));
+            width += (settings.NarrowWidth * ((codes.Count * 7) + 11)) + (DigitGrouping[0] * 7 * settings.NarrowWidth);
+
+            return base.OnCalculateWidth(width, settings, codes);
         }
         
         protected override void OnBeforeDrawCode(State state)
         {
-            state.Left += DigitGrouping[0] * GetModuleWidth(state.Settings);
+            state.Left += DigitGrouping[0] * 7 * state.Settings.NarrowWidth;
             DrawGuardBar(state, GuardType.Limit);
+
+            base.OnBeforeDrawCode(state);
         }
 
         protected override void OnBeforeDrawModule(State state, int index)
@@ -192,6 +191,14 @@ namespace Barcode_Writer
         protected override void OnAfterDrawCode(State state)
         {
             DrawGuardBar(state, GuardType.Limit);
+        }
+
+        public override BarcodeSettings GetDefaultSettings()
+        {
+            BarcodeSettings s = base.GetDefaultSettings();
+            s.ModulePadding = 0;
+
+            return s;
         }
     }
 }

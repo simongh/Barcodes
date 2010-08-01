@@ -27,7 +27,7 @@ namespace Barcode_Writer
             PatternSet.Add(8, Pattern.Parse("attat"));
             PatternSet.Add(9, Pattern.Parse("atatt"));
 
-            PatternSet.Add(STARTSTOP, Pattern.Parse("f"));
+            PatternSet.Add(STARTSTOP, Pattern.Parse("a"));
 
             AllowedCharsPattern = new System.Text.RegularExpressions.Regex(@"^\d{5}((\s|-)?\d{4}((\s|-)?\d{2})?)?$");
 
@@ -44,7 +44,7 @@ namespace Barcode_Writer
 
             total = total % 10;
 
-            e.Codes.Insert(e.Codes.Count - 2, total == 0 ? 0 : 10 - total);
+            e.Codes.Insert(e.Codes.Count - 1, total == 0 ? 0 : 10 - total);
         }
 
         protected override string ParseText(string value, CodedValueCollection codes)
@@ -64,14 +64,17 @@ namespace Barcode_Writer
             return value;
         }
 
-        protected override int GetModuleWidth(BarcodeSettings settings)
-        {
-            return (settings.NarrowWidth + settings.WideWidth) * 5;
-        }
-
         protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
-            return base.OnCalculateWidth(width, settings, codes) + (2 * settings.NarrowWidth) + settings.WideWidth;
+            width += (((settings.NarrowWidth + settings.WideWidth) * 5) * codes.Count) + (2 * settings.NarrowWidth) + settings.WideWidth; 
+            
+            return base.OnCalculateWidth(width, settings, codes);
+        }
+
+        protected override int OnCalculateHeight(int height, BarcodeSettings settings, CodedValueCollection codes)
+        {
+            height -= (settings.BarHeight - settings.MediumHeight);
+            return base.OnCalculateHeight(height, settings, codes);
         }
 
         public override BarcodeSettings GetDefaultSettings()

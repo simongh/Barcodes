@@ -96,7 +96,9 @@ namespace Barcode_Writer
 
         protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
-            return width + ((-23) * settings.NarrowWidth);
+            width += ((-23) * settings.NarrowWidth);
+
+            return base.OnCalculateWidth(width, settings, codes);
         }
 
         public override BarcodeSettings GetDefaultSettings()

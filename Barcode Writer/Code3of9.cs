@@ -80,21 +80,10 @@ namespace Barcode_Writer
             return value;
         }
 
-        protected override int GetModuleWidth(BarcodeSettings settings)
-        {
-            return (3 * settings.WideWidth) + (6 * settings.NarrowWidth);
-        }
-
-        protected override void OnBeforeDrawModule(State state, int index)
-        {
-            if (index > 0)
-                state.Left += state.Settings.ModulePadding;
-            base.OnBeforeDrawModule(state, index);
-        }
-
         protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
-            return width + (settings.ModulePadding * (codes.Count - 1));
+            width += (codes.Count * ((3 * settings.WideWidth) + (6 * settings.NarrowWidth)));
+            return base.OnCalculateWidth(width, settings, codes);
         }
     }
 }

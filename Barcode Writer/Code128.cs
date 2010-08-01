@@ -334,7 +334,7 @@ namespace Barcode_Writer
         {
             int total = 0;
 
-            for (int i = 0; i < e.Codes.Count; i++)
+            for (int i = 0; i < e.Codes.Count - 1; i++)
             {
                 if (i == 0)
                     total = e.Codes[i];
@@ -342,12 +342,7 @@ namespace Barcode_Writer
                     total += e.Codes[i] * i;
             }
 
-            e.Codes.Insert(e.Codes.Count - 2, total % 103);
-        }
-
-        protected override int GetModuleWidth(BarcodeSettings settings)
-        {
-            return settings.NarrowWidth * 11;
+            e.Codes.Insert(e.Codes.Count - 1, total % 103);
         }
 
         protected override void OnBeforeDrawCode(State state)
@@ -359,7 +354,9 @@ namespace Barcode_Writer
         protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
              //10 narrow space queit zone + 2 narrow bars for the STOP
-            return width + (2 * 10 * settings.NarrowWidth) + (2 * settings.NarrowWidth);
+            width += (codes.Count * 11 * settings.NarrowWidth) + (2 * 10 * settings.NarrowWidth) + (2 * settings.NarrowWidth);
+
+            return base.OnCalculateWidth(width, settings, codes);
         }
 
         public override bool IsValidData(string value)
@@ -371,6 +368,14 @@ namespace Barcode_Writer
             }
 
             return true;
+        }
+
+        public override BarcodeSettings GetDefaultSettings()
+        {
+            BarcodeSettings s = base.GetDefaultSettings();
+            s.ModulePadding = 0;
+
+            return s;
         }
     }
 }

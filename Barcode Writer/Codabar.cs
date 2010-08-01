@@ -66,43 +66,31 @@ namespace Barcode_Writer
             return value.Substring(1, value.Length - 2);
         }
 
-        protected override int GetModuleWidth(BarcodeSettings settings)
-        {
-            return (2 * settings.WideWidth) + (5 * settings.NarrowWidth);
-        }
-
         protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
-            width += (settings.ModulePadding * (codes.Count - 1));
+            foreach (int item in codes)
+            {
+                width += (PatternSet[item].NarrowCount * settings.NarrowWidth) + (PatternSet[item].WideCount * settings.WideWidth);
+            }
 
-            int count = (from t in codes where _Extras.IndexOf((char)t) > -1 select t).Count();
-            return width + (count * settings.WideWidth) - (count * settings.NarrowWidth);
-        }
-
-        protected override void OnAfterDrawModule(State state, int index)
-        {
-            if (_Extras.Contains(state.ModuleValue))
-                state.Left += GetModuleWidth(state.Settings) + state.Settings.WideWidth - state.Settings.NarrowWidth;
-            else
-                base.OnAfterDrawModule(state, index);
-
-            state.Left += state.Settings.ModulePadding;
+            return base.OnCalculateWidth(width, settings, codes);
         }
 
         public static void AddChecksumEventHandler(object sender, AddChecksumEventArgs e)
         {
-            if (System.Text.RegularExpressions.Regex.IsMatch(e.Text, "^\\d+$"))
+            string value = e.Text.Replace(" ", "");
+            if (!System.Text.RegularExpressions.Regex.IsMatch(value, "^\\d+$"))
                 throw new ArgumentException("Only numeric values can have a check digit");
 
             int total = 0;
 
-            for (int i = 0; i < e.Text.Length; i++)
+            for (int i = 0; i < value.Length; i++)
             {
                 if (i % 2 == 0)
-                    total += int.Parse(e.Text.Substring(i, 1));
+                    total += int.Parse(value.Substring(i, 1));
                 else
                 {
-                    int tmp = int.Parse(e.Text.Substring(i, 1)) * 2;
+                    int tmp = int.Parse(value.Substring(i, 1)) * 2;
                     total += (tmp % 9);
                 }
             }
@@ -110,7 +98,7 @@ namespace Barcode_Writer
             total = total % 10;
 
             e.Text += total.ToString();
-            e.Codes.Add(total.ToString()[0]);
+            e.Codes.Insert(e.Codes.Count - 1, total.ToString()[0]);
         }
     }
 }

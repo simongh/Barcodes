@@ -7,6 +7,8 @@ namespace Barcode_Writer
 {
     public class Code11 : BarcodeBase
     {
+        private const int LIMIT = 's';
+
         protected override void Init()
         {
             PatternSet = new Dictionary<int, Pattern>();
@@ -31,10 +33,13 @@ namespace Barcode_Writer
 
         void Code11_AddChecksum(object sender, AddChecksumEventArgs e)
         {
+            e.Codes.RemoveAt(e.Codes.Count - 1);
             DoChecksumCalculation(e, 10);
 
             if (e.Text.Length >= 10)
                 DoChecksumCalculation(e, 9);
+
+            e.Codes.Add(LIMIT);
         }
 
         protected override string ParseText(string value, CodedValueCollection codes)
@@ -42,7 +47,7 @@ namespace Barcode_Writer
             if (!IsValidData(value))
                 throw new ApplicationException();
 
-            string tmp = "s" + value + "s";
+            string tmp = string.Format("{1}{0}{1}", value, (char)LIMIT);
 
             foreach (char item in tmp.ToCharArray())
             {
@@ -50,11 +55,6 @@ namespace Barcode_Writer
             }
 
             return value;
-        }
-
-        protected override int GetModuleWidth(BarcodeSettings settings)
-        {
-            return (2 * settings.WideWidth) + (3 * settings.NarrowWidth);
         }
 
         protected void DoChecksumCalculation(AddChecksumEventArgs e, int factor)
@@ -72,7 +72,12 @@ namespace Barcode_Writer
             tmp = tmp % 11;
             e.Text += tmp > 9 ? "-" : tmp.ToString();
             if (e.Codes != null)
-                e.Codes.Add(tmp > 9 ? '-' : tmp + '0');
+            {
+                if (e.Codes[e.Codes.Count - 1] == LIMIT)
+                    e.Codes.Insert(e.Codes.Count - 1, tmp > 9 ? '-' : tmp + '0');
+                else
+                    e.Codes.Add(tmp > 9 ? '-' : tmp + '0');
+            }
         }
 
         public string AddSingleCheckDigit(string value)
@@ -94,28 +99,12 @@ namespace Barcode_Writer
 
         protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
-            width += (codes.Count - 1) * settings.ModulePadding;
+            foreach (int item in codes)
+            {
+                width += (PatternSet[item].WideCount * settings.WideWidth) + (PatternSet[item].NarrowCount * settings.NarrowWidth);
+            }
 
-            int[] shorts = new int[] { '0', '9', '-' };
-
-            int c = (from t in codes where shorts.Contains(t) select t).Count();
-            return width - (c * (settings.WideWidth - settings.NarrowWidth));
-        }
-
-        protected override void OnBeforeDrawModule(State state, int index)
-        {
-            base.OnBeforeDrawModule(state, index);
-        }
-
-        protected override void OnAfterDrawModule(State state, int index)
-        {
-            state.Left += state.Settings.ModulePadding;
-
-            int[] shorts = new int[] { '0', '9', '-' };
-            if (shorts.Contains(state.ModuleValue))
-                state.Left += GetModuleWidth(state.Settings) + state.Settings.NarrowWidth - state.Settings.WideWidth;
-            else
-                base.OnAfterDrawModule(state, index);
+            return base.OnCalculateWidth(width, settings, codes);
         }
     }
 }

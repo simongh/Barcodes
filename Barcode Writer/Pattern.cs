@@ -170,7 +170,7 @@ namespace Barcode_Writer
         /// <param name="pattern">pattern to encode</param>
         private void ParsePost(string pattern)
         {
-            _State = new Elements[(pattern.Length * 2) - 1];
+            _State = new Elements[(pattern.Length * 2)];
 
             for (int i = 0; i < pattern.Length; i++)
             {
@@ -190,7 +190,7 @@ namespace Barcode_Writer
                         break;
                 }
 
-                AddBar(Elements.WideWhite, (i * 2) - 1);
+                AddBar(Elements.WideWhite, (i * 2) + 1);
 
             }
         }
@@ -212,7 +212,7 @@ namespace Barcode_Writer
                     break;
                 case Elements.WideWhite:
                     WideCount++;
-                    BlackCount++;
+                    WhiteCount++;
                     break;
                 case Elements.NarrowWhite:
                     NarrowCount++;

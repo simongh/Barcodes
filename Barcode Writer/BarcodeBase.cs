@@ -1,4 +1,6 @@
 ﻿#define MEASURE
+#define MARKER
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -118,13 +120,8 @@ namespace Barcode_Writer
                 text = args.Text;
             }
 
-            int width = settings.LeftMargin + settings.RightMargin + (codes.Count * GetModuleWidth(settings));
-            int height = settings.TopMargin + settings.BarHeight + settings.BottomMargin;
-            width = OnCalculateWidth(width, settings, codes);
-            height = OnCalculateHeight(height, settings, codes);
-
-            if (settings.IsTextShown)
-                height += Convert.ToInt32(settings.Font.GetHeight()) + settings.TextPadding;
+            int width = OnCalculateWidth(0, settings, codes);
+            int height = OnCalculateHeight(0, settings, codes);
 
             if (settings.MaxWidth > 0 && width > settings.MaxWidth)
                 return null;
@@ -142,16 +139,27 @@ namespace Barcode_Writer
             State state = new State(g, settings, settings.LeftMargin, settings.LeftMargin);
             OnBeforeDrawCode(state);
 
+#if MARKER
+           bool isGrey = true;
+#endif
+
             for (int i = 0; i < codes.Count; i++)
             {
                 state.ModuleValue = (char)codes[i];
                 OnBeforeDrawModule(state, i);
+
+#if MARKER
+                if (isGrey)
+                    g.FillRectangle(Brushes.Gray, state.Left, 0, (PatternSet[codes[i]].WideCount * settings.WideWidth) + (PatternSet[codes[i]].NarrowCount * settings.NarrowWidth), height);
+                isGrey = !isGrey;
+#endif
 
                 foreach (Rectangle rect in PatternSet[codes[i]].Paint(settings))
                 {
                     rect.Offset(state.Left, state.Top);
                     g.FillRectangle(Brushes.Black, rect);
                 }
+
 
                 OnAfterDrawModule(state, i);
             }
@@ -218,7 +226,7 @@ namespace Barcode_Writer
         /// <returns>new pixel width</returns>
         protected virtual int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
-            return width;
+            return width + settings.LeftMargin + settings.RightMargin + ((codes.Count - 1) * settings.ModulePadding);
         }
 
         /// <summary>
@@ -229,6 +237,12 @@ namespace Barcode_Writer
         /// <returns>new pixel height</returns>
         protected virtual int OnCalculateHeight(int height, BarcodeSettings settings, CodedValueCollection codes)
         {
+            
+            height = settings.TopMargin + settings.BarHeight + settings.BottomMargin;
+            
+            if (settings.IsTextShown)
+                height += Convert.ToInt32(settings.Font.GetHeight()) + settings.TextPadding;
+
             return height;
         }
 
@@ -256,7 +270,7 @@ namespace Barcode_Writer
         /// <param name="index"></param>
         protected virtual void OnAfterDrawModule(State state, int index)
         {
-            state.Left += GetModuleWidth(state.Settings);
+            state.Left += (PatternSet[state.ModuleValue].WideCount * state.Settings.WideWidth) + (PatternSet[state.ModuleValue].NarrowCount * state.Settings.NarrowWidth) + state.Settings.ModulePadding;
         }
 
         /// <summary>
@@ -316,13 +330,6 @@ namespace Barcode_Writer
 
             return value;
         }
-
-        /// <summary>
-        /// Get the width of a module usin the supplied settings
-        /// </summary>
-        /// <param name="settings"></param>
-        /// <returns></returns>
-        protected abstract int GetModuleWidth(BarcodeSettings settings);
 
         /// <summary>
         /// Returns any required quiet space added to the barcode for width calculations
