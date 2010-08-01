@@ -19,6 +19,7 @@ namespace Barcode_Writer
         private static Code128 _Code128;
         private static Code11 _Code11;
         private static Code93 _Code93;
+        private static Code2of5 _Code2of5;
         private static Codabar _Codabar;
         private static Interleaved2of5 _Interleaved2of5;
         private static ExtendedCode3of9 _XCode3of9;
@@ -78,6 +79,11 @@ namespace Barcode_Writer
         public static Code93 Code93
         {
             get { return GetInstance<Code93>(ref _Code93); }
+        }
+
+        public static Code2of5 Code2of5
+        {
+            get { return GetInstance<Code2of5>(ref _Code2of5); }
         }
 
         public static Codabar Codabar

@@ -74,6 +74,7 @@
     <Compile Include="Code11.cs" />
     <Compile Include="Code128.cs" />
     <Compile Include="Code128Helper.cs" />
+    <Compile Include="Code2of5.cs" />
     <Compile Include="Code93.cs" />
     <Compile Include="CodedValueCollection.cs" />
     <Compile Include="EANHelper.cs" />
