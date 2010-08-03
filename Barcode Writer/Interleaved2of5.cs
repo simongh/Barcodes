@@ -12,14 +12,19 @@ namespace Barcode_Writer
 
         protected override void Init()
         {
+            DefaultSettings.ModulePadding = 0;
+
+            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^(\\d\\d)+$");
+        }
+
+        protected override void CreatePatternSet()
+        {
             PatternSet = new Dictionary<int, Pattern>();
 
             MakePatterns();
 
             PatternSet.Add(STARTMARKER, Pattern.Parse("nb nw nb nw"));
             PatternSet.Add(ENDMARKER, Pattern.Parse("wb nw nb"));
-
-            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^(\\d\\d)+$");
         }
 
         private void MakePatterns()
@@ -68,14 +73,5 @@ namespace Barcode_Writer
 
             return base.OnCalculateWidth(width, settings, codes);
         }
-
-        public override BarcodeSettings GetDefaultSettings()
-        {
-            BarcodeSettings s = base.GetDefaultSettings();
-            s.ModulePadding = 0;
-
-            return s;
-        }
-
     }
 }

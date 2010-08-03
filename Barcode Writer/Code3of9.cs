@@ -14,6 +14,11 @@ namespace Barcode_Writer
 
         protected override void Init()
         {
+            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^[A-Z0-9-\\. \\$/+%]+$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        }
+
+        protected override void CreatePatternSet()
+        {
             PatternSet = new Dictionary<int, Pattern>();
 
             PatternSet.Add('0', Pattern.Parse("nb nw nb ww wb nw wb nw nb"));
@@ -60,8 +65,6 @@ namespace Barcode_Writer
             PatternSet.Add('/', Pattern.Parse("nb ww nb ww nb nw nb ww nb"));
             PatternSet.Add('+', Pattern.Parse("nb ww nb nw nb ww nb ww nb"));
             PatternSet.Add('%', Pattern.Parse("nb nw nb ww nb ww nb ww nb"));
-
-            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^[A-Z0-9-\\. \\$/+%]+$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         }
 
         protected override string ParseText(string value, CodedValueCollection codes)

@@ -58,6 +58,23 @@ namespace Barcode_Writer
 
         protected override void Init()
         {
+            DefaultSettings.ModulePadding = 0;
+
+            Parity = new List<bool[]>();
+            Parity.Add(new bool[] { false, false, false, false, false, false });
+            Parity.Add(new bool[] { false, false, true, false, true, true });
+            Parity.Add(new bool[] { false, false, true, true, false, true });
+            Parity.Add(new bool[] { false, false, true, true, true, false });
+            Parity.Add(new bool[] { false, true, false, false, true, true });
+            Parity.Add(new bool[] { false, true, true, false, false, true });
+            Parity.Add(new bool[] { false, true, true, true, false, false });
+            Parity.Add(new bool[] { false, true, false, true, false, true });
+            Parity.Add(new bool[] { false, true, false, true, true, false });
+            Parity.Add(new bool[] { false, true, true, false, true, false });
+        }
+
+        protected override void CreatePatternSet()
+        {
             PatternSet = new Dictionary<int, Pattern>();
 
             //Odd parity (false)
@@ -99,17 +116,6 @@ namespace Barcode_Writer
             PatternSet.Add((int)GuardType.Limit, Pattern.Parse("1 0 1"));
             PatternSet.Add((int)GuardType.Split, Pattern.Parse("0 1 0 1 0"));
 
-            Parity = new List<bool[]>();
-            Parity.Add(new bool[] { false, false, false, false, false, false });
-            Parity.Add(new bool[] { false, false, true, false, true, true });
-            Parity.Add(new bool[] { false, false, true, true, false, true });
-            Parity.Add(new bool[] { false, false, true, true, true, false });
-            Parity.Add(new bool[] { false, true, false, false, true, true });
-            Parity.Add(new bool[] { false, true, true, false, false, true });
-            Parity.Add(new bool[] { false, true, true, true, false, false });
-            Parity.Add(new bool[] { false, true, false, true, false, true });
-            Parity.Add(new bool[] { false, true, false, true, true, false });
-            Parity.Add(new bool[] { false, true, true, false, true, false });
         }
 
         /// <summary>
@@ -191,14 +197,6 @@ namespace Barcode_Writer
         protected override void OnAfterDrawCode(State state)
         {
             DrawGuardBar(state, GuardType.Limit);
-        }
-
-        public override BarcodeSettings GetDefaultSettings()
-        {
-            BarcodeSettings s = base.GetDefaultSettings();
-            s.ModulePadding = 0;
-
-            return s;
         }
     }
 }

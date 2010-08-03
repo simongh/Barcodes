@@ -14,6 +14,17 @@ namespace Barcode_Writer
 
         protected override void Init()
         {
+            DefaultSettings.ModulePadding = 0;
+            DefaultSettings.IsTextShown = false;
+            DefaultSettings.IsChecksumCalculated = true;
+
+            AllowedCharsPattern = new System.Text.RegularExpressions.Regex(@"^\d{5}((\s|-)?\d{4}((\s|-)?\d{2})?)?$");
+
+            AddChecksum += new EventHandler<AddChecksumEventArgs>(Postnet_AddChecksum);
+        }
+
+        protected override void CreatePatternSet()
+        {
             PatternSet = new Dictionary<int, Pattern>();
 
             PatternSet.Add(0, Pattern.Parse("aattt"));
@@ -28,10 +39,6 @@ namespace Barcode_Writer
             PatternSet.Add(9, Pattern.Parse("atatt"));
 
             PatternSet.Add(STARTSTOP, Pattern.Parse("a"));
-
-            AllowedCharsPattern = new System.Text.RegularExpressions.Regex(@"^\d{5}((\s|-)?\d{4}((\s|-)?\d{2})?)?$");
-
-            AddChecksum += new EventHandler<AddChecksumEventArgs>(Postnet_AddChecksum);
         }
 
         void Postnet_AddChecksum(object sender, AddChecksumEventArgs e)
@@ -75,16 +82,6 @@ namespace Barcode_Writer
         {
             height -= (settings.BarHeight - settings.MediumHeight);
             return base.OnCalculateHeight(height, settings, codes);
-        }
-
-        public override BarcodeSettings GetDefaultSettings()
-        {
-            BarcodeSettings s = base.GetDefaultSettings();
-            s.ModulePadding = 0;
-            s.IsTextShown = false;
-            s.IsChecksumCalculated = true;
-
-            return s;
         }
     }
 }

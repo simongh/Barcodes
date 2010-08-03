@@ -12,7 +12,17 @@ namespace Barcode_Writer
     /// </summary>
     public class Code128 : BarcodeBase
     {
+        private const int STOP = 106;
+        protected const int AiMarker = 156;
+
         protected override void Init()
+        {
+            DefaultSettings.ModulePadding = 0;
+
+            AddChecksum += new EventHandler<AddChecksumEventArgs>(Code128_AddChecksum);
+        }
+
+        protected override void CreatePatternSet()
         {
             PatternSet = new Dictionary<int, Pattern>();
 
@@ -37,7 +47,7 @@ namespace Barcode_Writer
             PatternSet.Add(17, ParseCode("123221"));
             PatternSet.Add(18, ParseCode("223211"));
             PatternSet.Add(19, ParseCode("221132"));
-            
+
             PatternSet.Add(20, ParseCode("221231"));
             PatternSet.Add(21, ParseCode("213212"));
             PatternSet.Add(22, ParseCode("223112"));
@@ -48,7 +58,7 @@ namespace Barcode_Writer
             PatternSet.Add(27, ParseCode("312212"));
             PatternSet.Add(28, ParseCode("322112"));
             PatternSet.Add(29, ParseCode("322211"));
-            
+
             PatternSet.Add(30, ParseCode("212123"));
             PatternSet.Add(31, ParseCode("212321"));
             PatternSet.Add(32, ParseCode("232121"));
@@ -59,7 +69,7 @@ namespace Barcode_Writer
             PatternSet.Add(37, ParseCode("132113"));
             PatternSet.Add(38, ParseCode("132311"));
             PatternSet.Add(39, ParseCode("211313"));
-            
+
             PatternSet.Add(40, ParseCode("231113"));
             PatternSet.Add(41, ParseCode("231311"));
             PatternSet.Add(42, ParseCode("112133"));
@@ -70,7 +80,7 @@ namespace Barcode_Writer
             PatternSet.Add(47, ParseCode("133121"));
             PatternSet.Add(48, ParseCode("313121"));
             PatternSet.Add(49, ParseCode("211331"));
-            
+
             PatternSet.Add(50, ParseCode("231131"));
             PatternSet.Add(51, ParseCode("213113"));
             PatternSet.Add(52, ParseCode("213311"));
@@ -81,7 +91,7 @@ namespace Barcode_Writer
             PatternSet.Add(57, ParseCode("312113"));
             PatternSet.Add(58, ParseCode("312311"));
             PatternSet.Add(59, ParseCode("332111"));
-            
+
             PatternSet.Add(60, ParseCode("314111"));
             PatternSet.Add(61, ParseCode("221411"));
             PatternSet.Add(62, ParseCode("431111"));
@@ -92,7 +102,7 @@ namespace Barcode_Writer
             PatternSet.Add(67, ParseCode("141122"));
             PatternSet.Add(68, ParseCode("141221"));
             PatternSet.Add(69, ParseCode("112214"));
-            
+
             PatternSet.Add(70, ParseCode("112412"));
             PatternSet.Add(71, ParseCode("122114"));
             PatternSet.Add(72, ParseCode("122411"));
@@ -103,7 +113,7 @@ namespace Barcode_Writer
             PatternSet.Add(77, ParseCode("413111"));
             PatternSet.Add(78, ParseCode("241112"));
             PatternSet.Add(79, ParseCode("134111"));
-            
+
             PatternSet.Add(80, ParseCode("111242"));
             PatternSet.Add(81, ParseCode("121142"));
             PatternSet.Add(82, ParseCode("121241"));
@@ -114,7 +124,7 @@ namespace Barcode_Writer
             PatternSet.Add(87, ParseCode("421112"));
             PatternSet.Add(88, ParseCode("421211"));
             PatternSet.Add(89, ParseCode("212141"));
-            
+
             PatternSet.Add(90, ParseCode("214121"));
             PatternSet.Add(91, ParseCode("412121"));
             PatternSet.Add(92, ParseCode("111143"));
@@ -125,18 +135,16 @@ namespace Barcode_Writer
             PatternSet.Add(97, ParseCode("411113"));
             PatternSet.Add(98, ParseCode("411311"));
             PatternSet.Add(99, ParseCode("113141"));
-            
+
             PatternSet.Add(100, ParseCode("114131"));
             PatternSet.Add(101, ParseCode("311141"));
             PatternSet.Add(102, ParseCode("411131"));
             PatternSet.Add(103, ParseCode("211412"));
             PatternSet.Add(104, ParseCode("211214"));
             PatternSet.Add(105, ParseCode("211232"));
-            
-            //STOP pattern
-            PatternSet.Add(106, ParseCode("2331112"));
 
-            AddChecksum += new EventHandler<AddChecksumEventArgs>(Code128_AddChecksum);
+            //STOP pattern
+            PatternSet.Add(STOP, ParseCode("2331112"));
         }
 
         /// <summary>
@@ -172,6 +180,9 @@ namespace Barcode_Writer
 
             StringBuilder ParsedText = new StringBuilder();
 
+            if (value[0] < 128)
+                value = AutoFormat(value);
+
             if (value[0] == Code128Helper.StartVariantA)
             {
                 variant = Code128Helper.CODEA;
@@ -190,14 +201,15 @@ namespace Barcode_Writer
                 codes.Add((int)Code128Helper.StartVariantC - 50);
                 i++;
             }
-            else
-            {
-                codes.Add((int)Code128Helper.StartVariantB);
-            }
 
             int tmp;
             do
             {
+                if (value[i] == AiMarker)
+                {
+                    ParsedText.Append(AiMarker);
+                    i++;
+                }
                 if (shifted)
                     if (variant == Code128Helper.CODEA)
                         variant = Code128Helper.CODEB;
@@ -256,7 +268,7 @@ namespace Barcode_Writer
 
             } while (i < value.ToCharArray().Length);
 
-            codes.Add(106);
+            codes.Add(STOP);
 
             return ParsedText.ToString();
         }
@@ -345,6 +357,78 @@ namespace Barcode_Writer
             e.Codes.Insert(e.Codes.Count - 1, total % 103);
         }
 
+        protected string AutoFormat(string value)
+        {
+            StringBuilder s = new StringBuilder();
+
+            int i = 0;
+            int v = 0;
+            if (value[0] < ' ')
+            {
+                v = Code128Helper.CODEA;
+                s.Append(Code128Helper.StartVariantA);
+            }
+            else if (System.Text.RegularExpressions.Regex.IsMatch(value, "^\\d\\d"))
+            {
+                v = Code128Helper.CODEC;
+                s.Append(Code128Helper.StartVariantC);
+            }
+            else
+            {
+                v = Code128Helper.CODEB;
+                s.Append(Code128Helper.StartVariantB);
+            }
+
+            bool switched = false;
+            do
+            {
+                if (value[i] < ' ' && v != Code128Helper.CODEA)
+                {
+                    v = Code128Helper.CODEA;
+                    s.Append(Code128Helper.CODEA);
+                }
+                else if (value[i] > '_' && value[i] < 128 && v != Code128Helper.CODEB)
+                {
+                    v = Code128Helper.CODEB;
+                    s.Append(Code128Helper.CODEB);
+                }
+                else if (char.IsNumber(value[i]))
+                {
+                    if (i + 1 < value.Length && char.IsNumber(value[i + 1]) && v != Code128Helper.CODEC)
+                    {
+                        v = Code128Helper.CODEC;
+                        s.Append(Code128Helper.CODEC);
+
+                    }
+
+                    if (i + 1 >= value.Length && v == Code128Helper.CODEC)
+                    {
+                        v = Code128Helper.CODEB;
+                        s.Append(Code128Helper.CODEB);
+                    }
+                }
+                if (value[i] == Code128Helper.CODEA || value[i] == Code128Helper.CODEB || value[i] == Code128Helper.CODEC)
+                    v = value[i];
+
+                if (switched || value[i] == Code128Helper.SHIFT)
+                {
+                    v = v == Code128Helper.CODEA ? Code128Helper.CODEB : Code128Helper.CODEA;
+                    switched = !switched;
+                }
+
+                s.Append(value[i]);
+                i++;
+                if (v == Code128Helper.CODEC)
+                {
+                    s.Append(value[i]);
+                    i++;
+                }
+
+            } while (i < value.Length);
+
+            return s.ToString();
+        }
+
         protected override void OnBeforeDrawCode(State state)
         {
             state.Left += 10 * state.Settings.NarrowWidth;
@@ -370,12 +454,5 @@ namespace Barcode_Writer
             return true;
         }
 
-        public override BarcodeSettings GetDefaultSettings()
-        {
-            BarcodeSettings s = base.GetDefaultSettings();
-            s.ModulePadding = 0;
-
-            return s;
-        }
     }
 }

@@ -68,7 +68,6 @@
     <Compile Include="AddChecksumEventArgs.cs" />
     <Compile Include="AsciiEncoder.cs" />
     <Compile Include="BarcodeBase.cs" />
-    <Compile Include="BarcodeManager.cs" />
     <Compile Include="BarcodeSettings.cs" />
     <Compile Include="Codabar.cs" />
     <Compile Include="Code11.cs" />
@@ -77,6 +76,7 @@
     <Compile Include="Code2of5.cs" />
     <Compile Include="Code93.cs" />
     <Compile Include="CodedValueCollection.cs" />
+    <Compile Include="EAN128.cs" />
     <Compile Include="EANHelper.cs" />
     <Compile Include="ExtendedCode3of9.cs" />
     <Compile Include="Interleaved2of5.cs" />

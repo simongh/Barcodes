@@ -11,6 +11,13 @@ namespace Barcode_Writer
 
         protected override void Init()
         {
+            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^[\\d-]+$");
+
+            this.AddChecksum += new EventHandler<AddChecksumEventArgs>(Code11_AddChecksum);
+        }
+
+        protected override void CreatePatternSet()
+        {
             PatternSet = new Dictionary<int, Pattern>();
 
             PatternSet.Add('0', Pattern.Parse("nb nw nb nw wb"));
@@ -25,10 +32,6 @@ namespace Barcode_Writer
             PatternSet.Add('9', Pattern.Parse("wb nw nb nw nb"));
             PatternSet.Add('-', Pattern.Parse("nb nw wb nw nb"));
             PatternSet.Add('s', Pattern.Parse("nb nw wb ww nb"));
-
-            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^[\\d-]+$");
-
-            this.AddChecksum += new EventHandler<AddChecksumEventArgs>(Code11_AddChecksum);
         }
 
         void Code11_AddChecksum(object sender, AddChecksumEventArgs e)

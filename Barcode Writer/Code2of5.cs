@@ -12,6 +12,11 @@ namespace Barcode_Writer
 
         protected override void Init()
         {
+            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^\\d+");
+        }
+
+        protected override void CreatePatternSet()
+        {
             PatternSet = new Dictionary<int, Pattern>();
 
             PatternSet.Add(0, Pattern.Parse("nb nw nb nw wb nw wb nw nb"));
@@ -27,8 +32,6 @@ namespace Barcode_Writer
 
             PatternSet.Add(START, Pattern.Parse("nb nb nw nb nb nw nb"));
             PatternSet.Add(STOP, Pattern.Parse("nb nb nw nb nw nb nb"));
-
-            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^\\d+");
         }
 
         public static void AddChecksumEventHandler(object sender, AddChecksumEventArgs e)

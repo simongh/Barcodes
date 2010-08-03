@@ -194,5 +194,10 @@ namespace Barcode_Writer
             Font = new System.Drawing.Font(System.Drawing.FontFamily.GenericMonospace, 12);
             IsChecksumCalculated = true;
         }
+
+        public BarcodeSettings Copy()
+        {
+            return (BarcodeSettings)this.MemberwiseClone();
+        }
     }
 }

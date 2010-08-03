@@ -27,6 +27,8 @@ namespace Barcode_Writer
         {
             base.Init();
 
+            DefaultSettings.TextPadding = 2;
+
             PatternSet.Add(33, Pattern.Parse("nb nw nb nb"));
             PatternSet.Add(34, Pattern.Parse("nw nb"));
 
@@ -85,14 +87,6 @@ namespace Barcode_Writer
             width += (-8 * settings.NarrowWidth);
 
             return base.OnCalculateWidth(width, settings, codes);
-        }
-
-        public override BarcodeSettings GetDefaultSettings()
-        {
-            BarcodeSettings result =  base.GetDefaultSettings();
-            result.TextPadding = 2;
-
-            return result;
         }
 
         protected override string ParseText(string value, CodedValueCollection codes)

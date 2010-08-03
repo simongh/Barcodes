@@ -16,6 +16,15 @@ namespace Barcode_Writer
 
         protected override void Init()
         {
+            DefaultSettings.ModulePadding = 0;
+
+            AllowedCharsPattern = new System.Text.RegularExpressions.Regex(".+");
+
+            AddChecksum += new EventHandler<AddChecksumEventArgs>(Code93_AddChecksum);
+        }
+
+        protected override void CreatePatternSet()
+        {
             PatternSet = new Dictionary<int, Pattern>();
 
             PatternSet.Add(0, Pattern.Parse("100010100"));
@@ -69,10 +78,6 @@ namespace Barcode_Writer
 
             PatternSet.Add(LIMIT, Pattern.Parse("101011110"));
             PatternSet.Add(TERMINATOR, Pattern.Parse("1"));
-
-            AllowedCharsPattern = new System.Text.RegularExpressions.Regex(".+");
-
-            AddChecksum += new EventHandler<AddChecksumEventArgs>(Code93_AddChecksum);
         }
 
         private void Code93_AddChecksum(object sender, AddChecksumEventArgs e)
@@ -95,14 +100,6 @@ namespace Barcode_Writer
 
             total = total % 47;
             e.Codes.Insert(e.Codes.Count - 2, total);
-        }
-
-        public override BarcodeSettings GetDefaultSettings()
-        {
-            BarcodeSettings S = base.GetDefaultSettings();
-            S.ModulePadding = 0;
-
-            return S;
         }
 
         protected override string ParseText(string value, CodedValueCollection codes)

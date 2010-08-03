@@ -16,8 +16,18 @@ namespace Barcode_Writer
 
         protected override void Init()
         {
+            DefaultSettings.WideWidth = 4;
+            DefaultSettings.IsTextShown = false;
+            DefaultSettings.BarHeight = 10;
+            DefaultSettings.ModulePadding = 0;
+
             CreateLookups();
 
+            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^[A-Z-[DFIOQU]]\\d[A-Z-[DFIOQU]]\\d[A-Z-[DFIOQU]]\\d$");
+        }
+
+        protected override void CreatePatternSet()
+        {
             PatternSet = new Dictionary<int, Pattern>();
             for (int i = 0; i < 0x10; i++)
             {
@@ -26,8 +36,6 @@ namespace Barcode_Writer
 
             PatternSet.Add(ALIGNMENTBAR, Pattern.Parse("ww nb"));
             PatternSet.Add(ODDCOUNT, Pattern.Parse("ww, nw"));
-
-            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^[A-Z-[DFIOQU]]\\d[A-Z-[DFIOQU]]\\d[A-Z-[DFIOQU]]\\d$");
         }
 
         /// <summary>
@@ -184,16 +192,6 @@ namespace Barcode_Writer
             width += (settings.WideWidth + settings.NarrowWidth) * 27; //1+8+5+4+8+1
 
             return base.OnCalculateWidth(width, settings, codes);
-        }
-
-        public override BarcodeSettings GetDefaultSettings()
-        {
-            BarcodeSettings s = base.GetDefaultSettings();
-            s.WideWidth = 4;
-            s.IsTextShown = false;
-            s.BarHeight = 10;
-            s.ModulePadding = 0;
-            return s;
         }
     }
 }
