@@ -8,6 +8,8 @@ namespace Barcode_Writer
 {
     public class EAN128 : Code128
     {
+        #region AI Constants
+
         public const int SSCC18 = 0;
         public const int SSCC14 = 1;
         public const int NumberofContainersContained = 2;
@@ -100,15 +102,26 @@ namespace Barcode_Writer
         public const int InternalCompanyCodes8 = 98;
         public const int InternalCompanyCodes9 = 99;
 
+        #endregion
 
         public Bitmap Generate(int aiCode, string value)
         {
             return Generate(aiCode, value, DefaultSettings);
         }
 
+        public Bitmap Generate(int aiCode, int specifier, string value)
+        {
+            return Generate(aiCode, specifier, value, DefaultSettings);
+        }
+
+        public Bitmap Generate(int aiCode, int specifier, string value, BarcodeSettings settings)
+        {
+            return Generate(CreateEAN128(aiCode, specifier, value), settings);
+        }
+
         public Bitmap Generate(int aiCode, string value, BarcodeSettings settings)
         {
-            return Generate(string.Format("{0}{1}£{2}£{3}", Code128Helper.StartVariantB, Code128Helper.FNC1, aiCode, value), settings);
+            return Generate(CreateEAN128(aiCode,value), settings);
         }
 
         public Bitmap Generate(Dictionary<int, string> values)
@@ -123,7 +136,7 @@ namespace Barcode_Writer
             s.Append(Code128Helper.StartVariantB);
             foreach (KeyValuePair<int, string> item in values)
             {
-                s.AppendFormat("{0}£{1}£{2}", Code128Helper.FNC1, item.Key, item.Value);
+                s.Append(CreateEAN128(item.Key, item.Value));
             }
 
             return Generate(s.ToString(), settings);
@@ -134,6 +147,16 @@ namespace Barcode_Writer
             value = base.ParseText(value, codes);
 
             return System.Text.RegularExpressions.Regex.Replace(value, "£(.+?)£", "($1)");
+        }
+
+        public string CreateEAN128(int aiCode, string value)
+        {
+            return string.Format("{0}£{1}£{2}", Code128Helper.FNC1, aiCode, value);
+        }
+
+        public string CreateEAN128(int aiCode, int specifier, string value)
+        {
+            return string.Format("{0}£{1}{2}£{3}", Code128Helper.FNC1, aiCode, specifier, value);
         }
     }
 }
