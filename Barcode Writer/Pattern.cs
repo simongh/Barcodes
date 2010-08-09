@@ -170,27 +170,27 @@ namespace Barcode_Writer
         /// <param name="pattern">pattern to encode</param>
         private void ParsePost(string pattern)
         {
-            _State = new Elements[(pattern.Length * 2)];
+            _State = new Elements[(pattern.Length)];
 
             for (int i = 0; i < pattern.Length; i++)
             {
                 switch (pattern[i])
                 {
                     case't':
-                        AddBar(Elements.Tracker, i*2);
+                        AddBar(Elements.Tracker, i);
                         break;
                     case'a':
-                        AddBar(Elements.Ascender, i*2);
+                        AddBar(Elements.Ascender, i);
                         break;
                     case 'd':
-                        AddBar(Elements.Descender, i*2);
+                        AddBar(Elements.Descender, i);
                         break;
                     case 'f':
-                        AddBar(Elements.NarrowBlack, i*2);
+                        AddBar(Elements.NarrowBlack, i);
                         break;
                 }
 
-                AddBar(Elements.WideWhite, (i * 2) + 1);
+                //AddBar(Elements.WideWhite, (i * 2) + 1);
 
             }
         }

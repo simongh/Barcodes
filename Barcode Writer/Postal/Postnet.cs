@@ -14,7 +14,7 @@ namespace Barcode_Writer
 
         protected override void Init()
         {
-            DefaultSettings.ModulePadding = 0;
+            DefaultSettings.ModulePadding = DefaultSettings.WideWidth;
             DefaultSettings.IsTextShown = false;
             DefaultSettings.IsChecksumCalculated = true;
 
@@ -73,7 +73,7 @@ namespace Barcode_Writer
 
         protected override int OnCalculateWidth(int width, BarcodeSettings settings, CodedValueCollection codes)
         {
-            width += (((settings.NarrowWidth + settings.WideWidth) * 5) * codes.Count) + (2 * settings.NarrowWidth) + settings.WideWidth; 
+            width += (((settings.NarrowWidth) * 5) * codes.Count) + (2 * settings.NarrowWidth); 
             
             return base.OnCalculateWidth(width, settings, codes);
         }
