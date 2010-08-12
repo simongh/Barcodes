@@ -36,6 +36,9 @@ namespace Barcode_Writer
             set;
         }
 
+        /// <summary>
+        /// Gets the default settings for the barcode
+        /// </summary>
         public BarcodeSettings DefaultSettings
         {
             get;
@@ -309,7 +312,7 @@ namespace Barcode_Writer
         /// <summary>
         /// Fires the add checksum event
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="e">Arguments for the add checksum event</param>
         protected virtual void OnAddChecksum(AddChecksumEventArgs e)
         {
             if (AddChecksum == null)
