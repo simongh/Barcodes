@@ -19,7 +19,7 @@ namespace Barcode_Writer
         protected override void Init()
         {
             //DPS [1-9][ABD-HJLNP-UW-Z]
-            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^[a-z0-9]{5-7}([1-9][ABD-HJLNP-UW-Z])?$");
+            AllowedCharsPattern = new System.Text.RegularExpressions.Regex("^[a-z0-9]{5-7}[1-9][ABD-HJLNP-UW-Z]?$");
 
             AddChecksum += new EventHandler<AddChecksumEventArgs>(RM4SCC_AddChecksum);
 
