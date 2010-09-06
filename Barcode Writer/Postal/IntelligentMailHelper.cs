@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Barcode_Writer
 {
+    /// <summary>
+    /// Inteliigent Mail helper class for the transformation functions
+    /// </summary>
     internal class IntelligentMailHelper
     {
         public const int ASCENDER = 'A';
@@ -37,6 +40,11 @@ namespace Barcode_Writer
             t2 = InitialiseNof13Table(2, 78);
         }
 
+        /// <summary>
+        /// CRC 11 calculation
+        /// </summary>
+        /// <param name="dataArray">data values to calculate from</param>
+        /// <returns>CRC11 value</returns>
         public int CRC11(byte[] dataArray)
         {
             if (dataArray.Length != 13)
@@ -75,6 +83,11 @@ namespace Barcode_Writer
             return FrameCheckSequence;
         }
 
+        /// <summary>
+        /// Reverse the bit order in a 16-bit value
+        /// </summary>
+        /// <param name="input">input to reverse</param>
+        /// <returns>reversed value</returns>
         private int Reverse(int input)
         {
             int result = 0;
@@ -88,6 +101,12 @@ namespace Barcode_Writer
             return result;
         }
 
+        /// <summary>
+        /// Initialise the tables for lookup
+        /// </summary>
+        /// <param name="n">the bit count to use in the table</param>
+        /// <param name="length">the length of the table</param>
+        /// <returns>lookup table of values</returns>
         private short[] InitialiseNof13Table(int n, int length)
         {
             short[] result = new short[length];
@@ -132,6 +151,11 @@ namespace Barcode_Writer
             return result;
         }
 
+        /// <summary>
+        /// Incorporate the Frame Check Sequence into the data
+        /// </summary>
+        /// <param name="fcs">Frame Check Sequence</param>
+        /// <param name="data">data to incorporate</param>
         public void IncorporateFCS(int fcs, short[] data)
         {
             if ((fcs & 0x400) != 0)
@@ -159,6 +183,11 @@ namespace Barcode_Writer
 
         }
 
+        /// <summary>
+        /// Encode the routing code
+        /// </summary>
+        /// <param name="value">routing code value, either 0, 5, 9 or 11 digits long</param>
+        /// <returns>encoded number containing the routing code</returns>
         public long ConvertRoutingCode(string value)
         {
             long tmp = 0;
@@ -172,6 +201,12 @@ namespace Barcode_Writer
             return tmp;
         }
 
+        /// <summary>
+        /// Encode the routing code and destination code into a byte array
+        /// </summary>
+        /// <param name="routingcode">Encoded routing code</param>
+        /// <param name="value">destination code</param>
+        /// <returns>byte array</returns>
         public byte[] ConvertToBytes(long routingcode, string value)
         {
             routingcode = (routingcode * 10) + int.Parse(value.Substring(0, 1));
@@ -213,6 +248,11 @@ namespace Barcode_Writer
             return result;
         }
 
+        /// <summary>
+        /// Convert the encoded data into code words
+        /// </summary>
+        /// <param name="data">data to encode</param>
+        /// <returns>13 bit code words</returns>
         public short[] ConvertToCodewords(byte[] data)
         {
             ushort[] pairdata = new ushort[7];
@@ -235,8 +275,14 @@ namespace Barcode_Writer
             return result;
         }
 
+        /// <summary>
+        /// Shift the codeword base
+        /// </summary>
+        /// <param name="data">codewords to convert</param>
+        /// <param name="basediv">base to shift to</param>
+        /// <returns>shifted code words</returns>
         private short BaseShift(ushort[] data, int basediv)
-    {
+        {
             int c = 0;
             ushort res;
 
@@ -250,13 +296,22 @@ namespace Barcode_Writer
             }
 
             return (short)c;
-    }
+        }
 
+        /// <summary>
+        /// Check Frame Check Sequence is valid?
+        /// </summary>
+        /// <param name="fcs">FCS to check</param>
+        /// <returns>true if the FCS is greater than 0x400</returns>
         public bool CheckFcs(int fcs)
         {
             return (fcs & 0x400) != 0;
         }
 
+        /// <summary>
+        /// Lookup codewords in the tables
+        /// </summary>
+        /// <param name="data">data to encode</param>
         public void ConvertToCharacters(short[] data)
         {
             for (int i = 0; i < data.Length; i++)
@@ -270,9 +325,14 @@ namespace Barcode_Writer
             }
         }
 
+        /// <summary>
+        /// Include the FCS in the data
+        /// </summary>
+        /// <param name="data">data</param>
+        /// <param name="fcs">Frame Check Sequence</param>
         public void IncludeFcs(short[] data, int fcs)
         {
-            
+
             for (int i = 0; i < data.Length; i++)
             {
                 if ((fcs & (1 << i)) != 0)
@@ -286,6 +346,11 @@ namespace Barcode_Writer
         //12   11 10 9 8   7 6 5 4   3 2 1 0
         // 1    8  4 2 1   8 4 2 1   8 4 2 1
 
+        /// <summary>
+        /// Convert the encoded data into bar patterns
+        /// </summary>
+        /// <param name="data">data to encode</param>
+        /// <returns>bar pattern collection</returns>
         public CodedValueCollection ConvertToBars(short[] data)
         {
             CodedValueCollection result = new CodedValueCollection();
@@ -365,6 +430,12 @@ namespace Barcode_Writer
             return result;
         }
 
+        /// <summary>
+        /// Converts a pair of values into a 4-state bar
+        /// </summary>
+        /// <param name="descender">ascender value</param>
+        /// <param name="ascender">descender value</param>
+        /// <returns>4-state bar value</returns>
         private int ChooseBar(int descender, int ascender)
         {
             if (ascender == 0 && descender == 0)

@@ -5,8 +5,16 @@ using System.Text;
 
 namespace Barcode_Writer
 {
+    /// <summary>
+    /// ASCII encoder used by 1D barcodes, such as Extended 3of9
+    /// </summary>
     internal static class AsciiEncoder
     {
+        /// <summary>
+        /// Lookup the value string for a given ASCII value
+        /// </summary>
+        /// <param name="value">ASCII value less than 0x80</param>
+        /// <returns>the encoded value string</returns>
         public static string Lookup(char value)
         {
             if (value > 127)

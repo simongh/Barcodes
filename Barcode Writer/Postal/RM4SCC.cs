@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Barcode_Writer
 {
+    /// <summary>
+    /// Royal Mail 4-Sate Customer Code generator
+    /// </summary>
     public class RM4SCC : BarcodeBase
     {
         private const int START = '(';

@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace Barcode_Writer
 {
+    /// <summary>
+    /// USPS Intelligent Mail barcode
+    /// </summary>
     public class IntelligentMail : BarcodeBase
     {
         protected override void Init()
