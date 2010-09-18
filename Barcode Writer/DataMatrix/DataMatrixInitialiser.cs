@@ -24,7 +24,7 @@ namespace Barcode_Writer.Datamatrix
         /// Initialise the class for the specified definition
         /// </summary>
         /// <param name="definition">Definition to use</param>
-        public DataMatrixInitialiser(DataMatrixDefinition definition)
+        internal DataMatrixInitialiser(DataMatrixDefinition definition)
         {
             _Definition = definition;
         }

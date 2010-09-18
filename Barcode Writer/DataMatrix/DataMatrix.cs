@@ -82,6 +82,8 @@ namespace Barcode_Writer.Datamatrix
 
             ReedSolomon rs = new ReedSolomon(new DataMatrixInitialiser(def));
             _Data = rs.Encode(_Data, 1);
+
+            throw new NotImplementedException();
         }
 
         private DataMatrixDefinition ComputeSize()
