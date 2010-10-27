@@ -94,6 +94,7 @@
     <Compile Include="BarcodeSettings.cs" />
     <Compile Include="CodedValueCollection.cs" />
     <Compile Include="CoefficientsCollection.cs" />
+    <Compile Include="DataMatrix\OutputSettings.cs" />
     <Compile Include="GS1\GS1Builder.cs" />
     <Compile Include="GS1\GS1Helper.cs" />
     <Compile Include="Pattern.cs" />
