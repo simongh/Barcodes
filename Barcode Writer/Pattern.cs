@@ -4,7 +4,7 @@ using System.Text;
 using System.Drawing;
 using System.Text.RegularExpressions;
 
-namespace Barcode_Writer
+namespace Barcodes
 {
     /// <summary>
     /// Elements of a pattern

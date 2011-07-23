@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Barcode_Writer
+namespace Barcodes
 {
     /// <summary>
     /// USPS Intelligent Mail barcode

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Barcode_Writer
+namespace Barcodes
 {
     /// <summary>
     /// Extended Code 3 of 9 to support full 128 ASCII chars.

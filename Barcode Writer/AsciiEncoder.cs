@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Barcode_Writer
+namespace Barcodes
 {
     /// <summary>
     /// ASCII encoder used by 1D barcodes, such as Extended 3of9

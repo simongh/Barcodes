@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
 
-namespace Barcode_Writer.Datamatrix
+namespace Barcodes.Datamatrix
 {
     /// <summary>
     /// Encoding formats supported by DataMatrix

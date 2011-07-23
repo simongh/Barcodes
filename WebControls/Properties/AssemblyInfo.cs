@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Barcode Writer")]
+[assembly: AssemblyTitle("Barcodes Web Controls")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Simon Halsey")]
 [assembly: AssemblyProduct("Barcodes")]
-[assembly: AssemblyCopyright("Copyright © Simon Halsey 2010")]
+[assembly: AssemblyCopyright("Copyright © Simon Halsey 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("cb63d094-9557-49b3-a773-a5cd3e14ad54")]
+[assembly: Guid("e8428023-c53c-4d33-b64e-6ee04a8b5e9c")]
 
 // Version information for an assembly consists of the following four values:
 //

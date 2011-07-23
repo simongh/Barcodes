@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace Barcode_Writer
+namespace Barcodes
 {
     /// <summary>
     /// Base class for EAN codes

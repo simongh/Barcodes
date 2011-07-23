@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Barcode_Writer.GS1
+namespace Barcodes.GS1
 {
     public class GS1Helper
     {

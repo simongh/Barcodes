@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 
-namespace Barcode_Writer
+namespace Barcodes
 {
     /// <summary>
     /// Drawing state used to pass between methods

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace Barcode_Writer
+namespace Barcodes
 {
     public class EAN128 : Code128
     {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 
-namespace Barcode_Writer
+namespace Barcodes
 {
     /// <summary>
     /// Code 3 of 9 barcode generator

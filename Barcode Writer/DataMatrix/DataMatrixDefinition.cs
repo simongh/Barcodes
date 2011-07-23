@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Barcode_Writer.Datamatrix
+namespace Barcodes.Datamatrix
 {
     /// <summary>
     /// Holds the defination for DataMatrix layout

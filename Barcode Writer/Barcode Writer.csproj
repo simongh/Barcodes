@@ -8,8 +8,8 @@
     <ProjectGuid>{7130D5A2-8818-4300-9D1A-80C929059A2D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Barcode_Writer</RootNamespace>
-    <AssemblyName>Barcode Writer</AssemblyName>
+    <RootNamespace>Barcodes</RootNamespace>
+    <AssemblyName>Barcodes</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -83,6 +83,8 @@
     <Compile Include="1D\UPC2.cs" />
     <Compile Include="1D\UPC5.cs" />
     <Compile Include="1D\UPCE.cs" />
+    <Compile Include="BarcodeException.cs" />
+    <Compile Include="BarcodeSizeException.cs" />
     <Compile Include="DataMatrix\Encoder.cs" />
     <Compile Include="DataMatrix\DataMatrix.cs" />
     <Compile Include="DataMatrix\DataMatrixDefinition.cs" />

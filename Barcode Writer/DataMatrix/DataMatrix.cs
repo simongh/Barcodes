@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace Barcode_Writer.Datamatrix
+namespace Barcodes.Datamatrix
 {
     public class DataMatrix
     {
@@ -13,7 +13,7 @@ namespace Barcode_Writer.Datamatrix
         private System.Drawing.Size _Size;
         private byte[] _Data;
         private Bitmap _Canvas;
-        private Barcode_Writer.DataMatrix.OutputSettings _Settings;
+        private Barcodes.DataMatrix.OutputSettings _Settings;
 
         public System.Drawing.Size Size
         {

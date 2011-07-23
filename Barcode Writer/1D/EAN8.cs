@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Barcode_Writer
+namespace Barcodes
 {
     /// <summary>
     /// European Article Number (EAN) 8 digit code
