@@ -241,6 +241,9 @@ namespace Barcodes
 		/// <param name="value">scale factor</param>
 		public void Scale(float value)
 		{
+			if (value == 1)
+				return;
+
 			BarHeight = ScaleValue(value, BarHeight);
 			ShortHeight = ScaleValue(value, ShortHeight);
 			MediumHeight = ScaleValue(value, ShortHeight);

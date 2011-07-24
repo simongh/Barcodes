@@ -6,6 +6,9 @@ using System.Drawing;
 
 namespace Barcodes.Web
 {
+	/// <summary>
+	/// Parses and validates request parameters
+	/// </summary>
 	public class RequestSettings
 	{
 		public const string MARGINKEY = "m";
@@ -13,75 +16,127 @@ namespace Barcodes.Web
 		public const string SIZEKEY = "sz";
 		public const string DATAKEY = "data";
 		public const string FORMATKEY = "f";
+		public const string BARCODEKEY = "bc";
 
+		/// <summary>
+		/// Gets or sets the image size. 0 dimensions means the size is generated automatically
+		/// </summary>
 		public Size Size
 		{
 			get;
 			private set;
 		}
 
+		/// <summary>
+		/// Gets the left margin pixels
+		/// </summary>
 		public int LeftMargin
 		{
 			get;
 			private set;
 		}
 
+		/// <summary>
+		/// Gets the top margin pixels
+		/// </summary>
 		public int TopMargin
 		{
 			get;
 			private set;
 		}
 
+		/// <summary>
+		/// Gets the right margin pixels
+		/// </summary>
 		public int RightMargin
 		{
 			get;
 			private set;
 		}
 
+		/// <summary>
+		/// Gets the bottom margin pixels
+		/// </summary>
 		public int BottomMargin
 		{
 			get;
 			private set;
 		}
 
+		/// <summary>
+		/// Gets the scale factor
+		/// </summary>
 		public float Scale
 		{
 			get;
 			private set;
 		}
 
+		/// <summary>
+		/// Gets the image format
+		/// </summary>
 		public System.Drawing.Imaging.ImageFormat Format
 		{
 			get;
 			private set;
 		}
 
+		/// <summary>
+		/// Gets the MIME type for the current image format
+		/// </summary>
+		public string ContentType
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>
+		/// Gets the barcode data
+		/// </summary>
 		public string Data
 		{
 			get;
 			private set;
 		}
 
+		/// <summary>
+		/// Gets the barcode format
+		/// </summary>
+		public BarcodeFormats BarcodeFormat
+		{
+			get;
+			private set;
+		}
+
+		/// <summary>
+		/// Parses the collection of values for parameters
+		/// </summary>
+		/// <param name="values">collection of parameters</param>
 		public void Parse(System.Collections.Specialized.NameValueCollection values)
 		{
-			int c = 1;
+			int c = 2;
 			if (values[DATAKEY] == null)
+				return;
+
+			if (values[BARCODEKEY] == null)
 				return;
 
 			if (values[FORMATKEY] != null)
 				c++;
 
 			ParseFormat(values[FORMATKEY]);
+			ParseType(values[BARCODEKEY]);
 			Data = values[DATAKEY];
-
-			if (values.Count == c)
-				return;
 
 			Size = ParseSize(values[SIZEKEY]);
 			Scale = ParseScale(values[SCALEKEY]);
 			ParseMargins(values[MARGINKEY]);
 		}
 
+		/// <summary>
+		/// Looks for the image format parameter. Sets the default format to PNG
+		/// </summary>
+		/// <param name="value">image format value</param>
 		private void ParseFormat(string value)
 		{
 			if (string.IsNullOrEmpty(value))
@@ -93,13 +148,16 @@ namespace Barcodes.Web
 			switch (value.ToLower())
 			{
 				case "png":
+					ContentType = "image/png";
 					Format = System.Drawing.Imaging.ImageFormat.Png;
 					break;
 				case "jpg":
 				case"jpeg":
+					ContentType = "image/jpeg";
 					Format = System.Drawing.Imaging.ImageFormat.Jpeg;
 					break;
 				case "bmp":
+					ContentType = "image/bmp";
 					Format = System.Drawing.Imaging.ImageFormat.Bmp;
 					break;
 				default:
@@ -107,6 +165,11 @@ namespace Barcodes.Web
 			}
 		}
 
+		/// <summary>
+		/// Looks for size values in the format 'width,height'
+		/// </summary>
+		/// <param name="value">size parameter</param>
+		/// <returns>size; empty if not specifed</returns>
 		private Size ParseSize(string value)
 		{
 			if (string.IsNullOrEmpty(value))
@@ -132,6 +195,11 @@ namespace Barcodes.Web
 			return result;
 		}
 
+		/// <summary>
+		/// Looks for a scaling factor, returns 1 if not specified
+		/// </summary>
+		/// <param name="value">scale parameter</param>
+		/// <returns>scale value</returns>
 		private float ParseScale(string value)
 		{
 			if (string.IsNullOrEmpty(value))
@@ -140,6 +208,10 @@ namespace Barcodes.Web
 			return float.Parse(value);
 		}
 
+		/// <summary>
+		/// Looks for margins in one of the allowed formats format 'm', 'h,v', 'l,t,r,b'
+		/// </summary>
+		/// <param name="value">margins parameter</param>
 		private void ParseMargins(string value)
 		{
 			LeftMargin = 0;
@@ -192,6 +264,22 @@ namespace Barcodes.Web
 				RightMargin = int.Parse(a[2]);
 			if (a[3] != "")
 				BottomMargin = int.Parse(a[3]);
+		}
+
+		/// <summary>
+		/// looks for the barcode format parameter
+		/// </summary>
+		/// <param name="value">barcode format parameter</param>
+		private void ParseType(string value)
+		{
+			if (string.IsNullOrEmpty(value))
+				return;
+
+			BarcodeFormats t = (BarcodeFormats)int.Parse(value);
+			if (!Enum.IsDefined(typeof(BarcodeFormats), t))
+				throw new ArgumentException("The requested barcode format is not supported");
+
+			BarcodeFormat = t;
 		}
 	}
 }
