@@ -85,7 +85,7 @@
     <Compile Include="1D\UPCE.cs" />
     <Compile Include="BarcodeException.cs" />
     <Compile Include="BarcodeSizeException.cs" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="BarcodeFormats.cs" />
     <Compile Include="DataMatrix\Encoder.cs" />
     <Compile Include="DataMatrix\DataMatrix.cs" />
     <Compile Include="DataMatrix\DataMatrixDefinition.cs" />
