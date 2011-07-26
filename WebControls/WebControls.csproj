@@ -32,7 +32,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,7 +44,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mvc\BarcodeHelper.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="GeneratorService.cs" />
+    <Compile Include="ImageHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestSettings.cs" />
+    <Compile Include="UI\Barcode.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Barcode Writer\Barcode Writer.csproj">
+      <Project>{7130D5A2-8818-4300-9D1A-80C929059A2D}</Project>
+      <Name>Barcode Writer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

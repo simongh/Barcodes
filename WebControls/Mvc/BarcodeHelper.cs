@@ -17,9 +17,9 @@ namespace Barcodes.Web.Mvc
 		/// <param name="helper"></param>
 		/// <param name="data">barcode data</param>
 		/// <param name="format">barcode format</param>
-		public static void Barcode(this HtmlHelper helper, string data, BarcodeFormats format)
+		public static string Barcode(this HtmlHelper helper, string data, BarcodeFormats format)
 		{
-			BarcodeHelper.Barcode(helper, data, format, null, null);
+			return BarcodeHelper.Barcode(helper, data, format, null);
 		}
 
 		//public static void Barcode(this HtmlHelper helper, string data, BarcodeFormats format, string imageFormat)
@@ -27,15 +27,14 @@ namespace Barcodes.Web.Mvc
 		//    BarcodeHelper.Barcode(helper, data, format, imageFormat, null);
 		//}
 
-		public static void Barcode(this HtmlHelper helper, string data, BarcodeFormats format, string imageformat, object dimensions)
+		public static string Barcode(this HtmlHelper helper, string data, object options)
 		{
-			helper.ViewContext.Writer.Write(Config.Instance.Url);
-			helper.ViewContext.Writer.Write("?{0}={1}", RequestSettings.DATAKEY, data);
-			helper.ViewContext.Writer.Write("&{0}={1:d}", RequestSettings.BARCODEKEY, format);
+			return Barcode(helper, data, new System.Web.Routing.RouteValueDictionary(options));
+		}
 
-			if (imageformat != null)
-				helper.ViewContext.Writer.Write("&{0}={1}", RequestSettings.FORMATKEY, imageformat);
-
+		public static string Barcode(this HtmlHelper helper, string data, BarcodeFormats format, IDictionary<string, object> options)
+		{
+			return RequestSettings.UrlBuilder(data, format, options);
 		}
 	}
 }

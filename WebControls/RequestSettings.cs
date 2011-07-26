@@ -281,5 +281,52 @@ namespace Barcodes.Web
 
 			BarcodeFormat = t;
 		}
+
+		internal static string UrlBuilder(string data, BarcodeFormats format, IDictionary<string, object> options)
+		{
+			StringBuilder result = new StringBuilder();
+
+			result.Append(System.Web.VirtualPathUtility.ToAbsolute(Config.Instance.Url));
+			result.AppendFormat("?{0}={1}", RequestSettings.DATAKEY, data);
+			result.AppendFormat("&{0}={1:d}", RequestSettings.BARCODEKEY, format);
+
+			if (options.ContainsKey(RequestSettings.FORMATKEY))
+				result.AppendFormat("&{0}={1}", RequestSettings.FORMATKEY, options[RequestSettings.FORMATKEY]);
+
+			if (options.ContainsKey("scale"))
+				result.AppendFormat("&{0}={1}", RequestSettings.SCALEKEY, options["scale"]);
+
+			string tmp = GetSize(options);
+			if (tmp != ",")
+				result.AppendFormat("&{0}={1}", RequestSettings.SIZEKEY, tmp);
+
+			tmp = GetMargins(options);
+			if (tmp != "")
+				result.AppendFormat("&{0}={1}", RequestSettings.MARGINKEY, tmp);
+
+			return result.ToString();
+		}
+
+		private static string GetSize(IDictionary<string, object> options)
+		{
+			string result = "";
+			if (options.ContainsKey("width"))
+				result = options["width"].ToString();
+			result += ",";
+			if (options.ContainsKey("height"))
+				result += options["height"].ToString();
+
+			return result;
+		}
+
+		private static string GetMargins(IDictionary<string, object> options)
+		{
+			string result = "";
+
+			if (options.ContainsKey("margin"))
+				return options["margin"].ToString();
+
+			return result;
+		}
 	}
 }
