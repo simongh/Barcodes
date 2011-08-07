@@ -150,9 +150,10 @@ namespace Barcodes
 
 			Size size = GetDimensions(settings, codes);
 
-			Bitmap b = new Bitmap(size.Width, size.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+			Bitmap b = new Bitmap(size.Width, size.Height);//, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
 			Graphics g = Graphics.FromImage(b);
-			g.FillRectangle(Brushes.White, 0, 0, size.Width, size.Height);
+			g.ScaleTransform(settings.Scale, settings.Scale);
+			g.Clear(Color.White);
 
 #if MEASURE
 			AddMeasure(settings, size.Width, g);
@@ -225,7 +226,7 @@ namespace Barcodes
 				height = settings.Height;
 			}
 
-			return new Size(width, height);
+			return new Size((int)Math.Ceiling(width * settings.Scale), (int)Math.Ceiling(height * settings.Scale));
 		}
 
 		#endregion

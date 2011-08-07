@@ -207,6 +207,12 @@ namespace Barcodes
 			}
 		}
 
+		public float Scale
+		{
+			get;
+			set;
+		}
+
 		public BarcodeSettings()
 		{
 			BarHeight = 80;
@@ -224,6 +230,7 @@ namespace Barcodes
 			IsTextPadded = true;
 			Font = new System.Drawing.Font(System.Drawing.FontFamily.GenericMonospace, 12);
 			IsChecksumCalculated = true;
+			Scale = 1.0F;
 		}
 
 		/// <summary>
@@ -239,28 +246,28 @@ namespace Barcodes
 		/// Scales the barcode. The dimensions & max dimensions are not scaled.
 		/// </summary>
 		/// <param name="value">scale factor</param>
-		public void Scale(float value)
-		{
-			if (value == 1)
-				return;
+		//public void Scale(float value)
+		//{
+		//    if (value == 1)
+		//        return;
 
-			BarHeight = ScaleValue(value, BarHeight);
-			ShortHeight = ScaleValue(value, ShortHeight);
-			MediumHeight = ScaleValue(value, ShortHeight);
-			LeftMargin = ScaleValue(value, LeftMargin);
-			RightMargin = ScaleValue(value, RightMargin);
-			TopMargin = ScaleValue(value, TopMargin);
-			BottomMargin = ScaleValue(value, BottomMargin);
-			WideWidth = ScaleValue(value, WideWidth);
-			NarrowWidth = ScaleValue(value, NarrowWidth);
-			ModulePadding = ScaleValue(value, ModulePadding);
-			TextPadding = ScaleValue(value, TextPadding);
-			Font = new System.Drawing.Font(Font.Name, Font.Size * value);
-		}
+		//    BarHeight = ScaleValue(value, BarHeight);
+		//    ShortHeight = ScaleValue(value, ShortHeight);
+		//    MediumHeight = ScaleValue(value, ShortHeight);
+		//    LeftMargin = ScaleValue(value, LeftMargin);
+		//    RightMargin = ScaleValue(value, RightMargin);
+		//    TopMargin = ScaleValue(value, TopMargin);
+		//    BottomMargin = ScaleValue(value, BottomMargin);
+		//    WideWidth = ScaleValue(value, WideWidth);
+		//    NarrowWidth = ScaleValue(value, NarrowWidth);
+		//    ModulePadding = ScaleValue(value, ModulePadding);
+		//    TextPadding = ScaleValue(value, TextPadding);
+		//    Font = new System.Drawing.Font(Font.Name, Font.Size * value);
+		//}
 
-		private int ScaleValue(float scale, int value)
-		{
-			return (int)Math.Floor((float)value * scale);
-		}
+		//private int ScaleValue(float scale, int value)
+		//{
+		//    return (int)Math.Floor((float)value * scale);
+		//}
 	}
 }

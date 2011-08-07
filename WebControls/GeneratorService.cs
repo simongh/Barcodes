@@ -40,7 +40,7 @@ namespace Barcodes.Web
 
 			BarcodeSettings bs = b.DefaultSettings.Copy();
 			bs.Size = settings.Size;
-			bs.Scale(settings.Scale);
+			bs.Scale = settings.Scale;
 			bs.LeftMargin = settings.LeftMargin;
 			bs.TopMargin = settings.TopMargin;
 			bs.RightMargin = settings.RightMargin;
