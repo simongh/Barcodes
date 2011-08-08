@@ -73,15 +73,15 @@ namespace Barcodes
 		/// <param name="settings">Settings to sue for calculations</param>
 		/// <param name="width">width of the image in pixels</param>
 		/// <param name="canvas">Canvas to draw on</param>
-		protected void AddMeasure(BarcodeSettings settings, int width, Graphics canvas)
+		protected void AddMeasure(State state)
 		{
 			int left = 0;
 			bool alt = true;
 
-			while (left < width)
+			while (left < state.Canvas.VisibleClipBounds.Width)
 			{
 				if (alt)
-					canvas.FillRectangle(Brushes.Gainsboro, left, 0, 1, settings.TopMargin);
+					state.Canvas.FillRectangle(Brushes.Gainsboro, left, 0, 1, state.Settings.TopMargin);
 				left++;
 				alt = !alt;
 			}
@@ -94,19 +94,19 @@ namespace Barcodes
 		/// <param name="settings">the settigns file in use for the barcode</param>
 		/// <param name="text">the text to draw</param>
 		/// <param name="width">The width of the barcode to align the text</param>
-		protected virtual void PaintText(Graphics canvas, BarcodeSettings settings, string text, int width)
+		protected virtual void PaintText(State state)
 		{
-			if (!settings.IsTextShown)
+			if (!state.Settings.IsTextShown)
 				return;
 
-			text = PadText(text, settings);
+			string text = PadText(state);
 
-			SizeF textSize = canvas.MeasureString(text, settings.Font);
-			int x = (width / 2) - ((int)textSize.Width / 2);
-			int y = settings.TopMargin + settings.BarHeight + settings.TextPadding;
+			SizeF textSize = state.Canvas.MeasureString(text, state.Settings.Font);
+			int x = (int)(state.Canvas.VisibleClipBounds.Width / 2) - ((int)textSize.Width / 2);
+			int y = state.Settings.TopMargin + state.Settings.BarHeight + state.Settings.TextPadding;
 
-			canvas.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-			canvas.DrawString(text, settings.Font, Brushes.Black, x, y);
+			state.Canvas.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+			state.Canvas.DrawString(text, state.Settings.Font, Brushes.Black, x, y);
 		}
 
 		/// <summary>
@@ -115,19 +115,69 @@ namespace Barcodes
 		/// <param name="value">the text to pad</param>
 		/// <param name="settings">the settings in use</param>
 		/// <returns>the text with any padding added</returns>
-		protected string PadText(string value, BarcodeSettings settings)
+		protected string PadText(State state)
 		{
-			if (!settings.IsTextPadded)
-				return value;
+			if (!state.Settings.IsTextPadded)
+				return state.Text;
 
 
 			StringBuilder sb = new StringBuilder();
 			//sb.Append(" ");
-			foreach (char item in value)
+			foreach (char item in state.Text)
 			{
 				sb.AppendFormat("{0} ", item);
 			}
 			return sb.ToString();
+		}
+
+		protected Rectangle[] DrawPattern(Pattern pattern, State state)
+		{
+			List<Rectangle> rects = new List<Rectangle>();
+
+			int offset = (state.Settings.MediumHeight - state.Settings.ShortHeight);
+			int left = state.Left;
+			Rectangle rect;
+			foreach (Elements item in pattern.Elements)
+			{
+				switch (item)
+				{
+					case Elements.WideBlack:
+						rect = new Rectangle(left, state.Top, state.Settings.WideWidth, state.Settings.BarHeight);
+						left += state.Settings.WideWidth;
+
+						rects.Add(rect);
+						break;
+					case Elements.WideWhite:
+						left += state.Settings.WideWidth;
+						break;
+					case Elements.NarrowBlack:
+						rect = new Rectangle(left, state.Top, state.Settings.NarrowWidth, state.Settings.BarHeight);
+						left += state.Settings.NarrowWidth;
+
+						rects.Add(rect);
+						break;
+					case Elements.NarrowWhite:
+						left += state.Settings.NarrowWidth;
+						break;
+					case Elements.Tracker:
+						rect = new Rectangle(left, state.Top + offset, state.Settings.NarrowWidth, state.Settings.ShortHeight);
+						left += state.Settings.NarrowWidth;
+						rects.Add(rect);
+						break;
+					case Elements.Ascender:
+						rect = new Rectangle(left, state.Top, state.Settings.NarrowWidth, state.Settings.MediumHeight);
+						left += state.Settings.NarrowWidth;
+						rects.Add(rect);
+						break;
+					case Elements.Descender:
+						rect = new Rectangle(left, state.Top + offset, state.Settings.NarrowWidth, state.Settings.MediumHeight);
+						left += state.Settings.NarrowWidth;
+						rects.Add(rect);
+						break;
+				}
+			}
+
+			return rects.ToArray();
 		}
 
 		/// <summary>
@@ -138,58 +188,61 @@ namespace Barcodes
 		/// <returns>bitmap image of the barcode</returns>
 		protected Bitmap Paint(BarcodeSettings settings, string text)
 		{
-			CodedValueCollection codes = new CodedValueCollection();
-			text = ParseText(text, codes);
+			State state = new State(settings, settings.LeftMargin, settings.TopMargin);
+			state.Codes = new CodedValueCollection();
+			state.Text = ParseText(text, state.Codes);
 
 			if (settings.IsChecksumCalculated)
 			{
-				AddChecksumEventArgs args = new AddChecksumEventArgs(text, codes);
+				AddChecksumEventArgs args = new AddChecksumEventArgs(state);
 				OnAddChecksum(args);
-				text = args.Text;
+				state.Text = args.Text;
 			}
 
-			Size size = GetDimensions(settings, codes);
+			Size size = GetDimensions(settings, state.Codes);
 
 			Bitmap b = new Bitmap(size.Width, size.Height);//, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
-			Graphics g = Graphics.FromImage(b);
-			g.ScaleTransform(settings.Scale, settings.Scale);
-			g.Clear(Color.White);
+			state.Canvas = Graphics.FromImage(b);
+
+			Paint(state);
+
+			return b;
+		}
+
+		protected void Paint(State state)
+		{
+			state.Canvas.ScaleTransform(state.Settings.Scale, state.Settings.Scale);
+			state.Canvas.Clear(Color.White);
 
 #if MEASURE
-			AddMeasure(settings, size.Width, g);
+			AddMeasure(state);
 #endif
-			State state = new State(g, settings, settings.LeftMargin, settings.LeftMargin);
 			OnBeforeDrawCode(state);
 
 #if MARKER
-		   bool isGrey = true;
+			bool isGrey = true;
 #endif
 
-			for (int i = 0; i < codes.Count; i++)
+			for (int i = 0; i < state.Codes.Count; i++)
 			{
-				state.ModuleValue = (char)codes[i];
+				state.ModuleValue = (char)state.Codes[i];
 				OnBeforeDrawModule(state, i);
 
 #if MARKER
 				if (isGrey)
-					g.FillRectangle(Brushes.Gray, state.Left, 0, (PatternSet[codes[i]].WideCount * settings.WideWidth) + (PatternSet[codes[i]].NarrowCount * settings.NarrowWidth), size.Height);
+					state.Canvas.FillRectangle(Brushes.Gray, state.Left, 0, (PatternSet[state.Codes[i]].WideCount * state.Settings.WideWidth) + (PatternSet[state.Codes[i]].NarrowCount * state.Settings.NarrowWidth), state.Canvas.VisibleClipBounds.Height);
 				isGrey = !isGrey;
 #endif
-
-				foreach (Rectangle rect in PatternSet[codes[i]].Paint(settings))
-				{
-					rect.Offset(state.Left, state.Top);
-					g.FillRectangle(Brushes.Black, rect);
-				}
+				Rectangle[] r = DrawPattern(PatternSet[state.Codes[i]], state);
+				if (r.Length > 0)
+					state.Canvas.FillRectangles(Brushes.Black, r);
 
 
 				OnAfterDrawModule(state, i);
 			}
 
 			OnAfterDrawCode(state);
-			PaintText(g, settings, text, size.Width);
-
-			return b;
+			PaintText(state);
 		}
 
 		/// <summary>
