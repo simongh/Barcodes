@@ -1,9 +1,7 @@
 ﻿//#define MEASURE
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Drawing;
 
 namespace Barcodes
 {
@@ -13,7 +11,7 @@ namespace Barcodes
     public class Code128 : BarcodeBase
     {
         private const int STOP = 106;
-        protected const int AiMarker = 156;
+        protected int AiMarker = 156;
 
         protected override void Init()
         {

@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barcode Writer", "Barcode Writer\Barcode Writer.csproj", "{7130D5A2-8818-4300-9D1A-80C929059A2D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApplication1", "..\..\..\Visual Studio 2008\Projects\Barcode Writer\WindowsFormsApplication1\WindowsFormsApplication1.csproj", "{38E8D86F-2C5F-409D-A857-2A0B741BF5E3}"
@@ -22,7 +22,6 @@ Global
 		{38E8D86F-2C5F-409D-A857-2A0B741BF5E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38E8D86F-2C5F-409D-A857-2A0B741BF5E3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DDC14930-2A23-4624-846D-B4CA2FE171B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DDC14930-2A23-4624-846D-B4CA2FE171B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDC14930-2A23-4624-846D-B4CA2FE171B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDC14930-2A23-4624-846D-B4CA2FE171B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
