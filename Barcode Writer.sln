@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApplication1", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebControls", "WebControls\WebControls.csproj", "{DDC14930-2A23-4624-846D-B4CA2FE171B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barcodes2", "Barcodes2\Barcodes2.csproj", "{17EFA1E3-C128-421E-85CE-3C7BA14F2C62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,10 @@ Global
 		{DDC14930-2A23-4624-846D-B4CA2FE171B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DDC14930-2A23-4624-846D-B4CA2FE171B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDC14930-2A23-4624-846D-B4CA2FE171B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17EFA1E3-C128-421E-85CE-3C7BA14F2C62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17EFA1E3-C128-421E-85CE-3C7BA14F2C62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17EFA1E3-C128-421E-85CE-3C7BA14F2C62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17EFA1E3-C128-421E-85CE-3C7BA14F2C62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
