@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Barcodes2.Definitions
+namespace Barcodes2.Definitions.Single
 {
 	public class Code11 : DefaultDefinition
 	{
@@ -13,7 +13,7 @@ namespace Barcodes2.Definitions
 			IsChecksumRequired = true;
 		}
 
-		protected override Regex GetPattern()
+		protected override Regex GetRegex()
 		{
 			return new Regex("^[\\d-]+$");
 		}

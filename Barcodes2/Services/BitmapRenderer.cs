@@ -123,6 +123,7 @@ namespace Barcodes2.Services
 		{
 			var rects = new List<Rectangle>();
 
+			bool isGuards = false;
 			int offset = (Settings.MediumHeight - Settings.ShortHeight);
 			int left = location.X;
 			Rectangle rect;
@@ -134,6 +135,9 @@ namespace Barcodes2.Services
 						rect = new Rectangle(left, location.Y, Settings.WideWidth, Settings.BarHeight);
 						left += Settings.WideWidth;
 
+						if (isGuards)
+							GuardBarTransform(rect);
+
 						rects.Add(rect);
 						break;
 					case Element.WideWhite:
@@ -142,6 +146,9 @@ namespace Barcodes2.Services
 					case Element.NarrowBlack:
 						rect = new Rectangle(left, location.Y, Settings.NarrowWidth, Settings.BarHeight);
 						left += Settings.NarrowWidth;
+
+						if (isGuards)
+							GuardBarTransform(rect);
 
 						rects.Add(rect);
 						break;
@@ -163,6 +170,9 @@ namespace Barcodes2.Services
 						left += Settings.NarrowWidth;
 						rects.Add(rect);
 						break;
+					case Element.GuardBar:
+						isGuards = true;
+						break;
 				}
 			}
 
@@ -176,6 +186,13 @@ namespace Barcodes2.Services
 
 		protected virtual void PostRenderCode()
 		{ }
+
+		protected virtual void GuardBarTransform(Rectangle shape)
+		{
+			var offset = (5 * Settings.NarrowWidth) / 2;
+			shape.Inflate(0, offset);
+			shape.Offset(0, offset);
+		}
 
 		private void PaintText()
 		{

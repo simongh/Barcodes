@@ -1,10 +1,10 @@
-﻿using System;
-
+﻿
 namespace Barcodes2
 {
 	public class Generator
 	{
 		private readonly Services.IRenderer _renderer;
+		private readonly Services.IDefinitionFactory _definitions;
 
 		public BarcodeSettings Settings
 		{
@@ -18,22 +18,23 @@ namespace Barcodes2
 		}
 
 		public Generator()
-			: this(null, null)
+			: this(null)
 		{ }
 
 		public Generator(BarcodeSettings settings)
-			: this(null, settings)
+			: this(Services.Locator.Get<Services.BitmapRenderer>(), Services.Locator.Get<Services.DefinitionFactory>(), settings)
 		{ }
 
-		public Generator(Services.IRenderer renderer, BarcodeSettings settings)
+		public Generator(Services.IRenderer renderer, Services.IDefinitionFactory definitions, BarcodeSettings settings)
 		{
-			_renderer = renderer ?? new Services.BitmapRenderer();
+			_renderer = renderer;
+			_definitions = definitions;
 			Settings = settings ?? new BarcodeSettings();
 		}
 
 		public object Create(string value, BarcodeFormats format)
 		{
-			return Create(value, GetDefinition(format));
+			return Create(value, _definitions.GetDefinition(format));
 		}
 
 		public object Create(string value, Definitions.IDefinition definition)
@@ -50,55 +51,6 @@ namespace Barcodes2
 			_renderer.Definition = definition;
 
 			return _renderer.Render(codes, dt);
-		}
-
-		private Definitions.IDefinition GetDefinition(BarcodeFormats format)
-		{
-			switch (format)
-			{
-				case BarcodeFormats.Code3of9:
-					return new Definitions.Code3of9();
-				case BarcodeFormats.Code128:
-					break;
-				case BarcodeFormats.Codabar:
-					return new Definitions.Codabar();
-				case BarcodeFormats.Code11:
-					return new Definitions.Code11();
-				case BarcodeFormats.Code2of5:
-					return new Definitions.Code2of5();
-				case BarcodeFormats.Code93:
-					return new Definitions.Code93();
-				case BarcodeFormats.EAN128:
-					break;
-				case BarcodeFormats.EAN13:
-					break;
-				case BarcodeFormats.EAN8:
-					break;
-				case BarcodeFormats.Extended3of9:
-					break;
-				case BarcodeFormats.Interleaved2of5:
-					break;
-				case BarcodeFormats.UPC:
-					break;
-				case BarcodeFormats.UPC2:
-					break;
-				case BarcodeFormats.UPC5:
-					break;
-				case BarcodeFormats.UPCE:
-					break;
-				case BarcodeFormats.CPC:
-					break;
-				case BarcodeFormats.IntelligentMail:
-					break;
-				case BarcodeFormats.Postnet:
-					break;
-				case BarcodeFormats.RM4SCC:
-					break;
-				default:
-					break;
-			}
-
-			throw new NotImplementedException();
 		}
 	}
 }

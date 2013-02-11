@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Barcodes2.Definitions
+namespace Barcodes2.Definitions.Single
 {
 	public class Code93 : DefaultDefinition
 	{
@@ -16,7 +16,7 @@ namespace Barcodes2.Definitions
 			IsChecksumRequired = true;
 		}
 
-		protected override System.Text.RegularExpressions.Regex GetPattern()
+		protected override System.Text.RegularExpressions.Regex GetRegex()
 		{
 			return new System.Text.RegularExpressions.Regex(".+");
 		}

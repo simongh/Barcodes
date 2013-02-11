@@ -14,7 +14,8 @@ namespace Barcodes2
 		NarrowWhite,
 		Tracker,
 		Ascender,
-		Descender
+		Descender,
+		GuardBar
 	}
 
 	/// <summary>
@@ -101,7 +102,7 @@ namespace Barcodes2
 
 			if (Regex.IsMatch(pattern, "^[01]+$"))
 				result.ParseBinary(pattern);
-			else if (Regex.IsMatch(pattern, "^((0|1|[wn][wb]) ?)+$"))
+			else if (Regex.IsMatch(pattern, "^g?((0|1|[wn][wb]) ?)+$"))
 				result.ParseFull(pattern);
 			else if (Regex.IsMatch(pattern, "^[tadf]+$"))
 				result.ParsePost(pattern);
@@ -135,6 +136,9 @@ namespace Barcodes2
 					case "1":
 					case "nb":
 						AddBar(Element.NarrowBlack, i);
+						break;
+					case "g":
+						AddBar(Element.GuardBar, i);
 						break;
 					default:
 						throw new ApplicationException("Unknown pattern element.");

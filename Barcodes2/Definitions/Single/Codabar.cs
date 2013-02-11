@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Barcodes2.Definitions
+namespace Barcodes2.Definitions.Single
 {
 	public class Codabar : DefaultDefinition
 	{
@@ -45,7 +45,7 @@ namespace Barcodes2.Definitions
 			PatternSet.Add('e', Pattern.Parse("nb nw nb ww wb ww nb"));
 		}
 
-		protected override Regex GetPattern()
+		protected override Regex GetRegex()
 		{
 			return new Regex(@"^[atbnc\*de][\d-$:/\.\+]+[atbnc\*de]$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 		}

@@ -10,5 +10,6 @@ namespace Barcodes2.Definitions
 		Pattern GetPattern(int value);
 		int CalculateWidth(BarcodeSettings settings, CodedValueCollection codes);
 		string AddChecksum(string value, CodedValueCollection codes);
+		void TransformSettings(BarcodeSettings settings);
 	}
 }

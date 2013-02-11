@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Barcodes2.Definitions
+namespace Barcodes2.Definitions.Single
 {
 	public class Code2of5 : DefaultDefinition
 	{
 		private const int START = 10;
 		private const int STOP = 11;
 
-		protected override Regex GetPattern()
+		protected override Regex GetRegex()
 		{
 			return new System.Text.RegularExpressions.Regex("^\\d+");
 		}

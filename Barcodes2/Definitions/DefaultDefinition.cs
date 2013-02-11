@@ -16,12 +16,12 @@ namespace Barcodes2.Definitions
 			set;
 		}
 
-		protected abstract Regex GetPattern();
+		protected abstract Regex GetRegex();
 
 		public bool IsDataValid(string value)
 		{
 			if (_pattern == null)
-				_pattern = GetPattern();
+				_pattern = GetRegex();
 
 			return _pattern.IsMatch(value);
 		}
@@ -60,5 +60,8 @@ namespace Barcodes2.Definitions
 		{
 			throw new NotSupportedException();
 		}
+
+		public virtual void TransformSettings(BarcodeSettings settings)
+		{ }
 	}
 }

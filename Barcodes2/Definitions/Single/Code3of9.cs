@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Barcodes2.Definitions
+namespace Barcodes2.Definitions.Single
 {
 	public class Code3of9 : DefaultDefinition
 	{
-		protected override Regex GetPattern()
+		protected override Regex GetRegex()
 		{
 			return new Regex("^[A-Z0-9-\\. \\$/+%]+$", RegexOptions.IgnoreCase);
 		}
