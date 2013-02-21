@@ -82,7 +82,7 @@ namespace Barcodes2.Definitions.Single
 		{
 			int total = 0;
 			int w = 1;
-			for (int i = codes.Count - 2; i > 0; i--)
+			for (int i = codes.Count - 3; i > 0; i--)
 			{
 				total += (w * codes[i]);
 				w++;
@@ -143,7 +143,7 @@ namespace Barcodes2.Definitions.Single
 							codes.Add(tmp[1] - 55);
 							break;
 						default:
-							codes.Add(tmp[0]);
+							codes.Add(tmp[0] - 55);
 							break;
 					}
 				}
@@ -160,6 +160,12 @@ namespace Barcodes2.Definitions.Single
 		public override int CalculateWidth(BarcodeSettings settings, CodedValueCollection codes)
 		{
 			return ((codes.Count - 1) * 9 * settings.NarrowWidth) + settings.NarrowWidth;
+		}
+
+		public override void TransformSettings(BarcodeSettings settings)
+		{
+			base.TransformSettings(settings);
+			settings.ModulePadding = 0;
 		}
 	}
 }

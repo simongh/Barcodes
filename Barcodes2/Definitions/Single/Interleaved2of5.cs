@@ -63,7 +63,13 @@ namespace Barcodes2.Definitions.Single
 
 		public override int CalculateWidth(BarcodeSettings settings, CodedValueCollection codes)
 		{
-			return (((4 * settings.WideWidth) + (6 * settings.NarrowWidth)) * codes.Count) + (6 * settings.NarrowWidth) + settings.WideWidth;
+			return (((4 * settings.WideWidth) + (6 * settings.NarrowWidth)) * (codes.Count - 2)) + (6 * settings.NarrowWidth) + settings.WideWidth;
+		}
+
+		public override void TransformSettings(BarcodeSettings settings)
+		{
+			base.TransformSettings(settings);
+			settings.ModulePadding = 0;
 		}
 	}
 }

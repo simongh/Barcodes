@@ -47,7 +47,6 @@
     <Compile Include="Helpers\EANHelper.cs" />
     <Compile Include="RenderState.cs" />
     <Compile Include="Services\DefinitionFactory.cs" />
-    <Compile Include="Services\IDefinitionFactory.cs" />
     <Compile Include="Definitions\Single\ExtendedCode3of9.cs" />
     <Compile Include="Definitions\Single\Interleaved2of5.cs" />
     <Compile Include="Helpers\Code128Helper.cs" />

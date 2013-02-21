@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Barcodes2.Services
 {
-	public class DefinitionFactory : IDefinitionFactory
+	public class DefinitionFactory
 	{
 		private IDictionary<BarcodeFormats, Definitions.IDefinition> _cache;
 
@@ -12,7 +12,7 @@ namespace Barcodes2.Services
 			_cache = new Dictionary<BarcodeFormats, Definitions.IDefinition>();
 		}
 
-		public Definitions.IDefinition GetDefinition(BarcodeFormats format)
+		public virtual Definitions.IDefinition GetDefinition(BarcodeFormats format)
 		{
 			if (_cache.ContainsKey(format))
 				return _cache[format];

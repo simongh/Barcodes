@@ -10,7 +10,7 @@ namespace Barcodes2.Definitions.Single
 
 		public Code11()
 		{
-			IsChecksumRequired = true;
+			//IsChecksumRequired = true;
 		}
 
 		protected override Regex GetRegex()
@@ -57,7 +57,7 @@ namespace Barcodes2.Definitions.Single
 			return value;
 		}
 
-		protected string DoChecksumCalculation(string value, int factor, CodedValueCollection codes)
+		protected static string DoChecksumCalculation(string value, int factor, CodedValueCollection codes)
 		{
 			int tmp = 0;
 			int weight = 0;
@@ -82,12 +82,12 @@ namespace Barcodes2.Definitions.Single
 			return value;
 		}
 
-		public string AddSingleCheckDigit(string value)
+		public static string AddSingleCheckDigit(string value)
 		{
 			return DoChecksumCalculation(value, 10, null);
 		}
 
-		public string AddDoubleCheckDigit(string value)
+		public static string AddDoubleCheckDigit(string value)
 		{
 			var tmp = DoChecksumCalculation(value, 10, null);
 			return DoChecksumCalculation(tmp, 9, null);

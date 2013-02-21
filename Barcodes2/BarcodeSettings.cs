@@ -225,7 +225,7 @@ namespace Barcodes2
 			TextPadding = 10;
 			IsTextPadded = true;
 			Font = new System.Drawing.Font(System.Drawing.FontFamily.GenericMonospace, 12);
-			IsChecksumCalculated = true;
+			IsChecksumCalculated = false;
 			Scale = 1.0F;
 		}
 

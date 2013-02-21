@@ -22,14 +22,14 @@ namespace Barcodes2.Definitions.Single
 			PatternSet.Add(2, Pattern.Parse("nb nw wb nw nb nw nb nw wb"));
 			PatternSet.Add(3, Pattern.Parse("wb nw wb nw nb nw nb nw nb"));
 			PatternSet.Add(4, Pattern.Parse("nb nw nb nw wb nw nb nw wb"));
-			PatternSet.Add(5, Pattern.Parse("wb nw wb nw nb nw nb nw nb"));
+			PatternSet.Add(5, Pattern.Parse("wb nw nb nw wb nw nb nw nb"));
 			PatternSet.Add(6, Pattern.Parse("nb nw wb nw wb nw nb nw nb"));
 			PatternSet.Add(7, Pattern.Parse("nb nw nb nw nb nw wb nw wb"));
 			PatternSet.Add(8, Pattern.Parse("wb nw nb nw nb nw wb nw nb"));
 			PatternSet.Add(9, Pattern.Parse("nb nw wb nw nb nw wb nw nb"));
 
-			PatternSet.Add(START, Pattern.Parse("nb nb nw nb nb nw nb"));
-			PatternSet.Add(STOP, Pattern.Parse("nb nb nw nb nw nb nb"));
+			PatternSet.Add(START, Pattern.Parse("wb nw wb nw nb"));
+			PatternSet.Add(STOP, Pattern.Parse("wb nw nb nw wb"));
 		}
 
 		public override CodedValueCollection GetCodes(string value)
@@ -49,8 +49,8 @@ namespace Barcodes2.Definitions.Single
 
 		public override int CalculateWidth(BarcodeSettings settings, CodedValueCollection codes)
 		{
-			var width = (codes.Count * ((7 * settings.NarrowWidth) + (2 * settings.WideWidth)));
-			return width + (14 * settings.NarrowWidth);
+			var width = (codes.Count - 2) * ((7 * settings.NarrowWidth) + (2 * settings.WideWidth) + settings.ModulePadding);
+			return width + (4 * settings.WideWidth) + (6 * settings.NarrowWidth);
 		}
 
 		public override string AddChecksum(string value, CodedValueCollection codes)
