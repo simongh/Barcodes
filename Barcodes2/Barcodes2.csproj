@@ -45,6 +45,7 @@
     <Compile Include="Definitions\EANDefinition.cs" />
     <Compile Include="Definitions\EAN\EAN13.cs" />
     <Compile Include="Helpers\EANHelper.cs" />
+    <Compile Include="RenderState.cs" />
     <Compile Include="Services\DefinitionFactory.cs" />
     <Compile Include="Services\IDefinitionFactory.cs" />
     <Compile Include="Definitions\Single\ExtendedCode3of9.cs" />

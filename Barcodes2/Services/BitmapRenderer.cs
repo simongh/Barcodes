@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 
 namespace Barcodes2.Services
@@ -53,6 +54,8 @@ namespace Barcodes2.Services
 
 			var start = new Point(Settings.LeftMargin, Settings.TopMargin);
 
+			Paint(start);
+
 			return b;
 		}
 
@@ -95,28 +98,29 @@ namespace Barcodes2.Services
 			Canvas.ScaleTransform(Settings.Scale, Settings.Scale);
 			Canvas.Clear(Color.White);
 
-			PreRenderCode(location);
+			var state = new RenderState(location);
+			PreRenderCode(state);
 
-			for (int i = 0; i < Codes.Count; i++)
+			for (state.Index = 0; state.Index < Codes.Count; state.Index++)
 			{
-				PreRenderModule(i, location);
+				state.CurrentPattern = Definition.GetPattern(Codes[state.Index]);
+				PreRenderModule(state);
 
-				var p = Definition.GetPattern(Codes[i]);
-				var r = DrawPattern(p, location);
+				var r = DrawPattern(state.CurrentPattern, state.Location);
 				if (r.Length > 0)
 					Canvas.FillRectangles(Brushes.Black, r);
 
-				PostRenderModule(p, location);
+				PostRenderModule(state);
 			}
 
 			PostRenderCode();
 			PaintText();
 		}
 
-		protected virtual void PreRenderCode(Point start)
+		protected virtual void PreRenderCode(RenderState state)
 		{ }
 
-		protected virtual void PreRenderModule(int index, Point location)
+		protected virtual void PreRenderModule(RenderState state)
 		{ }
 
 		private Rectangle[] DrawPattern(Pattern pattern, Point location)
@@ -179,9 +183,11 @@ namespace Barcodes2.Services
 			return rects.ToArray();
 		}
 
-		protected virtual void PostRenderModule(Pattern pattern, Point location)
+		protected virtual void PostRenderModule(RenderState state)
 		{
-			location.X += (pattern.WideCount * Settings.WideWidth) + (pattern.NarrowCount * Settings.NarrowWidth) + Settings.ModulePadding;
+			var location = state.Location;
+			location.X += (state.CurrentPattern.WideCount * Settings.WideWidth) + (state.CurrentPattern.NarrowCount * Settings.NarrowWidth) + Settings.ModulePadding;
+			state.Location = location;
 		}
 
 		protected virtual void PostRenderCode()
@@ -222,6 +228,12 @@ namespace Barcodes2.Services
 				sb.AppendFormat("{0} ", item);
 			}
 			return sb.ToString();
+		}
+
+		private int GetEndPoint(Rectangle[] pattern)
+		{
+			var r = pattern.Last();
+			return r.X + r.Width;
 		}
 	}
 }

@@ -8,7 +8,22 @@ namespace Barcodes2.Definitions
 	public abstract class DefaultDefinition : IDefinition
 	{
 		private Regex _pattern;
-		protected IDictionary<int, Pattern> PatternSet;
+		private IDictionary<int, Pattern> _patternSet;
+
+		protected IDictionary<int, Pattern> PatternSet
+		{
+			get
+			{
+				if (_patternSet == null)
+					CreatePatternSet();
+
+				return _patternSet;
+			}
+			set
+			{
+				_patternSet = value;
+			}
+		}
 
 		public bool IsChecksumRequired
 		{
@@ -18,7 +33,7 @@ namespace Barcodes2.Definitions
 
 		protected abstract Regex GetRegex();
 
-		public bool IsDataValid(string value)
+		public virtual bool IsDataValid(string value)
 		{
 			if (_pattern == null)
 				_pattern = GetRegex();
@@ -43,9 +58,6 @@ namespace Barcodes2.Definitions
 
 		public Pattern GetPattern(int value)
 		{
-			if (PatternSet == null)
-				CreatePatternSet();
-
 			return PatternSet[value];
 		}
 
@@ -53,7 +65,7 @@ namespace Barcodes2.Definitions
 
 		public virtual int CalculateWidth(BarcodeSettings settings, CodedValueCollection codes)
 		{
-			return codes.Sum(x => (PatternSet[x].NarrowCount * settings.NarrowWidth) + (PatternSet[x].WideCount * settings.WideWidth));
+			return codes.Sum(x => (PatternSet[x].NarrowCount * settings.NarrowWidth) + (PatternSet[x].WideCount * settings.WideWidth)) + (codes.Count * settings.ModulePadding);
 		}
 
 		public virtual string AddChecksum(string value, CodedValueCollection codes)

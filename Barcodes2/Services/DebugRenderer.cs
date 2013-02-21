@@ -42,26 +42,25 @@ namespace Barcodes2.Services
 			}
 		}
 
-		protected override void PreRenderCode(Point location)
+		protected override void PreRenderCode(RenderState state)
 		{
 			if (ShowMeasure)
 				AddMeasure();
 			IsGrey = true;
 
-			base.PreRenderCode(location);
+			base.PreRenderCode(state);
 		}
 
-		protected override void PreRenderModule(int index, Point location)
+		protected override void PreRenderModule(RenderState state)
 		{
-			base.PreRenderModule(index, location);
+			base.PreRenderModule(state);
 
 			if (!ShowModuleShading)
 				return;
 
 			if (IsGrey)
 			{
-				var p = Definition.GetPattern(Codes[index]);
-				Canvas.FillRectangle(Brushes.Gray, location.X - Settings.ModulePadding, 0, (p.WideCount * Settings.WideWidth) + (p.NarrowCount * Settings.NarrowWidth), Canvas.VisibleClipBounds.Height);
+				Canvas.FillRectangle(Brushes.Gray, state.Location.X, Settings.TopMargin, (state.CurrentPattern.WideCount * Settings.WideWidth) + (state.CurrentPattern.NarrowCount * Settings.NarrowWidth), Canvas.VisibleClipBounds.Height);
 			}
 			IsGrey = !IsGrey;
 

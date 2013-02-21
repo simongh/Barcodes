@@ -9,7 +9,7 @@ namespace Barcodes2.Services
 
 		public static bool IsLocatorSet
 		{
-			get { return _provider == null; }
+			get { return _provider != null; }
 		}
 
 		static Locator()
@@ -36,7 +36,7 @@ namespace Barcodes2.Services
 			if (IsLocatorSet)
 				return _provider.Get<T>(arguments);
 
-			if (arguments != null)
+			if (arguments != null && arguments.Length > 0)
 				throw new ArgumentException("arguments are not supported without a locator");
 
 			return Activator.CreateInstance<T>();

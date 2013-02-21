@@ -67,7 +67,7 @@ namespace Barcodes2.Definitions.Single
 		public override string AddChecksum(string value, CodedValueCollection codes)
 		{
 			var parsed = value.Replace(" ", "");
-			if (!System.Text.RegularExpressions.Regex.IsMatch(value, "^\\d+$"))
+			if (!System.Text.RegularExpressions.Regex.IsMatch(parsed, "^\\d+$"))
 				throw new ArgumentException("Only numeric values can have a check digit");
 
 			int total = 0;
@@ -85,8 +85,16 @@ namespace Barcodes2.Definitions.Single
 
 			total = total % 10;
 
-			codes.Add(total.ToString()[0]);
+			codes.Insert(codes.Count - 1, total.ToString()[0]);
 			return value + total.ToString();
+		}
+
+		public override bool IsDataValid(string value)
+		{
+			value = value.ToLower();
+			value = value.Replace(" ", "");
+
+			return base.IsDataValid(value);
 		}
 	}
 }

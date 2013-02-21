@@ -67,7 +67,7 @@ namespace Barcodes2.Definitions
 
 		public virtual string GetDisplayText(string value)
 		{
-			throw new System.NotImplementedException();
+			return value;
 		}
 
 		public Pattern GetPattern(int value)
@@ -120,7 +120,10 @@ namespace Barcodes2.Definitions
 
 			PatternSet.Add((int)GuardType.Limit, Pattern.Parse("g1 0 1"));
 			PatternSet.Add((int)GuardType.Split, Pattern.Parse("g0 1 0 1 0"));
+		}
 
+		protected void CreateParity()
+		{
 			Parity = new List<bool[]>();
 			Parity.Add(new bool[] { false, false, false, false, false, false });
 			Parity.Add(new bool[] { false, false, true, false, true, true });
@@ -152,6 +155,9 @@ namespace Barcodes2.Definitions
 		/// <param name="codes">list of values</param>
 		protected virtual void CalculateParity(CodedValueCollection codes)
 		{
+			if (Parity == null)
+				CreateParity();
+
 			bool[] parity = Parity[codes[0]];
 
 			for (int i = 1; i < codes.Count; i++)
