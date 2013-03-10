@@ -42,70 +42,70 @@ namespace Barcodes2.DataMatrix
 		
 		private void Utah(Point location)
 		{
-			Module(location.Y - 2, location.X - 2, 0x01);
-			Module(location.Y - 2, location.X - 1, 0x02);
-			Module(location.Y - 1, location.X - 2, 0x04);
-			Module(location.Y - 1, location.X - 1, 0x08);
-			Module(location.Y - 1, location.X, 0x10);
-			Module(location.Y, location.X - 2, 0x20);
-			Module(location.Y, location.X - 1, 0x40);
-			Module(location.Y, location.X, 0x80);
+			Module(location.Y - 2, location.X - 2, 0x80);
+			Module(location.Y - 2, location.X - 1, 0x40);
+			Module(location.Y - 1, location.X - 2, 0x20);
+			Module(location.Y - 1, location.X - 1, 0x10);
+			    Module(location.Y - 1, location.X, 0x08);
+			    Module(location.Y, location.X - 2, 0x04);
+			    Module(location.Y, location.X - 1, 0x02);
+			        Module(location.Y, location.X, 0x01);
 
 			_index++;
 		}
 
 		private void Corner1()
 		{
-			Module(Size.Height - 1, 0, 0x01);
-			Module(Size.Height - 1, 1, 0x02);
-			Module(Size.Height - 1, 2, 0x04);
-			Module(0, Size.Width - 2, 0x08);
-			Module(0, Size.Width - 1, 0x10);
-			Module(1, Size.Width - 1, 0x20);
-			Module(2, Size.Width - 1, 0x40);
-			Module(3, Size.Width - 1, 0x80);
+			Module(Size.Height - 1, 0, 0x80);
+			Module(Size.Height - 1, 1, 0x40);
+			Module(Size.Height - 1, 2, 0x20);
+			Module(0, Size.Width - 2, 0x10);
+			Module(0, Size.Width - 1, 0x08);
+			Module(1, Size.Width - 1, 0x04);
+			Module(2, Size.Width - 1, 0x02);
+			Module(3, Size.Width - 1, 0x01);
 
 			_index++;
 		}
 
 		private void Corner2()
 		{
-			Module(Size.Height - 3, 0, 0x01);
-			Module(Size.Height - 2, 0, 0x02);
-			Module(Size.Height - 1, 0, 0x04);
-			Module(0, Size.Width - 4, 0x08);
-			Module(0, Size.Width - 3, 0x10);
-			Module(0, Size.Width - 2, 0x20);
-			Module(0, Size.Width - 1, 0x40);
-			Module(1, Size.Width - 1, 0x80);
+			Module(Size.Height - 3, 0, 0x80);
+			Module(Size.Height - 2, 0, 0x40);
+			Module(Size.Height - 1, 0, 0x20);
+			Module(0, Size.Width - 4, 0x10);
+			Module(0, Size.Width - 3, 0x08);
+			Module(0, Size.Width - 2, 0x04);
+			Module(0, Size.Width - 1, 0x02);
+			Module(1, Size.Width - 1, 0x01);
 
 			_index++;
 		}
 
 		private void Corner3()
 		{
-			Module(Size.Height - 3, 0, 0x01);
-			Module(Size.Height - 2, 0, 0x02);
-			Module(Size.Height - 1, 0, 0x04);
-			Module(0, Size.Width - 2, 0x08);
-			Module(0, Size.Width - 1, 0x10);
-			Module(1, Size.Width - 1, 0x20);
-			Module(2, Size.Width - 1, 0x40);
-			Module(3, Size.Width - 1, 0x80);
+			Module(Size.Height - 3, 0, 0x80);
+			Module(Size.Height - 2, 0, 0x40);
+			Module(Size.Height - 1, 0, 0x20);
+			Module(0, Size.Width - 2, 0x10);
+			Module(0, Size.Width - 1, 0x08);
+			Module(1, Size.Width - 1, 0x04);
+			Module(2, Size.Width - 1, 0x02);
+			Module(3, Size.Width - 1, 0x01);
 
 			_index++;
 		}
 
 		private void Corner4()
 		{
-			Module(Size.Height - 1, 0, 0x01);
-			Module(Size.Height - 1, Size.Width - 1, 0x02);
-			Module(0, Size.Width - 3, 0x04);
-			Module(0, Size.Width - 2, 0x08);
-			Module(0, Size.Width - 1, 0x10);
-			Module(1, Size.Width - 3, 0x20);
-			Module(1, Size.Width - 2, 0x40);
-			Module(1, Size.Width - 1, 0x80);
+			Module(Size.Height - 1, 0, 0x80);
+			Module(Size.Height - 1, Size.Width - 1, 0x40);
+			Module(0, Size.Width - 3, 0x20);
+			Module(0, Size.Width - 2, 0x10);
+			Module(0, Size.Width - 1, 0x08);
+			Module(1, Size.Width - 3, 0x04);
+			Module(1, Size.Width - 2, 0x02);
+			Module(1, Size.Width - 1, 0x01);
 
 			_index++;
 		}

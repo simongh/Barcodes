@@ -42,9 +42,11 @@
     <Compile Include="BarcodeSettings.cs" />
     <Compile Include="BarcodeSizeException.cs" />
     <Compile Include="CoefficientsCollection.cs" />
+    <Compile Include="DataMatrix\DataMatrixWriter.cs" />
     <Compile Include="DataMatrix\Encoder.cs" />
     <Compile Include="DataMatrix\EncoderFormat.cs" />
     <Compile Include="DataMatrix\LayoutRenderer.cs" />
+    <Compile Include="DataMatrix\MemoryStreamExtensions.cs" />
     <Compile Include="Definitions\EANDefinition.cs" />
     <Compile Include="Definitions\EAN\EAN13.cs" />
     <Compile Include="Helpers\EANHelper.cs" />
