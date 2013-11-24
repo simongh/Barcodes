@@ -63,6 +63,7 @@ namespace Barcodes2.Services
 				case BarcodeFormats.IntelligentMail:
 					break;
 				case BarcodeFormats.Postnet:
+					result = Locator.Get<Definitions.Postal.Postnet>();
 					break;
 				case BarcodeFormats.RM4SCC:
 					break;

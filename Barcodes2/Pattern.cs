@@ -176,27 +176,27 @@ namespace Barcodes2
 		/// <param name="pattern">pattern to encode</param>
 		private void ParsePost(string pattern)
 		{
-			_State = new Element[(pattern.Length)];
+			_State = new Element[(pattern.Length * 2)];
 
 			for (int i = 0; i < pattern.Length; i++)
 			{
 				switch (pattern[i])
 				{
 					case 't':
-						AddBar(Element.Tracker, i);
+						AddBar(Element.Tracker, i * 2);
 						break;
 					case 'a':
-						AddBar(Element.Ascender, i);
+						AddBar(Element.Ascender, i * 2);
 						break;
 					case 'd':
-						AddBar(Element.Descender, i);
+						AddBar(Element.Descender, i * 2);
 						break;
 					case 'f':
-						AddBar(Element.NarrowBlack, i);
+						AddBar(Element.NarrowBlack, i * 2);
 						break;
 				}
 
-				//AddBar(Elements.WideWhite, (i * 2) + 1);
+				AddBar(Element.WideWhite, (i * 2) + 1);
 
 			}
 		}
