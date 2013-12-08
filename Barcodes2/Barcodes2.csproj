@@ -53,7 +53,6 @@
     <Compile Include="Definitions\Postal\IntelligentMail.cs" />
     <Compile Include="Definitions\Postal\Postnet.cs" />
     <Compile Include="Helpers\EANHelper.cs" />
-    <Compile Include="Helpers\IntelligentMailHelper.cs" />
     <Compile Include="RenderState.cs" />
     <Compile Include="Services\DefinitionFactory.cs" />
     <Compile Include="Definitions\Single\ExtendedCode3of9.cs" />

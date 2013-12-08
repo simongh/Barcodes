@@ -68,6 +68,7 @@ namespace Barcodes2.Services
 					result = Locator.Get<Definitions.Postal.Postnet>();
 					break;
 				case BarcodeFormats.RM4SCC:
+					result = Locator.Get<Definitions.Postal.RM4SCC>();
 					break;
 				default:
 					break;
