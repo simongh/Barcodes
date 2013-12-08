@@ -10,6 +10,7 @@ namespace Barcodes
 	{
 		private const int STARTSTOP = 11;
 
+
 		protected override void Init()
 		{
 			DefaultSettings.ModulePadding = 0;

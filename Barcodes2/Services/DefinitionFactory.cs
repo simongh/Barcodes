@@ -59,8 +59,10 @@ namespace Barcodes2.Services
 				case BarcodeFormats.UPCE:
 					break;
 				case BarcodeFormats.CPC:
+					result = Locator.Get<Definitions.Postal.CPC>();
 					break;
 				case BarcodeFormats.IntelligentMail:
+					result = Locator.Get<Definitions.Postal.IntelligentMail>();
 					break;
 				case BarcodeFormats.Postnet:
 					result = Locator.Get<Definitions.Postal.Postnet>();
