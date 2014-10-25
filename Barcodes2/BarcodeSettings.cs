@@ -9,137 +9,77 @@ namespace Barcodes2
 		/// <summary>
 		/// Gets or sets the height in pixels of the bars
 		/// </summary>
-		public int BarHeight
-		{
-			get;
-			set;
-		}
+		public int BarHeight { get; set; }
 
 		/// <summary>
 		/// Gets or sets the height of short bar in 4-state codes
 		/// </summary>
-		public int ShortHeight
-		{
-			get;
-			set;
-		}
+		public int ShortHeight { get; set; }
 
 		/// <summary>
 		/// Gets or sets the height of medium height bars in 4-state codes
 		/// </summary>
-		public int MediumHeight
-		{
-			get;
-			set;
-		}
+		public int MediumHeight { get; set; }
 
 		/// <summary>
 		/// Gets or sets the left margin width in pixels
 		/// </summary>
-		public int LeftMargin
-		{
-			get;
-			set;
-		}
+		public int LeftMargin { get; set; }
 
 		/// <summary>
 		/// Gets or sets the right margin width in pixels
 		/// </summary>
-		public int RightMargin
-		{
-			get;
-			set;
-		}
+		public int RightMargin { get; set; }
 
 		/// <summary>
 		/// Gets or sets the top margin width in pixels
 		/// </summary>
-		public int TopMargin
-		{
-			get;
-			set;
-		}
+		public int TopMargin { get; set; }
 
 		/// <summary>
 		/// Gets or sets the bottom margin width in pixels
 		/// </summary>
-		public int BottomMargin
-		{
-			get;
-			set;
-		}
+		public int BottomMargin { get; set; }
 
 		/// <summary>
 		/// Gets or sets the width in pixels of wide bars when used
 		/// </summary>
-		public int WideWidth
-		{
-			get;
-			set;
-		}
+		public int WideWidth { get; set; }
 
 		/// <summary>
 		/// Gets or sets the width in pixels of narrow bars
 		/// </summary>
-		public int NarrowWidth
-		{
-			get;
-			set;
-		}
+		public int NarrowWidth { get; set; }
 
 		/// <summary>
 		/// Gets or sets the padding in pixels between modules
 		/// </summary>
-		public int ModulePadding
-		{
-			get;
-			set;
-		}
+		public int ModulePadding { get; set; }
 
 		/// <summary>
 		/// Gets or sets whether text is displayed with the barcode
 		/// </summary>
-		public bool IsTextShown
-		{
-			get;
-			set;
-		}
+		public bool IsTextShown { get; set; }
 
 		/// <summary>
 		/// Gets or sets the padding between the barcode and the text
 		/// </summary>
-		public int TextPadding
-		{
-			get;
-			set;
-		}
+		public int TextPadding { get; set; }
 
 		/// <summary>
 		/// Gets or sets whether spacing is added between individual characters in the barcode text
 		/// </summary>
-		public bool IsTextPadded
-		{
-			get;
-			set;
-		}
+		public bool IsTextPadded { get; set; }
 
 		/// <summary>
 		/// Gets or sets the maximum width of the barcode image
 		/// </summary>
-		public int MaxWidth
-		{
-			get;
-			set;
-		}
+		public int MaxWidth { get; set; }
 
 		/// <summary>
 		/// Gets or sets the maximum height of the barcode image
 		/// </summary>
-		public int MaxHeight
-		{
-			get;
-			set;
-		}
+		public int MaxHeight { get; set; }
 
 		/// <summary>
 		/// Gets or sets the maximum size of the barcode image
@@ -157,38 +97,22 @@ namespace Barcodes2
 		/// <summary>
 		/// Gets or sets the font to use for the text
 		/// </summary>
-		public System.Drawing.Font Font
-		{
-			get;
-			set;
-		}
+		public System.Drawing.Font Font { get; set; }
 
 		/// <summary>
 		/// Gets or sets whether the barcode will calculate & add the checksum (where defined)
 		/// </summary>
-		public bool IsChecksumCalculated
-		{
-			get;
-			set;
-		}
+		public bool IsChecksumCalculated { get; set; }
 
 		/// <summary>
 		/// Gets or sets the image width
 		/// </summary>
-		public int Width
-		{
-			get;
-			set;
-		}
+		public int Width { get; set; }
 
 		/// <summary>
 		/// Gets or sets the image height
 		/// </summary>
-		public int Height
-		{
-			get;
-			set;
-		}
+		public int Height { get; set; }
 
 		/// <summary>
 		/// Gets or sets the image size
@@ -203,11 +127,7 @@ namespace Barcodes2
 			}
 		}
 
-		public float Scale
-		{
-			get;
-			set;
-		}
+		public float Scale { get; set; }
 
 		public BarcodeSettings()
 		{
