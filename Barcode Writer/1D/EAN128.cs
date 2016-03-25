@@ -59,15 +59,55 @@ namespace Barcodes
 
 		protected override string ParseText(string value, CodedValueCollection codes)
 		{
-			value = base.ParseText(value, codes);
+            if (_Value == null)
+            {
+                return base.ParseText(value, codes);
+            }
+            else
+            {
+                if (_Value.ToString() != value)
+                    base.ParseText(value, codes);
+                else
+                {
+                    int i = 0;
+                    foreach(var element_string in _Value.CalculateElementStrings())
+                    {
+                        var cds = new CodedValueCollection();
+                        if (!element_string.EndsWith(char.ToString(Code128Helper.FNC1)))
+                        {
+                            base.ParseText(element_string, cds);
+                            cds.RemoveAt(cds.Count - 1);
+                        }
+                        else
+                        {
+                            base.ParseText(element_string.Substring(0, element_string.Length - 1), cds);
+                            cds.RemoveAt(cds.Count - 1);
+                            cds.Add(Code128Helper.FNC1 - 50);
+                        }
 
-			if (_Value != null)
-			{
-				value = _Value.ToDisplayString();
-				_Value = null;
-			}
+                        if (i == 0)
+                            cds.Insert(1, Code128Helper.FNC1 - 50);
+                        else if (codes[0] == cds[0])
+                            cds.RemoveAt(0);
+                        else
+                        {
+                            var r = cds[0];
+                            cds.RemoveAt(0);
+                            var ai = _Value.AICollection[i].ToString("{0:00}");
+                            cds.Insert(ai.Length, r);
+                        }
 
-			return value;
+                        codes.AddRange(cds);
+                        ++i;
+                    }
+                    codes.Add(Code128Helper.STOP);
+                }
+
+                var ret = _Value.ToDisplayString();
+                _Value = null;
+                return ret;
+            }
+
 		}
 
 		//public string CreateEAN128(int aiCode, string value)

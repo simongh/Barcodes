@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace Barcodes.GS1
 {
-	public class GS1Builder
+    public class GS1Builder
 	{
 		#region AI Constants
 
@@ -29,6 +30,7 @@ namespace Barcodes.GS1
 		public const int ReferenceToSourceEntity = 251;
 		public const int GDTI = 253;
 		public const int GLNExtension = 254;
+        public const int GlobalCouponNumber = 255;
 		public const int CountofItems = 30;
 		public const int ProductNetWeightKg = 310;
 		public const int ProductLengthMeters = 311;
@@ -109,6 +111,7 @@ namespace Barcodes.GS1
 		public const int UNCutClassification = 7002;
 		public const int ExpirationDateTime = 7003;
 		public const int ActivePotency = 7004;
+        public const int ProcessorApproval = 703;
 		public const int RollProducts = 8001;
 		public const int CellularMobileID = 8002;
 		public const int GRAI = 8003;
@@ -123,6 +126,7 @@ namespace Barcodes.GS1
 		public const int CouponExtendedCodeEndofOffer = 8101;
 		public const int CouponExtendedCode0 = 8102;
 		public const int CouponCodeIDNorthAmerica = 8110;
+		public const int ExtendedPackagingURL = 8200;
 		public const int TradingPartners = 90;
 		public const int InternalCompanyCodes1 = 91;
 		public const int InternalCompanyCodes2 = 92;
@@ -165,6 +169,56 @@ namespace Barcodes.GS1
 			_Values = new List<string>();
 			FNC1 = fnc1;
 		}
+
+        private bool IsVariable(int ai)
+        {
+            return ai == BatchNumbers ||
+                ai == SerialNumber ||
+                ai == HIBCCQuantity ||
+                ai == SecondaryDataField ||
+                ai == LotNumber ||
+                ai == AdditionalItemIdentification ||
+                ai == CustomerPartNumber ||
+                ai == MadeToOrderVariationNumber ||
+                ai == SecondSerialNumber ||
+                ai == ReferenceToSourceEntity ||
+                ai == GDTI ||
+                ai == GLNExtension ||
+                ai == GlobalCouponNumber ||
+                ai == CountofItems ||
+                ai == CountofTradeItems  ||
+                ai == AmountPayable  ||
+                ai == AmountPayableISO  ||
+                ai == AmountPayableArea  ||
+                ai == AmountPayableAreaISO  ||
+                ai == CustomerPurchaseOrderNumber ||
+                ai == GINC ||
+                ai == RoutingCode ||
+                ai == ShipToPostalCode ||
+                ai == ShipToPostalCodeISO ||
+                ai == CountryOfInitialProcessing ||
+                ai == UNCutClassification ||
+                ai == ActivePotency ||
+                ai == ProcessorApproval ||
+                ai == CellularMobileID ||
+                ai == GRAI ||
+                ai == GIAI ||
+                ai == IBAN ||
+                ai == ProductionDateTime ||
+                ai == PaymentSlipReference ||
+                ai == CouponCodeIDNorthAmerica ||
+                ai == ExtendedPackagingURL ||
+                ai == TradingPartners ||
+                ai == InternalCompanyCodes1 ||
+                ai == InternalCompanyCodes2 ||
+                ai == InternalCompanyCodes3 ||
+                ai == InternalCompanyCodes4 ||
+                ai == InternalCompanyCodes5 ||
+                ai == InternalCompanyCoeds6 ||
+                ai == InternalCompanyCodes7 ||
+                ai == InternalCompanyCodes8 ||
+                ai == InternalCompanyCodes9;
+        }
 
 		public void Add(int ai, string value)
 		{
@@ -413,14 +467,12 @@ namespace Barcodes.GS1
 		{
 			StringBuilder sb = new StringBuilder();
 
-			for (int i = 0; i < _Ais.Count; i++)
-			{
-				sb.Append(FNC1);
-				sb.Append(_Ais[i]);
-				sb.Append(_Values[i]);
-			}
+            sb.Append(FNC1);
+            CalculateElementStrings()
+                .ToList()
+                .ForEach((v) => sb.Append(v));
 
-			return sb.ToString();
+            return sb.ToString();
 		}
 
 		public string ToString(char fnc1)
@@ -435,11 +487,23 @@ namespace Barcodes.GS1
 
 			for (int i = 0; i < _Ais.Count; i++)
 			{
-				sb.AppendFormat("({0})", _Ais[i]);
+				sb.AppendFormat("({0:00})", _Ais[i]);
 				sb.Append(_Values[i]);
 			}
 
 			return sb.ToString();
 		}
-	}
+        public IEnumerable<String> CalculateElementStrings()
+        {
+            for (int i = 0; i < _Ais.Count; i++)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendFormat("{0:00}", _Ais[i]);
+                sb.Append(_Values[i]);
+                if (IsVariable(_Ais[i]))
+                    sb.Append(FNC1);
+                yield return sb.ToString();
+            }
+        }
+    }
 }

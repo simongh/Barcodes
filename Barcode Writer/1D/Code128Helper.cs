@@ -53,5 +53,10 @@ namespace Barcodes
         /// Shifts the next value between A & B
         /// </summary>
         public const char SHIFT = (char)148;
+
+        /// <summary>
+        /// Stop character
+        /// </summary>
+        public const int STOP = 106;
     }
 }
