@@ -10,7 +10,7 @@ namespace Barcodes
     /// </summary>
     public class Code128 : BarcodeBase
     {
-        private const int STOP = 106;
+        private readonly int STOP = Code128Helper.STOP;
         protected int AiMarker = 156;
 
         protected override void Init()
@@ -172,7 +172,7 @@ namespace Barcodes
 
         protected override string ParseText(string value, CodedValueCollection codes)
         {
-            char variant = Code128Helper.StartVariantB;
+            char variant = Code128Helper.CODEB;
             int i = 0;
             bool shifted = false;
 
@@ -373,8 +373,28 @@ namespace Barcodes
             }
             else
             {
-                v = Code128Helper.CODEB;
-                s.Append(Code128Helper.StartVariantB);
+                switch (value[0])
+                {
+                    case Code128Helper.StartVariantA:
+                        v = Code128Helper.CODEA;
+                        s.Append(Code128Helper.StartVariantA);
+                        ++i;
+                        break;
+                    case Code128Helper.StartVariantC:
+                        v = Code128Helper.CODEC;
+                        s.Append(Code128Helper.StartVariantC);
+                        ++i;
+                        break;
+                    case Code128Helper.StartVariantB:
+                        v = Code128Helper.CODEB;
+                        s.Append(Code128Helper.StartVariantB);
+                        ++i;
+                        break;
+                    default:
+                        v = Code128Helper.CODEB;
+                        s.Append(Code128Helper.StartVariantB);
+                        break;
+                }
             }
 
             bool switched = false;
@@ -416,7 +436,7 @@ namespace Barcodes
 
                 s.Append(value[i]);
                 i++;
-                if (v == Code128Helper.CODEC)
+                if (i < value.Length && v == Code128Helper.CODEC)
                 {
                     s.Append(value[i]);
                     i++;
