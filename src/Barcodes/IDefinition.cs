@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace BarcodeReader
+namespace Barcodes
 {
 	public interface IDefinition
 	{
-		IEnumerable<Types.Pattern> PatternSet { get; }
+		IEnumerable<Pattern> PatternSet { get; }
 
 		string GetDisplayText(string value);
 

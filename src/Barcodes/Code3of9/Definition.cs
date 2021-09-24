@@ -1,60 +1,59 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace BarcodeReader.Code3of9
+namespace Barcodes.Code3of9
 {
 	public class Definition : IDefinition
 	{
-		public IEnumerable<Types.Pattern> PatternSet
+		private static readonly IEnumerable<Pattern> _patternSet = new List<Pattern>
 		{
-			get
-			{
-				yield return Types.Pattern.Parse('0', "232103032");
-				yield return Types.Pattern.Parse('1', "032123230");
-				yield return Types.Pattern.Parse('2', "230123230");
-				yield return Types.Pattern.Parse('3', "030123232");
-				yield return Types.Pattern.Parse('4', "232103230");
-				yield return Types.Pattern.Parse('5', "032103232");
-				yield return Types.Pattern.Parse('6', "230103232");
-				yield return Types.Pattern.Parse('7', "232123030");
-				yield return Types.Pattern.Parse('8', "032123032");
-				yield return Types.Pattern.Parse('9', "230123032");
-				yield return Types.Pattern.Parse('A', "032321230");
-				yield return Types.Pattern.Parse('B', "230321230");
-				yield return Types.Pattern.Parse('C', "030321232");
-				yield return Types.Pattern.Parse('D', "232301230");
-				yield return Types.Pattern.Parse('E', "032301232");
-				yield return Types.Pattern.Parse('F', "230301232");
-				yield return Types.Pattern.Parse('G', "232321030");
-				yield return Types.Pattern.Parse('H', "032321032");
-				yield return Types.Pattern.Parse('I', "230321032");
-				yield return Types.Pattern.Parse('J', "232301032");
-				yield return Types.Pattern.Parse('K', "032323210");
-				yield return Types.Pattern.Parse('L', "230323210");
-				yield return Types.Pattern.Parse('M', "030323212");
-				yield return Types.Pattern.Parse('N', "232303210");
-				yield return Types.Pattern.Parse('O', "032303212");
-				yield return Types.Pattern.Parse('P', "230303212");
-				yield return Types.Pattern.Parse('Q', "232323010");
-				yield return Types.Pattern.Parse('R', "032323012");
-				yield return Types.Pattern.Parse('S', "230323012");
-				yield return Types.Pattern.Parse('T', "232303012");
-				yield return Types.Pattern.Parse('U', "012323230");
-				yield return Types.Pattern.Parse('V', "210323230");
-				yield return Types.Pattern.Parse('W', "010323232");
-				yield return Types.Pattern.Parse('X', "212303230");
-				yield return Types.Pattern.Parse('Y', "012303232");
-				yield return Types.Pattern.Parse('Z', "210303232");
-				yield return Types.Pattern.Parse('-', "212323030");
-				yield return Types.Pattern.Parse('.', "012323032");
-				yield return Types.Pattern.Parse(' ', "210323032");
-				yield return Types.Pattern.Parse('*', "212303032");
-				yield return Types.Pattern.Parse('$', "212121232");
-				yield return Types.Pattern.Parse('/', "212123212");
-				yield return Types.Pattern.Parse('+', "212321212");
-				yield return Types.Pattern.Parse('%', "232121212");
-			}
-		}
+			Pattern.Parse('0', "232103032"),
+			Pattern.Parse('1', "032123230"),
+			Pattern.Parse('2', "230123230"),
+			Pattern.Parse('3', "030123232"),
+			Pattern.Parse('4', "232103230"),
+			Pattern.Parse('5', "032103232"),
+			Pattern.Parse('6', "230103232"),
+			Pattern.Parse('7', "232123030"),
+			Pattern.Parse('8', "032123032"),
+			Pattern.Parse('9', "230123032"),
+			Pattern.Parse('A', "032321230"),
+			Pattern.Parse('B', "230321230"),
+			Pattern.Parse('C', "030321232"),
+			Pattern.Parse('D', "232301230"),
+			Pattern.Parse('E', "032301232"),
+			Pattern.Parse('F', "230301232"),
+			Pattern.Parse('G', "232321030"),
+			Pattern.Parse('H', "032321032"),
+			Pattern.Parse('I', "230321032"),
+			Pattern.Parse('J', "232301032"),
+			Pattern.Parse('K', "032323210"),
+			Pattern.Parse('L', "230323210"),
+			Pattern.Parse('M', "030323212"),
+			Pattern.Parse('N', "232303210"),
+			Pattern.Parse('O', "032303212"),
+			Pattern.Parse('P', "230303212"),
+			Pattern.Parse('Q', "232323010"),
+			Pattern.Parse('R', "032323012"),
+			Pattern.Parse('S', "230323012"),
+			Pattern.Parse('T', "232303012"),
+			Pattern.Parse('U', "012323230"),
+			Pattern.Parse('V', "210323230"),
+			Pattern.Parse('W', "010323232"),
+			Pattern.Parse('X', "212303230"),
+			Pattern.Parse('Y', "012303232"),
+			Pattern.Parse('Z', "210303232"),
+			Pattern.Parse('-', "212323030"),
+			Pattern.Parse('.', "012323032"),
+			Pattern.Parse(' ', "210323032"),
+			Pattern.Parse('*', "212303032"),
+			Pattern.Parse('$', "212121232"),
+			Pattern.Parse('/', "212123212"),
+			Pattern.Parse('+', "212321212"),
+			Pattern.Parse('%', "232121212")
+		};
+
+		public IEnumerable<Pattern> PatternSet => _patternSet;
 
 		public bool ValidateInput(string value)
 		{
@@ -67,7 +66,7 @@ namespace BarcodeReader.Code3of9
 		{
 			value = value.Trim('*');
 
-			return "*" + value + "*";
+			return $"*{value}*";
 		}
 	}
 }

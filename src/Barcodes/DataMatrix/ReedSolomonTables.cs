@@ -1,6 +1,6 @@
-﻿namespace BarcodeReader.DataMatrix
+﻿namespace Barcodes.DataMatrix
 {
-	public class ReedSolomonTables : BarcodeReader.ReedSolomonTables
+	public class ReedSolomonTables : Barcodes.ReedSolomonTables
 	{
 		private int _codeWords;
 

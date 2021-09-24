@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BarcodeReader
+namespace Barcodes
 {
 	public abstract class ReedSolomonTables
 	{

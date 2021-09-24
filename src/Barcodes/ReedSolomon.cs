@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BarcodeReader
+namespace Barcodes
 {
 	public class ReedSolomon
 	{

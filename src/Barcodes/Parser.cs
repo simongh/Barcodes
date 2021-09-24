@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace BarcodeReader
+namespace Barcodes
 {
 	public class Parser
 	{
@@ -16,7 +16,7 @@ namespace BarcodeReader
 			return _definition.ValidateInput(value);
 		}
 
-		public Types.EncodedData Parse(string value)
+		public EncodedData Parse(string value)
 		{
 			if (!ValidateData(value))
 				return null;
@@ -24,12 +24,12 @@ namespace BarcodeReader
 			var data = value.Select(c => _definition.PatternSet.First(p => p.Value == c)).ToList();
 			var text = _definition.GetDisplayText(value);
 
-			var result = new Types.EncodedData(data)
+			var result = new EncodedData(data)
 			{
 				DisplayText = text,
 			};
 
-			var checksum = _definition as Types.IChecksum;
+			var checksum = _definition as IChecksum;
 			if (checksum != null)
 			{
 				if (checksum.IsChecksumRequired)

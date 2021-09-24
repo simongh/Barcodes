@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BarcodeReader.Types
+namespace Barcodes
 {
 	public class EncodedData
 	{

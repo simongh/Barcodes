@@ -1,4 +1,4 @@
-﻿namespace BarcodeReader.Types
+﻿namespace Barcodes
 {
 	public interface IChecksum
 	{

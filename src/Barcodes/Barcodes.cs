@@ -1,6 +1,6 @@
-﻿namespace BarcodeReader
+﻿namespace Barcodes
 {
-	public static class Barcodes
+	public static class Barcode
 	{
 		public static void Code3of9(string value)
 		{

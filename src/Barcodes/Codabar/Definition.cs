@@ -1,45 +1,43 @@
-﻿using BarcodeReader.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace BarcodeReader.Codabar
+namespace Barcodes.Codabar
 {
-	public class Definition : IDefinition, Types.IChecksum
+	public class Definition : IDefinition, IChecksum
 	{
-		public IEnumerable<Pattern> PatternSet
+		private static readonly IEnumerable<Pattern> _patternSet = new List<Pattern>
 		{
-			get
-			{
-				yield return Pattern.Parse('0', "2323210");
-				yield return Pattern.Parse('1', "2323012");
-				yield return Pattern.Parse('2', "2321230");
-				yield return Pattern.Parse('3', "0123232");
-				yield return Pattern.Parse('4', "2303212");
-				yield return Pattern.Parse('5', "0323212");
-				yield return Pattern.Parse('6', "2123230");
-				yield return Pattern.Parse('7', "2123032");
-				yield return Pattern.Parse('8', "2103232");
-				yield return Pattern.Parse('9', "0321232");
+			Pattern.Parse('0', "2323210"),
+			Pattern.Parse('1', "2323012"),
+			Pattern.Parse('2', "2321230"),
+			Pattern.Parse('3', "0123232"),
+			Pattern.Parse('4', "2303212"),
+			Pattern.Parse('5', "0323212"),
+			Pattern.Parse('6', "2123230"),
+			Pattern.Parse('7', "2123032"),
+			Pattern.Parse('8', "2103232"),
+			Pattern.Parse('9', "0321232"),
 
-				yield return Pattern.Parse('-', "2321032");
-				yield return Pattern.Parse('$', "2301232");
-				yield return Pattern.Parse(':', "0323030");
-				yield return Pattern.Parse('/', "0303230");
-				yield return Pattern.Parse('.', "0303032");
-				yield return Pattern.Parse('+', "2303030");
+			Pattern.Parse('-', "2321032"),
+			Pattern.Parse('$', "2301232"),
+			Pattern.Parse(':', "0323030"),
+			Pattern.Parse('/', "0303230"),
+			Pattern.Parse('.', "0303032"),
+			Pattern.Parse('+', "2303030"),
 
-				yield return Pattern.Parse('a', "2301212");
-				yield return Pattern.Parse('b', "2121230");
-				yield return Pattern.Parse('c', "2321210");
-				yield return Pattern.Parse('d', "2321012");
-				yield return Pattern.Parse('t', "2301212");
-				yield return Pattern.Parse('n', "2121230");
-				yield return Pattern.Parse('*', "2321210");
-				yield return Pattern.Parse('e', "2321012");
-			}
-		}
+			Pattern.Parse('a', "2301212"),
+			Pattern.Parse('b', "2121230"),
+			Pattern.Parse('c', "2321210"),
+			Pattern.Parse('d', "2321012"),
+			Pattern.Parse('t', "2301212"),
+			Pattern.Parse('n', "2121230"),
+			Pattern.Parse('*', "2321210"),
+			Pattern.Parse('e', "2321012")
+		};
+
+		public IEnumerable<Pattern> PatternSet => _patternSet;
 
 		public bool IsChecksumRequired => false;
 

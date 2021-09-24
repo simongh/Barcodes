@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BarcodeReader
+namespace Barcodes
 {
 	public static class Guard
 	{
