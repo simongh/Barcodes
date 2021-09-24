@@ -18,5 +18,21 @@ namespace Barcodes
 		{
 			Codes = codes;
 		}
+
+		public void AddToStart(Pattern pattern)
+		{
+			Codes.Insert(0, pattern);
+		}
+
+		public void AddToEnd(Pattern pattern)
+		{
+			Codes.Add(pattern);
+		}
+
+		public void Bracket(Pattern pattern)
+		{
+			AddToStart(pattern);
+			AddToEnd(pattern);
+		}
 	}
 }

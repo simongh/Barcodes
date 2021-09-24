@@ -6,7 +6,7 @@ namespace Barcodes.Code11
 {
 	public class Definition : IDefinition, IChecksum, ILimits
 	{
-		private static readonly IEnumerable<Pattern> _patternSet = new List<Pattern>
+		private static readonly PatternSet _patternSet = new PatternSet(new List<Pattern>
 		{
 			Pattern.Parse('0', "nb nw nb nw wb"),
 			Pattern.Parse('1', "wb nw nb nw wb"),
@@ -21,9 +21,9 @@ namespace Barcodes.Code11
 			Pattern.Parse('-', "nb nw wb nw nb"),
 
 			Pattern.Parse('s', "nb nw wb ww nb")
-		};
+		});
 
-		public IEnumerable<Pattern> PatternSet => _patternSet;
+		public PatternSet PatternSet => _patternSet;
 
 		public bool IsChecksumRequired => true;
 
@@ -84,10 +84,7 @@ namespace Barcodes.Code11
 
 		public void AddLimits(EncodedData data)
 		{
-			var limit = PatternSet.First(p => p.Value == 's');
-
-			data.Codes.Insert(0, limit);
-			data.Codes.Add(limit);
+			data.Bracket(PatternSet.Find('s'));
 		}
 	}
 }

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Barcodes.Codabar
 {
 	public class Definition : IDefinition, IChecksum
 	{
-		private static readonly IEnumerable<Pattern> _patternSet = new List<Pattern>
+		private static readonly PatternSet _patternSet = new PatternSet(new List<Pattern>
 		{
 			Pattern.Parse('0', "2323210"),
 			Pattern.Parse('1', "2323012"),
@@ -35,9 +34,9 @@ namespace Barcodes.Codabar
 			Pattern.Parse('n', "2121230"),
 			Pattern.Parse('*', "2321210"),
 			Pattern.Parse('e', "2321012")
-		};
+		});
 
-		public IEnumerable<Pattern> PatternSet => _patternSet;
+		public PatternSet PatternSet => _patternSet;
 
 		public bool IsChecksumRequired => false;
 
@@ -60,7 +59,7 @@ namespace Barcodes.Codabar
 
 			total %= 10;
 
-			data.Codes.Add(PatternSet.First(p => p.Value == total));
+			data.AddToEnd(PatternSet.Find(total));
 			data.DisplayText += total.ToString();
 
 			data.IsChecksumed = true;

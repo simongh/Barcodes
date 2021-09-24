@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace Barcodes
+﻿namespace Barcodes
 {
 	public interface IDefinition
 	{
-		IEnumerable<Pattern> PatternSet { get; }
+		PatternSet PatternSet { get; }
 
 		string GetDisplayText(string value);
 

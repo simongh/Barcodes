@@ -5,7 +5,7 @@ namespace Barcodes.Code3of9
 {
 	public class Definition : IDefinition
 	{
-		private static readonly IEnumerable<Pattern> _patternSet = new List<Pattern>
+		private static readonly PatternSet _patternSet = new PatternSet(new List<Pattern>
 		{
 			Pattern.Parse('0', "232103032"),
 			Pattern.Parse('1', "032123230"),
@@ -51,9 +51,9 @@ namespace Barcodes.Code3of9
 			Pattern.Parse('/', "212123212"),
 			Pattern.Parse('+', "212321212"),
 			Pattern.Parse('%', "232121212")
-		};
+		});
 
-		public IEnumerable<Pattern> PatternSet => _patternSet;
+		public PatternSet PatternSet => _patternSet;
 
 		public bool ValidateInput(string value)
 		{
