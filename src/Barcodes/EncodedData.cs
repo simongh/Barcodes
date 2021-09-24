@@ -8,6 +8,8 @@ namespace Barcodes
 
 		public string DisplayText { get; set; }
 
+		public bool IsChecksumed { get; set; }
+
 		public EncodedData()
 			: this(new List<Pattern>())
 		{ }

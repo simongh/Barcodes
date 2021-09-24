@@ -43,6 +43,9 @@ namespace Barcodes.Codabar
 
 		public void AddChecksum(EncodedData data)
 		{
+			if (data.IsChecksumed)
+				return;
+
 			if (!Regex.IsMatch(data.DisplayText, @"^\d+$"))
 				throw new ArgumentException("Only numeric values can have a check digit");
 
@@ -59,6 +62,8 @@ namespace Barcodes.Codabar
 
 			data.Codes.Add(PatternSet.First(p => p.Value == total));
 			data.DisplayText += total.ToString();
+
+			data.IsChecksumed = true;
 		}
 
 		public string GetDisplayText(string value)
@@ -70,7 +75,7 @@ namespace Barcodes.Codabar
 
 		public bool ValidateInput(string value)
 		{
-			return Regex.IsMatch(value, @"^[atbnc\*de][\d-$:/\.\+]+[atbnc\*de]$");
+			return Regex.IsMatch(value, @"^[abcdtne\*][\d-$:/\.\+]+[abcdtn\*e]$");
 		}
 	}
 }

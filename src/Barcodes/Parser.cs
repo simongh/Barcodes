@@ -29,11 +29,15 @@ namespace Barcodes
 				DisplayText = text,
 			};
 
-			var checksum = _definition as IChecksum;
-			if (checksum != null)
+			if (_definition is IChecksum checksum)
 			{
 				if (checksum.IsChecksumRequired)
 					checksum.AddChecksum(result);
+			}
+
+			if (_definition is ILimits limits)
+			{
+				limits.AddLimits(result);
 			}
 
 			return result;
