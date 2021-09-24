@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Barcodes.Codabar
 {
 	public class Definition : IDefinition, IChecksum
 	{
-		private static readonly PatternSet _patternSet = new PatternSet(new List<Pattern>
+		private static readonly PatternSet _patternSet = new PatternSet(new[]
 		{
 			Pattern.Parse('0', "2323210"),
 			Pattern.Parse('1', "2323012"),
@@ -49,12 +48,12 @@ namespace Barcodes.Codabar
 				throw new ArgumentException("Only numeric values can have a check digit");
 
 			var total = 0;
-			for (int i = 0; i < data.DisplayText.Length; i++)
+			for (int i = 0; i < data.Codes.Count; i++)
 			{
 				if (i % 2 == 0)
-					total += data.DisplayText[i] - 0x30;
+					total += data.Codes[i].Value - '0';
 				else
-					total += ((data.DisplayText[i] - 0x30) * 2) % 9;
+					total += ((data.Codes[i].Value - '0') * 2) % 9;
 			}
 
 			total %= 10;

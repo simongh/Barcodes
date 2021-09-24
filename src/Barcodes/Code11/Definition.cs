@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Barcodes.Code11
 {
 	public class Definition : IDefinition, IChecksum, ILimits
 	{
-		private static readonly PatternSet _patternSet = new PatternSet(new List<Pattern>
+		private static readonly PatternSet _patternSet = new PatternSet(new[]
 		{
 			Pattern.Parse('0', "nb nw nb nw wb"),
 			Pattern.Parse('1', "wb nw nb nw wb"),
@@ -34,7 +33,7 @@ namespace Barcodes.Code11
 
 			AddCheckDigit(data, 10);
 
-			if (data.DisplayText.Length >= 10)
+			if (data.Codes.Count >= 10)
 				AddCheckDigit(data, 9);
 		}
 
@@ -53,13 +52,13 @@ namespace Barcodes.Code11
 		{
 			int tmp = 0;
 
-			for (int i = 0; i < data.DisplayText.Length; i++)
+			for (int i = 0; i < data.Codes.Count; i++)
 			{
-				int weight = ((data.DisplayText.Length - i) % factor);
+				int weight = ((data.Codes.Count - i) % factor);
 				if (weight == 0)
 					weight = factor;
 
-				tmp += (data.DisplayText[i] == '-' ? 10 : (data.DisplayText[i] - '0') * weight);
+				tmp += (data.Codes[i].Value == '-' ? 10 : (data.Codes[i].Value - '0') * weight);
 			}
 
 			var chk = (tmp % 11) > 9 ? '-' : tmp;

@@ -21,7 +21,16 @@ namespace Barcodes
 			if (!ValidateData(value))
 				return null;
 
-			var data = value.Select(c => _definition.PatternSet.Find(c)).ToList();
+			var data = value
+				.Select(c =>
+				{
+					if (_definition is IParser parser)
+						return parser.Convert(c);
+					else
+						return _definition.PatternSet.Find(c);
+				})
+				.ToList();
+
 			var text = _definition.GetDisplayText(value);
 
 			var result = new EncodedData(data)

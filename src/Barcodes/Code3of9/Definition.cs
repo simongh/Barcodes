@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Barcodes.Code3of9
 {
 	public class Definition : IDefinition
 	{
-		private static readonly PatternSet _patternSet = new PatternSet(new List<Pattern>
+		private static readonly PatternSet _patternSet = new PatternSet(new[]
 		{
 			Pattern.Parse('0', "232103032"),
 			Pattern.Parse('1', "032123230"),

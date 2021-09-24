@@ -8,7 +8,7 @@ namespace Barcodes
 	{
 		private IEnumerable<Pattern> _patterns;
 
-		internal PatternSet(IList<Pattern> patterns)
+		internal PatternSet(IEnumerable<Pattern> patterns)
 		{
 			_patterns = patterns;
 		}

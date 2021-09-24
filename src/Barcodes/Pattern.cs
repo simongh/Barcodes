@@ -44,6 +44,8 @@ namespace Barcodes
 			return new Pattern(value, pattern.Select(ToElement).ToArray());
 		}
 
+		public static Pattern Parse(int value, string pattern) => Parse((char)value, pattern);
+
 		private static Element ToElement(char value)
 		{
 			var element = (Element)(value - '0');
