@@ -1,8 +1,10 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Barcodes.Code93
 {
-	public class Definition : IDefinition
+	public class Definition : IDefinition, IChecksum, ILimits, IParser
 	{
 		private const int SHIFT1 = 43;
 		private const int SHIFT2 = 44;
@@ -67,11 +69,116 @@ namespace Barcodes.Code93
 
 		public PatternSet PatternSet => _patternSet;
 
+		public bool IsChecksumRequired => true;
+
+		public void AddChecksum(EncodedData data)
+		{
+			if (data.IsChecksumed)
+				return;
+
+			AddChecksum(data, 20);
+			AddChecksum(data, 15);
+
+			data.IsChecksumed = true;
+		}
+
+		private void AddChecksum(EncodedData data, int weight)
+		{
+			int total = 0, w = 1;
+
+			for (int i = data.Codes.Count; i >= 0; i--)
+			{
+				total += w * data.Codes[i].Value;
+				w++;
+				if (w > weight)
+					w = 1;
+			}
+
+			total %= 47;
+
+			data.AddToEnd(PatternSet.Find(total));
+		}
+
 		public string GetDisplayText(string value) => value;
 
 		public bool ValidateInput(string value)
 		{
 			return Regex.IsMatch(value, ".+");
+		}
+
+		public void AddLimits(EncodedData data)
+		{
+			data.Bracket(PatternSet.Find(LIMIT));
+			data.AddToEnd(PatternSet.Find(TERMINATOR));
+		}
+
+		public IEnumerable<Pattern> Parse(string value)
+		{
+			var result = new List<Pattern>();
+
+			var simple = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%";
+
+			foreach (var item in value)
+			{
+				if (item > 127)
+					throw new ArgumentException($"The value '{value}' is not valid for a Code93 barcode");
+
+				var index = simple.IndexOf(item);
+				if (index >= 0)
+					result.Add(PatternSet.Find(index));
+				else if (item == 0)
+				{
+					result.Add(PatternSet.Find(SHIFT2));
+					result.Add(PatternSet.Find(simple.IndexOf('U')));
+				}
+				else if (item == 64)
+				{
+					result.Add(PatternSet.Find(SHIFT2));
+					result.Add(PatternSet.Find(simple.IndexOf('V')));
+				}
+				else if (item == 96)
+				{
+					result.Add(PatternSet.Find(SHIFT2));
+					result.Add(PatternSet.Find(simple.IndexOf('W')));
+				}
+				else if (item < 27)
+				{
+					result.Add(PatternSet.Find(SHIFT1));
+					result.Add(PatternSet.Find(item + 10));
+				}
+				else if (item < 32)
+				{
+					result.Add(PatternSet.Find(SHIFT2));
+					result.Add(PatternSet.Find(item - 16));
+				}
+				else if (item < 59)
+				{
+					result.Add(PatternSet.Find(SHIFT3));
+					result.Add(PatternSet.Find(item - 23));
+				}
+				else if (item < 64)
+				{
+					result.Add(PatternSet.Find(SHIFT2));
+					result.Add(PatternSet.Find(item - 44));
+				}
+				else if (item < 96)
+				{
+					result.Add(PatternSet.Find(SHIFT2));
+					result.Add(PatternSet.Find(item - 71));
+				}
+				else if (item < 122)
+				{
+					result.Add(PatternSet.Find(SHIFT4));
+					result.Add(PatternSet.Find(item - 87));
+				}
+				else if (item < 127)
+				{
+					result.Add(PatternSet.Find(SHIFT2));
+					result.Add(PatternSet.Find(item - 98));
+				}
+			}
+
+			return result;
 		}
 	}
 }

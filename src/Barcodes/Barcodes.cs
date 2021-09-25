@@ -2,19 +2,19 @@
 {
 	public static class Barcode
 	{
-		public static void Code3of9(string value)
+		private static EncodedData Encode(IDefinition definition, string value)
 		{
-			var data = new Parser(new Code3of9.Definition()).Parse(value);
-			if (data == null)
-				return;
+			if (!definition.ValidateInput(value))
+				return null;
+
+			return new Parser(definition).Parse(value);
 		}
 
 		public static void Codabar(string value, bool addChecksum)
 		{
 			var definition = new Codabar.Definition();
-			var parser = new Parser(definition);
 
-			var data = parser.Parse(value);
+			var data = Encode(definition, value);
 			if (data == null)
 				return;
 
@@ -24,7 +24,22 @@
 
 		public static void Code11(string value)
 		{
-			var data = new Parser(new Code11.Definition()).Parse(value);
+			var data = Encode(new Code11.Definition(), value);
+		}
+
+		public static void Code2of5(string value)
+		{
+			var data = Encode(new Code2of5.Definition(), value);
+		}
+
+		public static void Code3of9(string value)
+		{
+			var data = Encode(new Code3of9.Definition(), value);
+		}
+
+		public static void Code93(string value)
+		{
+			var data = Encode(new Code93.Definition(), value);
 		}
 	}
 }

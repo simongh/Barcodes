@@ -2,7 +2,7 @@
 
 namespace Barcodes.Code2of5
 {
-	public class Definition : IDefinition, IChecksum, ILimits, IParser
+	public class Definition : IDefinition, IChecksum, ILimits, IConvert
 	{
 		private const int START = 10;
 		private const int STOP = 11;
@@ -30,6 +30,9 @@ namespace Barcodes.Code2of5
 
 		public void AddChecksum(EncodedData data)
 		{
+			if (data.IsChecksumed)
+				return;
+
 			var total = 0;
 			var isEven = true;
 
@@ -42,6 +45,8 @@ namespace Barcodes.Code2of5
 			total = total == 0 ? 0 : 10 - total;
 
 			data.AddToEnd(PatternSet.Find(total));
+
+			data.IsChecksumed = true;
 		}
 
 		public void AddLimits(EncodedData data)

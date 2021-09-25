@@ -1,7 +1,9 @@
-﻿namespace Barcodes
+﻿using System.Collections.Generic;
+
+namespace Barcodes
 {
 	public interface IParser
 	{
-		Pattern Convert(char value);
+		IEnumerable<Pattern> Parse(string value);
 	}
 }
