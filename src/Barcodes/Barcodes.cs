@@ -41,5 +41,15 @@
 		{
 			var data = Encode(new Definitions.Code93(), value);
 		}
+
+		public static void ExtendedCode(string value)
+		{
+			var data = Encode(new Definitions.ExtendedCode3of9(), value);
+		}
+
+		public static void Interleaved2of5(string value)
+		{
+			var data = Encode(new Definitions.Interleaved2of5(), value);
+		}
 	}
 }

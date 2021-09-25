@@ -6,19 +6,19 @@ namespace Barcodes.Definitions
 	{
 		private static readonly PatternSet _patternSet = new PatternSet(new[]
 		{
-			Pattern.Parse('0', "nb nw nb nw wb"),
-			Pattern.Parse('1', "wb nw nb nw wb"),
-			Pattern.Parse('2', "nb ww nb nw wb"),
-			Pattern.Parse('3', "wb ww nb nw nb"),
-			Pattern.Parse('4', "nb nw wb nw wb"),
-			Pattern.Parse('5', "wb nw wb nw nb"),
-			Pattern.Parse('6', "nb ww wb nw nb"),
-			Pattern.Parse('7', "nb nw nb ww wb"),
-			Pattern.Parse('8', "wb nw nb ww nb"),
-			Pattern.Parse('9', "wb nw nb nw nb"),
-			Pattern.Parse('-', "nb nw wb nw nb"),
+			Pattern.Parse('0', "23230"),
+			Pattern.Parse('1', "03230"),
+			Pattern.Parse('2', "21230"),
+			Pattern.Parse('3', "01232"),
+			Pattern.Parse('4', "23030"),
+			Pattern.Parse('5', "03032"),
+			Pattern.Parse('6', "21032"),
+			Pattern.Parse('7', "23210"),
+			Pattern.Parse('8', "03212"),
+			Pattern.Parse('9', "03232"),
+			Pattern.Parse('-', "23032"),
 
-			Pattern.Parse('s', "nb nw wb ww nb")
+			Pattern.Parse('s', "23012")
 		});
 
 		public PatternSet PatternSet => _patternSet;

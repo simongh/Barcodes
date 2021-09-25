@@ -9,19 +9,19 @@ namespace Barcodes.Definitions
 
 		private static readonly PatternSet _patternSet = new PatternSet(new[]
 		{
-			Pattern.Parse(0, "nb nw nb nw wb nw wb nw nb"),
-			Pattern.Parse(1, "wb nw nb nw nb nw nb nw wb"),
-			Pattern.Parse(2, "nb nw wb nw nb nw nb nw wb"),
-			Pattern.Parse(3, "wb nw wb nw nb nw nb nw nb"),
-			Pattern.Parse(4, "nb nw nb nw wb nw nb nw wb"),
-			Pattern.Parse(5, "wb nw wb nw nb nw nb nw nb"),
-			Pattern.Parse(6, "nb nw wb nw wb nw nb nw nb"),
-			Pattern.Parse(7, "nb nw nb nw nb nw wb nw wb"),
-			Pattern.Parse(8, "wb nw nb nw nb nw wb nw nb"),
-			Pattern.Parse(9, "nb nw wb nw nb nw wb nw nb"),
+			Pattern.Parse(0, "232303032"),
+			Pattern.Parse(1, "032323230"),
+			Pattern.Parse(2, "230323230"),
+			Pattern.Parse(3, "030323232"),
+			Pattern.Parse(4, "232303230"),
+			Pattern.Parse(5, "030323232"),
+			Pattern.Parse(6, "230303232"),
+			Pattern.Parse(7, "232323030"),
+			Pattern.Parse(8, "032323032"),
+			Pattern.Parse(9, "230323032"),
 
-			Pattern.Parse(START,"nb nb nw nb nb nw nb"),
-			Pattern.Parse(STOP,"nb nb nw nb nw nb nb")
+			Pattern.Parse(START,"2232232"),
+			Pattern.Parse(STOP,"2232322")
 		});
 
 		public PatternSet PatternSet => _patternSet;

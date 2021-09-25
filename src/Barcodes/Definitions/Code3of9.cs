@@ -54,7 +54,7 @@ namespace Barcodes.Definitions
 
 		public PatternSet PatternSet => _patternSet;
 
-		public bool ValidateInput(string value)
+		public virtual bool ValidateInput(string value)
 		{
 			if (value == null)
 				return false;
