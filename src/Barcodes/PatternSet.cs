@@ -17,8 +17,10 @@ namespace Barcodes
 
 		IEnumerator IEnumerable.GetEnumerator() => _patterns.GetEnumerator();
 
-		public Pattern Find(char value) => _patterns.First(p => p.Value == value);
+		public Pattern Find(char value) => _patterns.FirstOrDefault(p => p.Value == value);
 
-		public Pattern Find(int value) => _patterns.First(p => p.Value == value);
+		public Pattern Find(int value) => _patterns.FirstOrDefault(p => p.Value == value);
+
+		public Pattern Index(int value) => _patterns.ElementAt(value);
 	}
 }

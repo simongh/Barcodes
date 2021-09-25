@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace Barcodes.Codabar
+namespace Barcodes.Definitions
 {
-	public class Definition : IDefinition, IChecksum
+	public class Codabar : IDefinition, IChecksum
 	{
 		private static readonly PatternSet _patternSet = new PatternSet(new[]
 		{
@@ -58,7 +58,7 @@ namespace Barcodes.Codabar
 
 			total %= 10;
 
-			data.AddToEnd(PatternSet.Find(total));
+			data.AddToEnd(PatternSet.Index(total));
 			data.DisplayText += total.ToString();
 
 			data.IsChecksumed = true;

@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
-namespace Barcodes.Code11
+namespace Barcodes.Definitions
 {
-	public class Definition : IDefinition, IChecksum, ILimits
+	public class Code11 : IDefinition, IChecksum, ILimits
 	{
 		private static readonly PatternSet _patternSet = new PatternSet(new[]
 		{
@@ -64,7 +63,7 @@ namespace Barcodes.Code11
 			var chk = (tmp % 11) > 9 ? '-' : tmp;
 
 			data.DisplayText += chk.ToString();
-			data.Codes.Add(PatternSet.First(p => p.Value == tmp));
+			data.Codes.Add(PatternSet.Index(tmp));
 
 			data.IsChecksumed = true;
 		}

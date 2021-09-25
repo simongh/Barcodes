@@ -12,7 +12,7 @@
 
 		public static void Codabar(string value, bool addChecksum)
 		{
-			var definition = new Codabar.Definition();
+			var definition = new Definitions.Codabar();
 
 			var data = Encode(definition, value);
 			if (data == null)
@@ -24,22 +24,22 @@
 
 		public static void Code11(string value)
 		{
-			var data = Encode(new Code11.Definition(), value);
+			var data = Encode(new Definitions.Code11(), value);
 		}
 
 		public static void Code2of5(string value)
 		{
-			var data = Encode(new Code2of5.Definition(), value);
+			var data = Encode(new Definitions.Code2of5(), value);
 		}
 
 		public static void Code3of9(string value)
 		{
-			var data = Encode(new Code3of9.Definition(), value);
+			var data = Encode(new Definitions.Code3of9(), value);
 		}
 
 		public static void Code93(string value)
 		{
-			var data = Encode(new Code93.Definition(), value);
+			var data = Encode(new Definitions.Code93(), value);
 		}
 	}
 }

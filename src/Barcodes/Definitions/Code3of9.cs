@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Barcodes.Code3of9
+namespace Barcodes.Definitions
 {
-	public class Definition : IDefinition
+	public class Code3of9 : IDefinition
 	{
 		private static readonly PatternSet _patternSet = new PatternSet(new[]
 		{

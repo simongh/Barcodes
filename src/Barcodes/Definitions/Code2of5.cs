@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Barcodes.Code2of5
+namespace Barcodes.Definitions
 {
-	public class Definition : IDefinition, IChecksum, ILimits, IConvert
+	public class Code2of5 : IDefinition, IChecksum, ILimits, IConvert
 	{
 		private const int START = 10;
 		private const int STOP = 11;
@@ -44,18 +44,18 @@ namespace Barcodes.Code2of5
 			total = total % 10;
 			total = total == 0 ? 0 : 10 - total;
 
-			data.AddToEnd(PatternSet.Find(total));
+			data.AddToEnd(PatternSet.Index(total));
 
 			data.IsChecksumed = true;
 		}
 
 		public void AddLimits(EncodedData data)
 		{
-			data.AddToStart(PatternSet.Find(START));
-			data.AddToEnd(PatternSet.Find(STOP));
+			data.AddToStart(PatternSet.Index(START));
+			data.AddToEnd(PatternSet.Index(STOP));
 		}
 
-		public Pattern Convert(char value) => PatternSet.Find(value - '0');
+		public Pattern Convert(char value) => PatternSet.Index(value);
 
 		public string GetDisplayText(string value)
 		{
