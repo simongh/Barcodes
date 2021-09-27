@@ -27,6 +27,14 @@
 			var data = Encode(new Definitions.Code11(), value);
 		}
 
+		public static void Code128(string value)
+		{
+			var builder = new Code128Builder();
+			builder.Add(value);
+
+			var data = Encode(new Definitions.Code128(), builder.ToString());
+		}
+
 		public static void Code2of5(string value)
 		{
 			var data = Encode(new Definitions.Code2of5(), value);

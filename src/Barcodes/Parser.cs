@@ -37,7 +37,8 @@ namespace Barcodes
 							return convert.Convert(c);
 						else
 							return _definition.PatternSet.Find(c);
-					}));
+					})
+					.Where(c => c != null));
 			}
 			var text = _definition.GetDisplayText(value);
 
