@@ -4,8 +4,8 @@ namespace Barcodes.Definitions
 {
 	public class Code2of5 : IDefinition, IChecksum, ILimits, IConvert
 	{
-		private const int START = 10;
-		private const int STOP = 11;
+		private const byte START = 10;
+		private const byte STOP = 11;
 
 		private static readonly PatternSet _patternSet = new PatternSet(new[]
 		{
@@ -41,7 +41,7 @@ namespace Barcodes.Definitions
 				total += (isEven ? 3 : 1) * data.Codes[i].Value;
 			}
 
-			total = total % 10;
+			total %= 10;
 			total = total == 0 ? 0 : 10 - total;
 
 			data.AddToEnd(PatternSet.Index(total));

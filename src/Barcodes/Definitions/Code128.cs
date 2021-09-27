@@ -4,7 +4,7 @@ namespace Barcodes.Definitions
 {
 	public class Code128 : IDefinition, IChecksum, ILimits
 	{
-		private const int STOP = 106;
+		private const byte STOP = 106;
 
 		private static readonly PatternSet _patternSet = new PatternSet(new[]
 		{

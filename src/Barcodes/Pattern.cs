@@ -6,7 +6,7 @@ namespace Barcodes
 {
 	public class Pattern
 	{
-		public char Value { get; }
+		public byte Value { get; }
 
 		public IEnumerable<Element> Elements { get; }
 
@@ -18,7 +18,7 @@ namespace Barcodes
 
 		public int WhiteCount { get; private set; }
 
-		public Pattern(char value, IEnumerable<Element> elements)
+		public Pattern(byte value, IEnumerable<Element> elements)
 			: this()
 		{
 			Guard.IsNotNull(elements, nameof(elements));
@@ -37,14 +37,14 @@ namespace Barcodes
 		private Pattern()
 		{ }
 
-		public static Pattern Parse(char value, string pattern)
+		public static Pattern Parse(char value, string pattern) => Parse((byte)value, pattern);
+
+		public static Pattern Parse(byte value, string pattern)
 		{
 			Guard.IsNotNull(pattern, nameof(pattern));
 
-			return new Pattern(value, pattern.Select(ToElement).ToArray());
+			return new Pattern((byte)value, pattern.Select(ToElement).ToArray());
 		}
-
-		public static Pattern Parse(int value, string pattern) => Parse((char)value, pattern);
 
 		private static Element ToElement(char value)
 		{

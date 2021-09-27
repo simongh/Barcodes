@@ -6,12 +6,12 @@ namespace Barcodes.Definitions
 {
 	public class Code93 : IDefinition, IChecksum, ILimits, IParser
 	{
-		private const char SHIFT1 = (char)1;
-		private const char SHIFT2 = (char)2;
-		private const char SHIFT3 = (char)3;
-		private const char SHIFT4 = (char)4;
-		private const char LIMIT = (char)5;
-		private const char TERMINATOR = (char)6;
+		private const byte SHIFT1 = 1;
+		private const byte SHIFT2 = 2;
+		private const byte SHIFT3 = 3;
+		private const byte SHIFT4 = 4;
+		private const byte LIMIT = 5;
+		private const byte TERMINATOR = 6;
 
 		private static readonly PatternSet _patternSet = new PatternSet(new[]
 		{
@@ -118,10 +118,10 @@ namespace Barcodes.Definitions
 
 			var transformer = new AsciiTransformer
 			{
-				Shift1 = SHIFT1,
-				Shift2 = SHIFT2,
-				Shift3 = SHIFT3,
-				Shift4 = SHIFT4
+				Shift1 = (char)SHIFT1,
+				Shift2 = (char)SHIFT2,
+				Shift3 = (char)SHIFT3,
+				Shift4 = (char)SHIFT4
 			};
 
 			foreach (var item in value)

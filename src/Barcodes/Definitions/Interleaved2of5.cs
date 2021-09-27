@@ -16,17 +16,17 @@ namespace Barcodes.Definitions
 			var patterns = new List<Pattern>();
 			var elements = new List<Element>();
 
-			for (int i = 0; i < 100; i++)
+			for (byte i = 0; i < 100; i++)
 			{
 				elements.Clear();
 
-				for (int j = 0; j < 5; j++)
+				for (byte j = 0; j < 5; j++)
 				{
 					elements.Add((Element)widths[i / 10][j] - '0');
 					elements.Add((Element)widths[i % 10][j] - '0' + 1);
 				}
 
-				patterns.Add(new Pattern((char)i, elements));
+				patterns.Add(new Pattern(i, elements));
 			}
 
 			patterns.Add(Pattern.Parse(STARTMARKER, "2323"));
