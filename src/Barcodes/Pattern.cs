@@ -43,7 +43,7 @@ namespace Barcodes
 		{
 			Guard.IsNotNull(pattern, nameof(pattern));
 
-			return new Pattern((byte)value, pattern.Select(ToElement).ToArray());
+			return new Pattern(value, pattern.Select(ToElement).ToArray());
 		}
 
 		private static Element ToElement(char value)

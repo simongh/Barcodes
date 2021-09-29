@@ -34,7 +34,7 @@ namespace Barcodes
 
 		public static byte Calculate(string value, int range)
 		{
-			return Calculate(value.Select(c => (byte)c).ToArray());
+			return Calculate(value.Select(c => (byte)c).ToArray(), range);
 		}
 	}
 }
