@@ -23,7 +23,7 @@ namespace Barcodes
 
 		private void FillTables()
 		{
-			for (int p = 0, v = 0; v < SymbolSize; v++)
+			for (int p = 1, v = 0; v < SymbolSize; v++)
 			{
 				_antiLogTable[v] = (byte)p;
 				_logTable[p] = (byte)v;

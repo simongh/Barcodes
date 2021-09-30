@@ -1,8 +1,14 @@
-﻿namespace Barcodes.DataMatrix
+﻿using System;
+
+namespace Barcodes.DataMatrix
 {
 	public class ReedSolomonTables : Barcodes.ReedSolomonTables
 	{
 		private int _codeWords;
+
+		private static readonly Lazy<ReedSolomonTables> _instance = new Lazy<ReedSolomonTables>(() => new ReedSolomonTables(5));
+
+		public static ReedSolomonTables Instance => _instance.Value;
 
 		protected override int G => 0x12D;
 
