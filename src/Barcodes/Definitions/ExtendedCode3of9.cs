@@ -5,7 +5,7 @@ namespace Barcodes.Definitions
 {
 	public class ExtendedCode3of9 : Code3of9, IParser
 	{
-		public IEnumerable<Pattern> Parse(string value)
+		public IEnumerable<Pattern> Parse(byte[] value)
 		{
 			var result = new List<Pattern>();
 
@@ -20,7 +20,7 @@ namespace Barcodes.Definitions
 			foreach (var item in value)
 			{
 				result.AddRange(transformer
-					.Transform(item)
+					.Transform((char)item)
 					.Select(c => PatternSet.Find(c)));
 			}
 

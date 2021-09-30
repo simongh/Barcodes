@@ -68,11 +68,6 @@ namespace Barcodes.Definitions
 			data.IsChecksumed = true;
 		}
 
-		public string GetDisplayText(string value)
-		{
-			return value;
-		}
-
 		public bool ValidateInput(string value)
 		{
 			if (value == null)

@@ -133,8 +133,6 @@ namespace Barcodes.Definitions
 
 		public bool IsChecksumRequired => true;
 
-		public string GetDisplayText(string value) => value;
-
 		public bool ValidateInput(string value)
 		{
 			return !value.Any(c => c > 127);

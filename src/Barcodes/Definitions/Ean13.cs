@@ -23,7 +23,7 @@ namespace Barcodes.Definitions
 			return Regex.IsMatch(value, @"^\d{12,13}$");
 		}
 
-		public IEnumerable<Pattern> Parse(string value)
+		public IEnumerable<Pattern> Parse(byte[] value)
 		{
 			var result = new List<Pattern>();
 

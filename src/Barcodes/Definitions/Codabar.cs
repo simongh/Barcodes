@@ -64,13 +64,6 @@ namespace Barcodes.Definitions
 			data.IsChecksumed = true;
 		}
 
-		public string GetDisplayText(string value)
-		{
-			value = value.ToLower();
-
-			return value.Substring(1, value.Length - 2);
-		}
-
 		public bool ValidateInput(string value)
 		{
 			return Regex.IsMatch(value, @"^[abcdtne\*][\d-$:/\.\+]+[abcdtn\*e]$");

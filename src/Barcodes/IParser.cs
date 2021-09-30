@@ -4,6 +4,6 @@ namespace Barcodes
 {
 	public interface IParser
 	{
-		IEnumerable<Pattern> Parse(string value);
+		IEnumerable<Pattern> Parse(byte[] value);
 	}
 }

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace Barcodes
 {
-	public class Code128Builder : List<char>
+	public class Code128Builder
 	{
+		private readonly List<char> _data = new List<char>();
+
 		/// <summary>
 		/// Start value for a type A code
 		/// </summary>
@@ -63,99 +64,176 @@ namespace Barcodes
 
 		public const char AiMarker = (char)156;
 
-		public void Add(string value)
+		public static Code128Builder UsingCodeA()
 		{
-			AddRange(value);
+			var result = new Code128Builder();
+			result.Add(StartVariantA);
+
+			return result;
 		}
 
-		public override string ToString()
+		public static Code128Builder UsingCodeB()
+		{
+			var result = new Code128Builder();
+			result.Add(StartVariantB);
+
+			return result;
+		}
+
+		public static Code128Builder UsingCodeC()
+		{
+			var result = new Code128Builder();
+			result.Add(StartVariantC);
+
+			return result;
+		}
+
+		public Code128Builder SwitchToCodeA()
+		{
+			Add(CODEA);
+
+			return this;
+		}
+
+		public Code128Builder SwitchToCodeB()
+		{
+			Add(CODEB);
+
+			return this;
+		}
+
+		public Code128Builder SwitchToCodeC()
+		{
+			Add(CODEC);
+
+			return this;
+		}
+
+		public Code128Builder Shift(char value)
+		{
+			Add(SHIFT);
+			Add(value);
+
+			return this;
+		}
+
+		public Code128Builder Add(string value)
+		{
+			_data.AddRange(value);
+
+			return this;
+		}
+
+		public Code128Builder Add(char value)
+		{
+			_data.Add(value);
+			return this;
+		}
+
+		public void Clear()
+		{
+			_data.Clear();
+		}
+
+		public byte[] ToArray()
 		{
 			var variant = CODEB;
 			var shifted = false;
 			int codeCBuffer = -1;
 
-			if (this[0] == StartVariantA)
-				variant = CODEA;
-			else if (this[0] == StartVariantC)
-				variant = CODEC;
-
-			using (var result = new StringWriter())
+			var result = new List<byte>();
+			foreach (var item in _data)
 			{
-				foreach (var item in this)
+				if (item == StartVariantA)
 				{
-					if (item == AiMarker)
-						continue;
+					variant = CODEA;
+					result.Add((byte)(item - 50));
+					continue;
+				}
+				else if (item == StartVariantB)
+				{
+					result.Add((byte)(item - 50));
+					continue;
+				}
+				else if (item == StartVariantC)
+				{
+					variant = CODEC;
+					result.Add((byte)(item - 50));
+					continue;
+				}
 
-					if (shifted)
-					{
-						if (variant == CODEA)
-							variant = CODEB;
-						else
-							variant = CODEA;
-					}
+				if (item == AiMarker)
+					continue;
 
+				if (shifted)
+				{
 					if (variant == CODEA)
-					{
-						result.Write(EncodeCodeA(item));
+						variant = CODEB;
+					else
+						variant = CODEA;
+				}
 
-						if (item == CODEB || item == CODEC)
-							variant = item;
+				if (variant == CODEA)
+				{
+					result.Add(EncodeCodeA(item));
+
+					if (item == CODEB || item == CODEC)
+						variant = item;
+				}
+				else if (variant == CODEB)
+				{
+					result.Add(EncodeCodeB(item));
+
+					if (item == CODEA || item == CODEC)
+						variant = item;
+				}
+				else
+				{
+					if (item == CODEA || item == CODEB)
+					{
+						result.Add((byte)(item - 50));
+						variant = item;
 					}
-					else if (variant == CODEB)
+					else if (item == FNC1)
 					{
-						result.Write(EncodeCodeB(item));
-
-						if (item == CODEA || item == CODEC)
-							variant = item;
+						result.Add((byte)(item - 50));
 					}
 					else
 					{
-						if (item == CODEA || item == CODEB)
+						if (!char.IsDigit(item))
+							throw new ArgumentException($"Unexpected Code C character {(int)item:x} encountered");
+
+						if (codeCBuffer < 0)
 						{
-							result.Write((char)(item - 50));
-							variant = item;
-						}
-						else if (item == FNC1)
-						{
-							result.Write((char)(item - 50));
+							codeCBuffer = (item - '0') * 10;
+							continue;
 						}
 						else
 						{
-							if (!char.IsDigit(item))
-								throw new ArgumentException($"Unexpected Code C character {(int)item:x} encountered");
-
-							if (codeCBuffer < 0)
-							{
-								codeCBuffer = (item - '0') * 10;
-								continue;
-							}
-							else
-							{
-								result.Write((item - '0') + codeCBuffer);
-								codeCBuffer = -1;
-							}
+							result.Add((byte)((item - '0') + codeCBuffer));
+							codeCBuffer = -1;
 						}
 					}
-
-					if (shifted)
-					{
-						if (variant == CODEA)
-							variant = CODEB;
-						else
-							variant = CODEA;
-					}
-
-					shifted = (item == 98 && variant != CODEC);
 				}
 
-				if (codeCBuffer >= 0)
-					throw new ArgumentException("Encoding of code C value was attempted, but the value was not specifed using 2 characters");
+				if (shifted)
+				{
+					if (variant == CODEA)
+						variant = CODEB;
+					else
+						variant = CODEA;
+				}
 
-				return result.ToString();
+				shifted = (item == 98 && variant != CODEC);
 			}
+
+			if (codeCBuffer >= 0)
+				throw new ArgumentException("Encoding of code C value was attempted, but the value was not specifed using 2 characters");
+
+			return result.ToArray();
 		}
 
-		private char EncodeCodeA(char value)
+		private byte EncodeCodeA(char value)
 		{
 			int offset;
 			if (value > 31 && value < 96)
@@ -167,10 +245,10 @@ namespace Barcodes
 			else
 				throw new ArgumentException($"Unssupported Code A character {(int)value:x} encountered");
 
-			return (char)(value + offset);
+			return (byte)(value + offset);
 		}
 
-		private char EncodeCodeB(char value)
+		private byte EncodeCodeB(char value)
 		{
 			int offset;
 			if (value > 31 && value < 127)
@@ -182,7 +260,7 @@ namespace Barcodes
 			else
 				throw new ArgumentException($"Unssupported Code B character {(int)value:x} encountered");
 
-			return (char)(value + offset);
+			return (byte)(value + offset);
 		}
 	}
 }

@@ -19,7 +19,7 @@ namespace Barcodes.Definitions
 
 		public string GetDisplayText(string value) => value;
 
-		public IEnumerable<Pattern> Parse(string value)
+		public IEnumerable<Pattern> Parse(byte[] value)
 		{
 			var result = new List<Pattern>
 			{

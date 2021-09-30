@@ -55,12 +55,7 @@ namespace Barcodes.Definitions
 			data.AddToEnd(PatternSet.Index(STOP));
 		}
 
-		public Pattern Convert(char value) => PatternSet.Index(value);
-
-		public string GetDisplayText(string value)
-		{
-			return value;
-		}
+		public Pattern Convert(byte value) => PatternSet.Index(value);
 
 		public bool ValidateInput(string value)
 		{

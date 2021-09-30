@@ -2,6 +2,6 @@
 {
 	public interface IConvert
 	{
-		Pattern Convert(char value);
+		Pattern Convert(byte value);
 	}
 }

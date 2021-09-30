@@ -112,7 +112,7 @@ namespace Barcodes.Definitions
 			data.AddToEnd(PatternSet.Find(TERMINATOR));
 		}
 
-		public IEnumerable<Pattern> Parse(string value)
+		public IEnumerable<Pattern> Parse(byte[] value)
 		{
 			var result = new List<Pattern>();
 
@@ -127,7 +127,7 @@ namespace Barcodes.Definitions
 			foreach (var item in value)
 			{
 				result.AddRange(transformer
-					.Transform(item)
+					.Transform((char)item)
 					.Select(c => _patternSet.Find(c)));
 			}
 

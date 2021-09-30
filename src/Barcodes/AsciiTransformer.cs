@@ -21,7 +21,7 @@ namespace Barcodes
 					value
 				};
 
-			if (value >= '-' && value <= 9)
+			if (value >= '-' && value <= '9')
 				return new[]
 				{
 					value
@@ -97,7 +97,7 @@ namespace Barcodes
 					(char)(value - 97 + 'A'),
 				};
 
-			if (value < 126)
+			if (value < 127)
 				return new[]
 				{
 					Shift2,

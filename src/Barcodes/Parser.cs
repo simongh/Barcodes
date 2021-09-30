@@ -17,11 +17,8 @@ namespace Barcodes
 			return _definition.ValidateInput(value);
 		}
 
-		public EncodedData Parse(string value)
+		public EncodedData Parse(byte[] value, string text)
 		{
-			if (!ValidateData(value))
-				return null;
-
 			var data = new List<Pattern>();
 
 			if (_definition is IParser parser)
@@ -40,7 +37,6 @@ namespace Barcodes
 					})
 					.Where(c => c != null));
 			}
-			var text = _definition.GetDisplayText(value);
 
 			var result = new EncodedData(data)
 			{
@@ -60,5 +56,50 @@ namespace Barcodes
 
 			return result;
 		}
+
+		public EncodedData Parse(string value) => Parse(value.Select(c => (byte)c).ToArray(), value);
+
+		//{
+		//	if (!ValidateData(value))
+		//		return null;
+
+		//	var data = new List<Pattern>();
+
+		//	if (_definition is IParser parser)
+		//	{
+		//		data.AddRange(parser.Parse(value));
+		//	}
+		//	else
+		//	{
+		//		data.AddRange(value
+		//			.Select(c =>
+		//			{
+		//				if (_definition is IConvert convert)
+		//					return convert.Convert(c);
+		//				else
+		//					return _definition.PatternSet.Find(c);
+		//			})
+		//			.Where(c => c != null));
+		//	}
+		//	var text = _definition.GetDisplayText(value);
+
+		//	var result = new EncodedData(data)
+		//	{
+		//		DisplayText = text,
+		//	};
+
+		//	if (_definition is IChecksum checksum)
+		//	{
+		//		if (checksum.IsChecksumRequired)
+		//			checksum.AddChecksum(result);
+		//	}
+
+		//	if (_definition is ILimits limits)
+		//	{
+		//		limits.AddLimits(result);
+		//	}
+
+		//	return result;
+		//}
 	}
 }

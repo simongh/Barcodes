@@ -32,9 +32,10 @@ namespace Barcodes
 			return (byte)(range - (total % range));
 		}
 
-		public static byte Calculate(string value, int range)
+		public static byte Calculate(string value, int range, Func<char, byte> convert = null)
 		{
-			return Calculate(value.Select(c => (byte)c).ToArray(), range);
+			var func = convert ?? (a => (byte)a);
+			return Calculate(value.Select(c => func.Invoke(c)).ToArray(), range);
 		}
 	}
 }

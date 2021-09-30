@@ -4,8 +4,6 @@
 	{
 		PatternSet PatternSet { get; }
 
-		string GetDisplayText(string value);
-
 		bool ValidateInput(string value);
 	}
 }
