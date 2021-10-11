@@ -6,6 +6,8 @@ namespace Barcodes.Definitions
 	{
 		protected const byte Limit = 31;
 		protected const byte Split = 32;
+		protected const byte LimitStart = 33;
+		protected const byte LimitEnd = 34;
 
 		protected static readonly PatternSet _patternSet = new PatternSet(new[]
 		{
@@ -45,8 +47,10 @@ namespace Barcodes.Definitions
 			Pattern.Parse(28, "2332333"),
 			Pattern.Parse(29, "2223233"),
 
-			Pattern.Parse(Limit, "232"),
-			Pattern.Parse(Split, "32323"),
+			Pattern.Parse(Limit, "232", true),
+			Pattern.Parse(Split, "32323", true),
+			Pattern.Parse(LimitStart, "2322"),
+			Pattern.Parse(LimitEnd, "32"),
 		});
 
 		protected static readonly List<bool[]> _parity = new List<bool[]>

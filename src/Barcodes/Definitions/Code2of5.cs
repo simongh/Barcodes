@@ -20,8 +20,8 @@ namespace Barcodes.Definitions
 			Pattern.Parse(8, "032323032"),
 			Pattern.Parse(9, "230323032"),
 
-			Pattern.Parse(START,"2232232"),
-			Pattern.Parse(STOP,"2232322")
+			Pattern.Parse(START,"2232232", true),
+			Pattern.Parse(STOP,"2232322", true)
 		});
 
 		public PatternSet PatternSet => _patternSet;

@@ -18,7 +18,7 @@ namespace Barcodes.Definitions
 			Pattern.Parse('9', "03232"),
 			Pattern.Parse('-', "23032"),
 
-			Pattern.Parse('s', "23012")
+			Pattern.Parse('s', "23012", true)
 		});
 
 		public PatternSet PatternSet => _patternSet;

@@ -16,8 +16,6 @@ namespace Barcodes.Definitions
 			data.Bracket(PatternSet.Find(Limit));
 		}
 
-		public string GetDisplayText(string value) => value;
-
 		public IEnumerable<Pattern> Parse(byte[] value)
 		{
 			var result = new List<Pattern>();

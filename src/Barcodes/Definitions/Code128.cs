@@ -126,7 +126,7 @@ namespace Barcodes.Definitions
 			Pattern.Parse(105, "22323322233"),
 
             //STOP pattern
-            Pattern.Parse(STOP, "2233322232322"),
+            Pattern.Parse(STOP, "2233322232322", true),
 			});
 
 		public PatternSet PatternSet => _patternSet;

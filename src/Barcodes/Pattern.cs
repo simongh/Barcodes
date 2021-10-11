@@ -10,15 +10,17 @@ namespace Barcodes
 
 		public IEnumerable<Element> Elements { get; }
 
-		public int WideCount { get; private set; }
+		public int WideCount => Elements.Count(e => e.IsWide());
 
-		public int NarrowCount { get; private set; }
+		public int NarrowCount => Elements.Count() - WideCount;
 
-		public int BlackCount { get; private set; }
+		public int BlackCount => Elements.Count(e => e.IsWhite());
 
-		public int WhiteCount { get; private set; }
+		public int WhiteCount => Elements.Count() - WhiteCount;
 
-		public Pattern(byte value, IEnumerable<Element> elements)
+		public bool IsGuard { get; }
+
+		public Pattern(byte value, IEnumerable<Element> elements, bool isGuard = false)
 			: this()
 		{
 			Guard.IsNotNull(elements, nameof(elements));
@@ -26,24 +28,18 @@ namespace Barcodes
 
 			Value = value;
 			Elements = elements;
-
-			WideCount = elements.Count(e => e.IsWide());
-			NarrowCount = elements.Count() - WideCount;
-
-			WhiteCount = elements.Count(e => e.IsWhite());
-			BlackCount = elements.Count() - WhiteCount;
 		}
 
 		private Pattern()
 		{ }
 
-		public static Pattern Parse(char value, string pattern) => Parse((byte)value, pattern);
+		public static Pattern Parse(char value, string pattern, bool isGuard = false) => Parse((byte)value, pattern, isGuard);
 
-		public static Pattern Parse(byte value, string pattern)
+		public static Pattern Parse(byte value, string pattern, bool isGuard = false)
 		{
 			Guard.IsNotNull(pattern, nameof(pattern));
 
-			return new Pattern(value, pattern.Select(ToElement).ToArray());
+			return new Pattern(value, pattern.Select(ToElement).ToArray(), isGuard);
 		}
 
 		private static Element ToElement(char value)

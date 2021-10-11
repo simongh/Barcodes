@@ -63,7 +63,7 @@ namespace Barcodes.Definitions
 			Pattern.Parse(SHIFT2, "111011010"),
 			Pattern.Parse(SHIFT3, "111010110"),
 			Pattern.Parse(SHIFT4, "100110010"),
-			Pattern.Parse(LIMIT,  "101011110"),
+			Pattern.Parse(LIMIT,  "101011110", true),
 			Pattern.Parse(TERMINATOR, "1"),
 		});
 
