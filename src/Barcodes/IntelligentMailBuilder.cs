@@ -80,7 +80,7 @@ namespace Barcodes
 		{
 			value = Regex.Replace(value, "[-\\s]", "");
 
-			var data1 = ConvertToBytes(ConvertRoutingCode(value), value);
+			var data1 = ConvertToBytes(value);
 			var fcs = Crc11(data1);
 
 			var data2 = ConvertToCodewords(data1);
@@ -99,23 +99,25 @@ namespace Barcodes
 			var code = value.Substring(20);
 
 			var tmp = 0L;
-			if (value.Length == 5)
+			if (code.Length == 5)
 				tmp = long.Parse(code) + 1;
-			if (value.Length == 9)
+			if (code.Length == 9)
 				tmp = long.Parse(code) + 100001;
-			if (value.Length == 11)
+			if (code.Length == 11)
 				tmp = long.Parse(code) + 1000100001;
 
 			return tmp;
 		}
 
-		private byte[] ConvertToBytes(long routingcode, string value)
+		private byte[] ConvertToBytes(string value)
 		{
+			var routingcode = ConvertRoutingCode(value);
+
 			routingcode = (routingcode * 10) + value[0] - '0';
 			routingcode = (routingcode * 5) + value[1] - '0';
 
-			byte[] result = new byte[13];
-			int length = 0;
+			var result = new byte[13];
+			var length = 0;
 			void loop(int digit)
 			{
 				if (length == 0)
@@ -251,7 +253,7 @@ namespace Barcodes
 			}
 		}
 
-		public byte[] ConvertToBars(short[] data)
+		private byte[] ConvertToBars(short[] data)
 		{
 			return new byte[]
 			{
