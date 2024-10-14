@@ -4,6 +4,8 @@ namespace Barcodes.Writer
 {
     public struct Pattern
     {
+        public char Value { get; private set; }
+
         public Element[] Elements { get; private set; }
 
         public int WhiteCount { get; private set; }
@@ -14,8 +16,9 @@ namespace Barcodes.Writer
 
         public int NarrowCount { get; private set; }
 
-        public Pattern(params Element[] elements)
+        public Pattern(char value, params Element[] elements)
         {
+            Value = value;
             Elements = elements;
 
             foreach (var item in elements)

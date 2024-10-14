@@ -15,8 +15,7 @@ namespace Barcodes.Writer.Drawing
             using var canvas = new SKCanvas(image);
             canvas.Clear(SKColors.White);
 
-            Paint(settings, definition, code, canvas, 0);
-            DrawText(settings, definition, code.Value, canvas);
+            Paint(settings, definition, code, canvas);
 
             using var data = image.Encode(SKEncodedImageFormat.Png, 100);
 
@@ -59,7 +58,7 @@ namespace Barcodes.Writer.Drawing
             return new Size((int)Math.Ceiling(width * settings.Scale), (int)Math.Ceiling(height * settings.Scale));
         }
 
-        private void Paint(BarcodeSettings settings, BaseDefinition definition, CodedCollection code, SKCanvas canvas, int width)
+        private void Paint(BarcodeSettings settings, BaseDefinition definition, CodedCollection code, SKCanvas canvas)
         {
             var left = settings.LeftMargin;
 
@@ -68,6 +67,8 @@ namespace Barcodes.Writer.Drawing
                 var start = new SKPoint(left, settings.TopMargin);
                 left = DrawPattern(settings, codeItem, canvas, start);
             }
+
+            DrawText(settings, code.Value, canvas);
         }
 
         private int DrawPattern(BarcodeSettings settings, Pattern pattern, SKCanvas canvas, SKPoint start)
@@ -96,12 +97,12 @@ namespace Barcodes.Writer.Drawing
                 left += width;
             }
 
-            return (int)(left + settings.ModulePadding);
+            return (int)left;
         }
 
-        private void DrawText(BarcodeSettings settings, BaseDefinition definition, string text, SKCanvas canvas)
+        private void DrawText(BarcodeSettings settings, string text, SKCanvas canvas)
         {
-            if (!settings.IsTextShown || !definition.IsTextShown)
+            if (!settings.IsTextShown || text == null)
                 return;
 
             using var paint = new SKPaint

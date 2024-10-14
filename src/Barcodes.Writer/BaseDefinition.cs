@@ -6,48 +6,54 @@ namespace Barcodes.Writer
 {
     public abstract class BaseDefinition
     {
-        public abstract IEnumerable<(char Value, Pattern Pattern)> PatternSet { get; }
+        public abstract IEnumerable<Pattern> PatternSet { get; }
 
         public virtual bool IsCheckSumRequired { get; } = false;
 
         public virtual bool IsTextShown { get; } = false;
 
+        public virtual bool UseModulePadding { get; } = false;
+
         public virtual int CalculateWidth(BarcodeSettings settings, CodedCollection value)
         {
             return value.Sum(p =>
                 (p.NarrowCount * settings.NarrowWidth)
-                + (p.WideCount * settings.WideWidth))
-            + (value.Count * settings.ModulePadding);
+                + (p.WideCount * settings.WideWidth));
         }
 
         public virtual string GetDisplayText(string value) => value;
 
-        public virtual bool TryParse(string value, out CodedCollection? codes)
+        public bool TryParse(string value, out CodedCollection? codes)
+        {
+            codes = Parse(value);
+
+            if (codes == null)
+                return false;
+            else
+            {
+                if (IsTextShown)
+                    codes.Value = GetDisplayText(value);
+
+                return true;
+            }
+        }
+
+        protected virtual CodedCollection? Parse(string value)
         {
             var result = new CodedCollection();
 
-            foreach (var item in PreParse(value))
+            foreach (var item in value)
             {
                 var p = PatternSet.FirstOrDefault(e => e.Value == item);
                 if (p.Value != item)
                 {
-                    codes = null;
-                    return false;
+                    return null;
                 }
 
-                result.Add(p.Pattern);
+                result.Add(p);
             }
 
-            Transform(result);
-            result.Value = GetDisplayText(value);
-
-            codes = result;
-            return true;
+            return result;
         }
-
-        protected virtual string PreParse(string value) => value;
-
-        protected virtual void Transform(CodedCollection codes)
-        { }
     }
 }

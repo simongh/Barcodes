@@ -8,7 +8,7 @@ namespace Barcodes.Samples
         {
             Console.WriteLine("Hello, World!");
 
-            var def = new Writer.Definitions.Code3of9();
+            var def = new Writer.Definitions.Code93();
             var draw = new Writer.Drawing.Bitmap();
 
             if (def.TryParse("TEST", out var codes))
