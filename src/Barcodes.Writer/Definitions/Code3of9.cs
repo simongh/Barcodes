@@ -5,6 +5,8 @@ namespace Barcodes.Writer.Definitions
 {
     public class Code3of9 : BaseDefinition
     {
+        private readonly Pattern _guard = new('*', NarrowBlack, WideWhite, NarrowBlack, NarrowWhite, WideBlack, NarrowWhite, WideBlack, NarrowWhite, NarrowBlack);
+
         public override IEnumerable<Pattern> PatternSet
         {
             get
@@ -48,7 +50,6 @@ namespace Barcodes.Writer.Definitions
                 yield return new('-', NarrowBlack, WideWhite, NarrowBlack, NarrowWhite, NarrowBlack, NarrowWhite, WideBlack, NarrowWhite, WideBlack);
                 yield return new('.', WideBlack, WideWhite, NarrowBlack, NarrowWhite, NarrowBlack, NarrowWhite, WideBlack, NarrowWhite, NarrowBlack);
                 yield return new(' ', NarrowBlack, WideWhite, WideBlack, NarrowWhite, NarrowBlack, NarrowWhite, WideBlack, NarrowWhite, NarrowBlack);
-                yield return new('*', NarrowBlack, WideWhite, NarrowBlack, NarrowWhite, WideBlack, NarrowWhite, WideBlack, NarrowWhite, NarrowBlack);
                 yield return new('$', NarrowBlack, WideWhite, NarrowBlack, WideWhite, NarrowBlack, WideWhite, NarrowBlack, NarrowWhite, NarrowBlack);
                 yield return new('/', NarrowBlack, WideWhite, NarrowBlack, WideWhite, NarrowBlack, NarrowWhite, NarrowBlack, WideWhite, NarrowBlack);
                 yield return new('+', NarrowBlack, WideWhite, NarrowBlack, NarrowWhite, NarrowBlack, WideWhite, NarrowBlack, WideWhite, NarrowBlack);
@@ -57,8 +58,6 @@ namespace Barcodes.Writer.Definitions
         }
 
         public override bool IsTextShown => true;
-
-        public override bool UseModulePadding => true;
 
         public override string GetDisplayText(string value)
         {
@@ -73,13 +72,11 @@ namespace Barcodes.Writer.Definitions
 
         protected override CodedCollection? Parse(string value)
         {
-            var guard = PatternSet.Find('*').Pattern;
-            var space = new Pattern(' ', NarrowWhite, NarrowWhite);
+            var space = new Pattern(' ', NarrowWhite);
 
             var result = new CodedCollection
             {
-                guard,
-                space,
+                _guard,
             };
 
             foreach (var item in value)
@@ -90,11 +87,12 @@ namespace Barcodes.Writer.Definitions
                     return null;
                 }
 
+                result.AddSpace(space);
                 result.Add(p.Pattern);
-                result.Add(space);
             }
 
-            result.Add(guard);
+            result.AddSpace(space);
+            result.Add(_guard);
 
             return result;
         }

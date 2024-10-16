@@ -68,7 +68,8 @@ namespace Barcodes.Writer.Drawing
                 left = DrawPattern(settings, codeItem, canvas, start);
             }
 
-            DrawText(settings, code.Value, canvas);
+            if (definition.IsTextShown && settings.IsTextShown)
+                DrawText(settings, code.Value, canvas);
         }
 
         private int DrawPattern(BarcodeSettings settings, Pattern pattern, SKCanvas canvas, SKPoint start)

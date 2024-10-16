@@ -8,10 +8,10 @@ namespace Barcodes.Samples
         {
             Console.WriteLine("Hello, World!");
 
-            var def = new Writer.Definitions.Code93();
+            var def = new Writer.Definitions.Code11();
             var draw = new Writer.Drawing.Bitmap();
 
-            if (def.TryParse("TEST", out var codes))
+            if (def.TryParse("0123452", out var codes))
             {
                 var options = new BarcodeSettings
                 {
@@ -23,6 +23,8 @@ namespace Barcodes.Samples
 
                 File.WriteAllBytes("c:\\temp\\test.bmp", s.ToArray());
             }
+            else
+                Console.WriteLine("invalid data");
         }
     }
 }

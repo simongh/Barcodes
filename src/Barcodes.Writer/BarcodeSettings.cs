@@ -51,11 +51,6 @@
         public int NarrowWidth { get; set; } = 2;
 
         /// <summary>
-        /// Gets or sets the padding in pixels between modules
-        /// </summary>
-        public int ModulePadding { get; set; } = 2;
-
-        /// <summary>
         /// Gets or sets whether text is displayed with the barcode
         /// </summary>
         public bool IsTextShown { get; set; } = true;

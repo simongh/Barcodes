@@ -11,5 +11,11 @@ namespace Barcodes.Writer
 
             return (result, result.Value == value);
         }
+
+        public static void AddSpace(this CodedCollection codes, Pattern space)
+        {
+            if (codes.Count > 0)
+                codes.Add(space);
+        }
     }
 }

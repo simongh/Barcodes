@@ -8,11 +8,9 @@ namespace Barcodes.Writer
     {
         public abstract IEnumerable<Pattern> PatternSet { get; }
 
-        public virtual bool IsCheckSumRequired { get; } = false;
+        public virtual bool IsCheckSumRequired { get; set; } = false;
 
         public virtual bool IsTextShown { get; } = false;
-
-        public virtual bool UseModulePadding { get; } = false;
 
         public virtual int CalculateWidth(BarcodeSettings settings, CodedCollection value)
         {
@@ -31,7 +29,7 @@ namespace Barcodes.Writer
                 return false;
             else
             {
-                if (IsTextShown)
+                if (IsTextShown && codes.Value == null)
                     codes.Value = GetDisplayText(value);
 
                 return true;
