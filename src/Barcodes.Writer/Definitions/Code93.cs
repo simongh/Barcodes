@@ -9,8 +9,8 @@ namespace Barcodes.Writer.Definitions
         private const char Shift2 = (char)44;
         private const char Shift3 = (char)45;
         private const char Shift4 = (char)46;
-        private const char Limit = (char)47;
-        private const char Terminator = (char)48;
+        private readonly Pattern _limit = new((char)47, NarrowBlack, NarrowWhite, NarrowBlack, NarrowWhite, NarrowBlack, NarrowBlack, NarrowBlack, NarrowBlack, NarrowWhite);
+        private readonly Pattern _terminator = new((char)48, NarrowBlack);
 
         public override IEnumerable<Pattern> PatternSet
         {
@@ -64,9 +64,6 @@ namespace Barcodes.Writer.Definitions
                 yield return new(Shift2, NarrowBlack, NarrowBlack, NarrowBlack, NarrowWhite, NarrowBlack, NarrowBlack, NarrowWhite, NarrowBlack, NarrowWhite);
                 yield return new(Shift3, NarrowBlack, NarrowBlack, NarrowBlack, NarrowWhite, NarrowBlack, NarrowWhite, NarrowBlack, NarrowBlack, NarrowWhite);
                 yield return new(Shift4, NarrowBlack, NarrowWhite, NarrowWhite, NarrowBlack, NarrowBlack, NarrowWhite, NarrowWhite, NarrowBlack, NarrowWhite);
-
-                yield return new(Limit, NarrowBlack, NarrowWhite, NarrowBlack, NarrowWhite, NarrowBlack, NarrowBlack, NarrowBlack, NarrowBlack, NarrowWhite);
-                yield return new(Terminator, NarrowBlack);
             }
         }
 
@@ -74,12 +71,12 @@ namespace Barcodes.Writer.Definitions
         {
             var result = new CodedCollection
             {
-                PatternSet.Find(Limit).Pattern
+                _limit
             };
 
             foreach (var item in value)
             {
-                int lookup = 0;
+                int lookup;
                 if (item == ' ')
                     lookup = 38;
                 else if (item == '$')
@@ -126,16 +123,16 @@ namespace Barcodes.Writer.Definitions
                 result.Add(PatternSet.Find((char)lookup).Pattern);
             }
 
-            result.Add(GetCheckDigit(20, result));
-            result.Add(GetCheckDigit(15, result));
+            AddCheckDigit(20, result);
+            AddCheckDigit(15, result);
 
-            result.Add(PatternSet.Find(Limit).Pattern);
-            result.Add(PatternSet.Find(Terminator).Pattern);
+            result.Add(_limit);
+            result.Add(_terminator);
 
             return result;
         }
 
-        private Pattern GetCheckDigit(int weight, CodedCollection codes)
+        private void AddCheckDigit(int weight, CodedCollection codes)
         {
             int total = 0;
             int w = 1;
@@ -148,7 +145,8 @@ namespace Barcodes.Writer.Definitions
             }
 
             total = total % 47;
-            return PatternSet.Find((char)total).Pattern;
+            var cs = PatternSet.Find((char)total).Pattern;
+            codes.Add(cs);
         }
     }
 }

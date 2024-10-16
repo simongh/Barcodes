@@ -12,17 +12,17 @@ namespace Barcodes.Writer.Definitions
         {
             get
             {
-                yield return new('0', NarrowBlack, NarrowWhite, NarrowBlack, NarrowWhite, WideBlack);
-                yield return new('1', WideBlack, NarrowWhite, NarrowBlack, NarrowWhite, WideBlack);
-                yield return new('2', NarrowBlack, WideWhite, NarrowBlack, NarrowWhite, WideBlack);
-                yield return new('3', WideBlack, WideWhite, NarrowBlack, NarrowWhite, NarrowBlack);
-                yield return new('4', NarrowBlack, NarrowWhite, WideBlack, NarrowWhite, WideBlack);
-                yield return new('5', WideBlack, NarrowWhite, WideBlack, NarrowWhite, NarrowBlack);
-                yield return new('6', NarrowBlack, WideWhite, WideBlack, NarrowWhite, NarrowBlack);
-                yield return new('7', NarrowBlack, NarrowWhite, NarrowBlack, WideWhite, WideBlack);
-                yield return new('8', WideBlack, NarrowWhite, NarrowBlack, WideWhite, NarrowBlack);
-                yield return new('9', WideBlack, NarrowWhite, NarrowBlack, NarrowWhite, NarrowBlack);
-                yield return new('-', NarrowBlack, NarrowWhite, WideBlack, NarrowWhite, NarrowBlack);
+                yield return new('0', NarrowBlack, NarrowWhite, NarrowBlack, NarrowWhite, WideBlack, NarrowWhite);
+                yield return new('1', WideBlack, NarrowWhite, NarrowBlack, NarrowWhite, WideBlack, NarrowWhite);
+                yield return new('2', NarrowBlack, WideWhite, NarrowBlack, NarrowWhite, WideBlack, NarrowWhite);
+                yield return new('3', WideBlack, WideWhite, NarrowBlack, NarrowWhite, NarrowBlack, NarrowWhite);
+                yield return new('4', NarrowBlack, NarrowWhite, WideBlack, NarrowWhite, WideBlack, NarrowWhite);
+                yield return new('5', WideBlack, NarrowWhite, WideBlack, NarrowWhite, NarrowBlack, NarrowWhite);
+                yield return new('6', NarrowBlack, WideWhite, WideBlack, NarrowWhite, NarrowBlack, NarrowWhite);
+                yield return new('7', NarrowBlack, NarrowWhite, NarrowBlack, WideWhite, WideBlack, NarrowWhite);
+                yield return new('8', WideBlack, NarrowWhite, NarrowBlack, WideWhite, NarrowBlack, NarrowWhite);
+                yield return new('9', WideBlack, NarrowWhite, NarrowBlack, NarrowWhite, NarrowBlack, NarrowWhite);
+                yield return new('-', NarrowBlack, NarrowWhite, WideBlack, NarrowWhite, NarrowBlack, NarrowWhite);
             }
         }
 
@@ -35,6 +35,7 @@ namespace Barcodes.Writer.Definitions
             var result = new CodedCollection()
             {
                 _limit,
+                space
             };
 
             foreach (var c in value)
@@ -47,31 +48,27 @@ namespace Barcodes.Writer.Definitions
                 if (!v.Found)
                     return null;
 
-                result.AddSpace(space);
                 result.Add(v.Pattern);
             }
 
             result.Value = value;
-            result.AddSpace(space);
 
             if (IsCheckSumRequired)
             {
-                DoChecksumCalculation(10, result);
+                AddChecksum(10, result);
 
                 if (value.Length >= 10)
                 {
-                    result.AddSpace(space);
-                    DoChecksumCalculation(9, result);
+                    AddChecksum(9, result);
                 }
             }
 
-            result.AddSpace(space);
             result.Add(_limit);
 
             return result;
         }
 
-        private void DoChecksumCalculation(int factor, CodedCollection codes)
+        private void AddChecksum(int factor, CodedCollection codes)
         {
             var values = codes.Where(p => p.Value != ' ' && p.Value != _limit.Value).ToArray();
 
