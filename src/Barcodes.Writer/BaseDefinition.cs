@@ -12,6 +12,8 @@ namespace Barcodes.Writer
 
         public virtual bool IsTextShown { get; } = false;
 
+        public string? DisplayText { get; set; }
+
         public virtual int CalculateWidth(BarcodeSettings settings, CodedCollection value)
         {
             return value.Sum(p =>
@@ -19,7 +21,7 @@ namespace Barcodes.Writer
                 + (p.WideCount * settings.WideWidth));
         }
 
-        public virtual string GetDisplayText(string value) => value;
+        public virtual string GetDisplayText(string value) => DisplayText ?? value;
 
         public bool TryParse(string value, out CodedCollection? codes)
         {

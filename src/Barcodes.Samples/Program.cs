@@ -8,10 +8,10 @@ namespace Barcodes.Samples
         {
             Console.WriteLine("Hello, World!");
 
-            var def = new Writer.Definitions.Interleaved2of5();
+            var def = new Writer.Definitions.Code128();
             var draw = new Writer.Drawing.Bitmap();
 
-            if (def.TryParse("602003", out var codes))
+            if (def.TryParse("simon", out var codes))
             {
                 var options = new BarcodeSettings
                 {

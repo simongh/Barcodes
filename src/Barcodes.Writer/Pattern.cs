@@ -16,6 +16,10 @@ namespace Barcodes.Writer
 
         public int NarrowCount { get; private set; }
 
+        public Pattern(int value, params Element[] elements)
+            : this((char)value, elements)
+        { }
+
         public Pattern(char value, params Element[] elements)
         {
             Value = value;
