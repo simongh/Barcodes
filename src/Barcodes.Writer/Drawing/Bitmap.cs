@@ -83,6 +83,24 @@ namespace Barcodes.Writer.Drawing
                 else
                     width = settings.NarrowWidth;
 
+                int height, yShift = 0;
+                if ((item & Element.Ascender) == Element.Ascender)
+                {
+                    height = settings.MediumHeight;
+                }
+                else if ((item & Element.Descender) == Element.Descender)
+                {
+                    height = settings.MediumHeight;
+                    yShift = settings.BarHeight - settings.MediumHeight;
+                }
+                else if ((item & Element.Tracker) == Element.Tracker)
+                {
+                    height = settings.ShortHeight;
+                    yShift = settings.BarHeight - settings.MediumHeight;
+                }
+                else
+                    height = settings.BarHeight;
+
                 var isBlack = (item & Element.Black) == Element.Black;
 
                 if (isBlack)
@@ -92,7 +110,7 @@ namespace Barcodes.Writer.Drawing
                         Color = SKColors.Black,
                         Style = SKPaintStyle.Fill,
                     };
-                    canvas.DrawRect(left, start.Y, width, settings.BarHeight, paint);
+                    canvas.DrawRect(left, start.Y + yShift, width, height, paint);
                 }
 
                 left += width;
