@@ -1,6 +1,4 @@
-﻿using Barcodes2;
-
-namespace Barcodes.Samples
+﻿namespace Barcodes.Samples
 {
     internal class Program
     {
@@ -8,26 +6,9 @@ namespace Barcodes.Samples
         {
             Console.WriteLine("Hello, World!");
 
-            var def = new Writer.Definitions.RM4SCC();
-            var draw = new Writer.Drawing.Bitmap();
-
-            if (def.TryParse("BX11LT1A", out var codes))
-            {
-                var options = new BarcodeSettings
-                {
-                    TextPadding = 10,
-                    BottomMargin = 10,
-                    BarHeight = 12,
-                    MediumHeight = 8,
-                    ShortHeight = 4,
-                };
-
-                var s = draw.Create(def, codes, options);
-
-                File.WriteAllBytes("c:\\temp\\test.bmp", s.ToArray());
-            }
-            else
-                Console.WriteLine("invalid data");
+            ReadOnlySpan<byte> s;
+            s = Writer.BarcodeWriter.Cpc("A1B 2C3");
+            File.WriteAllBytes("c:\\temp\\test.bmp", s.ToArray());
         }
     }
 }

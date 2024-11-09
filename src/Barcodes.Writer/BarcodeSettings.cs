@@ -120,13 +120,15 @@
 
         public float Scale { get; set; } = 1.0F;
 
-        /// <summary>
-        /// Creates a duplicate of these settings
-        /// </summary>
-        /// <returns>New seetings object</returns>
-        public BarcodeSettings Copy()
+        public static BarcodeSettings Postal()
         {
-            return (BarcodeSettings)MemberwiseClone();
+            var height = 4;
+            return new()
+            {
+                BarHeight = 3 * height,
+                MediumHeight = 2 * height,
+                ShortHeight = height,
+            };
         }
     }
 }
