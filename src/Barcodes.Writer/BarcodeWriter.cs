@@ -36,5 +36,7 @@ namespace Barcodes.Writer
         public static ReadOnlySpan<byte> RM4SCC(string value, BarcodeSettings? settings = null) => Generate(settings ?? BarcodeSettings.Postal(), new Definitions.RM4SCC(), value);
 
         public static ReadOnlySpan<byte> Cpc(string value, BarcodeSettings? settings = null) => Generate(settings ?? BarcodeSettings.Postal(), new Definitions.Cpc(), value);
+
+        public static ReadOnlySpan<byte> IntelligentMail(string value, BarcodeSettings? settings = null) => Generate(settings ?? BarcodeSettings.Postal(), new Definitions.IntelligentMail(), value);
     }
 }
