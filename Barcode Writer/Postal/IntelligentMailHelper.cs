@@ -29,7 +29,7 @@ namespace Barcodes
             _Instance = new IntelligentMailHelper();
         }
 
-        #endregion
+        #endregion Statics
 
         private IntelligentMailHelper()
         {
@@ -177,7 +177,6 @@ namespace Barcodes
                 data[9] = (short)(~data[1] & 0x7ff);
             if ((fcs & 0x1) != 0)
                 data[9] = (short)(~data[0] & 0x7ff);
-
         }
 
         /// <summary>
@@ -329,7 +328,6 @@ namespace Barcodes
         /// <param name="fcs">Frame Check Sequence</param>
         public void IncludeFcs(short[] data, int fcs)
         {
-
             for (int i = 0; i < data.Length; i++)
             {
                 if ((fcs & (1 << i)) != 0)
